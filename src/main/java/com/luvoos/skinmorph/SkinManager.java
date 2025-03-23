@@ -50,7 +50,7 @@ public class SkinManager {
                 // apply skin on main thread
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     target.setPlayerProfile(profile);
-                    if (sendResponseMessage) target.sendMessage("§aYour skin has been changed to: " + skinName);
+                    if (sendResponseMessage) target.sendMessage("§aYour skin has been changed to: §e" + skinName);
                 });
 
             } catch (Exception e) {
@@ -63,54 +63,97 @@ public class SkinManager {
     public void setSkinFromName(@NotNull Player target, @NotNull String skinName, boolean sendResponseMessage, int tries)
     {
         if (skinName.isEmpty() || !target.isOnline()) return;
-        try {
-            final PlayerProfile playerProfile = target.getPlayerProfile();
-            playerProfile.setProperties(getTextures(skinName, tries));
-            target.setPlayerProfile(playerProfile);
 
-            if (sendResponseMessage) target.sendMessage("§aYour skin has been changed to: " + skinName);
-        } catch (NullPointerException e) {
-            if (sendResponseMessage) target.sendMessage("§cInvalid profile! ('" + skinName + "')");
-        }
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                final PlayerProfile profile = target.getPlayerProfile();
+                Collection<ProfileProperty> textures = getTextures(skinName, tries); // might be slow
+
+                if (textures == null) {
+                    if (sendResponseMessage) target.sendMessage("§cInvalid profile! ('" + skinName + "')");
+                    return;
+                }
+
+                profile.setProperties(textures);
+
+                // apply skin on main thread
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    target.setPlayerProfile(profile);
+                    if (sendResponseMessage) target.sendMessage("§aYour skin has been changed to: §e" + skinName);
+                });
+
+            } catch (Exception e) {
+                if (sendResponseMessage) target.sendMessage("§cError changing skin: " + e.getMessage());
+            }
+        });
     }
 
     public void setSkinFromName(@NotNull CommandSender caller, @NotNull Player target, @NotNull String skinName, boolean sendResponseMessage)
     {
         if (skinName.isEmpty() || !target.isOnline()) return;
-        try {
-            final PlayerProfile playerProfile = target.getPlayerProfile();
-            playerProfile.setProperties(getTextures(skinName, 1));
-            target.setPlayerProfile(playerProfile);
 
-            if (sendResponseMessage) target.sendMessage("§aYour skin has been changed to: " + skinName);
-            if (sendResponseMessage) caller.sendMessage("§a" + target.getName() + "'s skin has been changed to: " + skinName);
-        } catch (NullPointerException e) {
-            if (sendResponseMessage) caller.sendMessage("§cInvalid profile! ('" + skinName + "')");
-        }
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                final PlayerProfile profile = target.getPlayerProfile();
+                Collection<ProfileProperty> textures = getTextures(skinName, 3); // might be slow
+
+                if (textures == null) {
+                    if (sendResponseMessage) target.sendMessage("§cInvalid profile! ('" + skinName + "')");
+                    return;
+                }
+
+                profile.setProperties(textures);
+
+                // apply skin on main thread
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    target.setPlayerProfile(profile);
+                    if (sendResponseMessage) target.sendMessage("§aYour skin has been changed to: §e" + skinName);
+                    if (sendResponseMessage) caller.sendMessage("§a" + target.getName() + "'s skin has been changed to: §e" + skinName);
+                });
+
+            } catch (Exception e) {
+                if (sendResponseMessage) target.sendMessage("§cError changing skin: " + e.getMessage());
+            }
+        });
     }
 
     public void setSkinFromName(@NotNull CommandSender caller, @NotNull Player target, @NotNull String skinName, boolean sendResponseMessage, int tries)
     {
         if (skinName.isEmpty() || !target.isOnline()) return;
-        try {
-            final PlayerProfile playerProfile = target.getPlayerProfile();
-            playerProfile.setProperties(getTextures(skinName, tries));
-            target.setPlayerProfile(playerProfile);
 
-            if (sendResponseMessage) target.sendMessage("§aYour skin has been changed to: " + skinName);
-            if (sendResponseMessage) caller.sendMessage("§a" + target.getName() + "'s skin has been changed to: " + skinName);
-        } catch (NullPointerException e) {
-            if (sendResponseMessage) caller.sendMessage("§cInvalid profile! ('" + skinName + "')");
-        }
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                final PlayerProfile profile = target.getPlayerProfile();
+                Collection<ProfileProperty> textures = getTextures(skinName, tries); // might be slow
+
+                if (textures == null) {
+                    if (sendResponseMessage) target.sendMessage("§cInvalid profile! ('" + skinName + "')");
+                    return;
+                }
+
+                profile.setProperties(textures);
+
+                // apply skin on main thread
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    target.setPlayerProfile(profile);
+                    if (sendResponseMessage) target.sendMessage("§aYour skin has been changed to: §e" + skinName);
+                    if (sendResponseMessage) caller.sendMessage("§a" + target.getName() + "'s skin has been changed to: §e" + skinName);
+                });
+
+            } catch (Exception e) {
+                if (sendResponseMessage) target.sendMessage("§cError changing skin: " + e.getMessage());
+            }
+        });
     }
 
     public void resetSkin(@NotNull Player player, boolean sendResponseMessage)
     {
         setSkinFromName(player, player.getName().toLowerCase(), false);
-        if (sendResponseMessage) player.sendMessage("§aYour skin has been reset to your default skin");
+        if (sendResponseMessage) player.sendMessage("§aYour skin has been reset to your §edefault skin");
     }
 
-    public CompletableFuture<Collection<ProfileProperty>> getTexturesAsync(String skinName, int tries) {
+    public CompletableFuture<Collection<ProfileProperty>> getTexturesAsync(String skinName, int tries)
+    {
         return CompletableFuture.supplyAsync(() -> getTextures(skinName, tries));
     }
 
