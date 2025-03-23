@@ -88,15 +88,10 @@ public class FavoritesManager {
 
     public void preloadFavorites()
     {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (String skinName : getAllFavorites()) {
-                    skinManager.getTexturesAsync(skinName, 3);
-                    plugin.getLogger().info("Loading favorite " + skinName);
-                }
-            }
-        }.runTaskAsynchronously(plugin); // don't block the main thread
+        for (String skinName : getAllFavorites()) {
+            skinManager.getTexturesAsync(skinName, 3);
+            plugin.getLogger().info("Loaded favorite " + skinName);
+        }
     }
 
     public void reloadFavorites()

@@ -38,7 +38,7 @@ public class SkinManager {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
                 final PlayerProfile profile = target.getPlayerProfile();
-                Collection<ProfileProperty> textures = getTextures(skinName, 1); // might be slow
+                Collection<ProfileProperty> textures = getTextures(skinName, 3); // might be slow
 
                 if (textures == null) {
                     if (sendResponseMessage) target.sendMessage("§cInvalid profile! ('" + skinName + "')");

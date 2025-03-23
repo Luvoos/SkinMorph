@@ -34,7 +34,7 @@ public class SkinCommand implements CommandExecutor {
                 return true;
             }
             try {
-                plugin.menu.open(player);
+                plugin.menu.open(player, 1);
             } catch (ExecutionException e) {
                 throw new RuntimeException(e);
             } catch (InterruptedException e) {

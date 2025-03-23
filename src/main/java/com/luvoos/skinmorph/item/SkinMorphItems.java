@@ -84,4 +84,23 @@ public class SkinMorphItems {
         item.setItemMeta(meta);
         addFavorite = item;
     }
+
+    public static ItemStack previousPage()
+    {
+        ItemStack item = new ItemStack(Material.ARROW);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("§ePrevious Page");
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    public static ItemStack nextPage()
+    {
+        ItemStack item = new ItemStack(Material.ARROW);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("§eNext Page");
+        item.setItemMeta(meta);
+        return item;
+    }
+
 }
