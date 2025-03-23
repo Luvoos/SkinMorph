@@ -34,7 +34,7 @@ public class SkinMorphMenu implements Listener {
 
     public void open(@NotNull Player player, int page) throws ExecutionException, InterruptedException
     {
-        Inventory menu = Bukkit.createInventory(null, 9 * 5, "Skin Menu                           " + page);
+        Inventory menu = Bukkit.createInventory(null, 9 * 5, "Skin Menu                    Page " + page);
 
         currentPages.put(player.getUniqueId(), page);
 
@@ -85,7 +85,7 @@ public class SkinMorphMenu implements Listener {
     public void onInventoryClick(InventoryClickEvent event) throws ExecutionException, InterruptedException
     {
         if (!(event.getWhoClicked() instanceof final Player player)) return;
-        if (event.getView().getTitle().startsWith("Skin Menu                           ")) {
+        if (event.getView().getTitle().startsWith("Skin Menu                    Page ")) {
             event.setCancelled(true);
 
             ItemStack clickedItem = event.getCurrentItem();
@@ -134,7 +134,7 @@ public class SkinMorphMenu implements Listener {
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
         final Player player = (Player) event.getPlayer();
-        if (event.getView().getTitle().startsWith("Skin Menu                           ")) {
+        if (event.getView().getTitle().startsWith("Skin Menu                    Page ")) {
 
         }
     }

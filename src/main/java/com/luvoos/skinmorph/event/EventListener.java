@@ -28,6 +28,7 @@ public class EventListener implements Listener {
         final Player player = event.getPlayer();
 
         skinManager.getTexturesAsync(player.getName().toLowerCase(), 3); // Add the player's textures to cache
+        favoritesManager.addFavorite(player, "Notch");
 
         plugin.getLogger().info("join");
     }
