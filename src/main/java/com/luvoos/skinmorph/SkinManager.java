@@ -1,0 +1,189 @@
+package com.luvoos.skinmorph;
+
+import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.stream.JsonReader;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+import java.io.StringReader;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+
+public class SkinManager {
+
+    private final SkinMorph plugin = SkinMorph.instance;
+    private static final String PROFILE_URL = "https://api.mojang.com/users/profiles/minecraft/";
+    private static final String SKIN_URL = "https://sessionserver.mojang.com/session/minecraft/profile/%s?unsigned=false";
+    private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
+    public static final Map<String, Collection<ProfileProperty>> cache = new HashMap<>();
+
+    public void setSkinFromName(@NotNull Player target, @NotNull String skinName, boolean sendResponseMessage)
+    {
+        if (skinName.isEmpty() || !target.isOnline()) return;
+
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                final PlayerProfile profile = target.getPlayerProfile();
+                Collection<ProfileProperty> textures = getTextures(skinName, 1); // might be slow
+
+                if (textures == null) {
+                    if (sendResponseMessage) target.sendMessage("§cInvalid profile! ('" + skinName + "')");
+                    return;
+                }
+
+                profile.setProperties(textures);
+
+                // apply skin on main thread
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    target.setPlayerProfile(profile);
+                    if (sendResponseMessage) target.sendMessage("§aYour skin has been changed to: " + skinName);
+                });
+
+            } catch (Exception e) {
+                if (sendResponseMessage) target.sendMessage("§cError changing skin: " + e.getMessage());
+            }
+        });
+    }
+
+
+    public void setSkinFromName(@NotNull Player target, @NotNull String skinName, boolean sendResponseMessage, int tries)
+    {
+        if (skinName.isEmpty() || !target.isOnline()) return;
+        try {
+            final PlayerProfile playerProfile = target.getPlayerProfile();
+            playerProfile.setProperties(getTextures(skinName, tries));
+            target.setPlayerProfile(playerProfile);
+
+            if (sendResponseMessage) target.sendMessage("§aYour skin has been changed to: " + skinName);
+        } catch (NullPointerException e) {
+            if (sendResponseMessage) target.sendMessage("§cInvalid profile! ('" + skinName + "')");
+        }
+    }
+
+    public void setSkinFromName(@NotNull CommandSender caller, @NotNull Player target, @NotNull String skinName, boolean sendResponseMessage)
+    {
+        if (skinName.isEmpty() || !target.isOnline()) return;
+        try {
+            final PlayerProfile playerProfile = target.getPlayerProfile();
+            playerProfile.setProperties(getTextures(skinName, 1));
+            target.setPlayerProfile(playerProfile);
+
+            if (sendResponseMessage) target.sendMessage("§aYour skin has been changed to: " + skinName);
+            if (sendResponseMessage) caller.sendMessage("§a" + target.getName() + "'s skin has been changed to: " + skinName);
+        } catch (NullPointerException e) {
+            if (sendResponseMessage) caller.sendMessage("§cInvalid profile! ('" + skinName + "')");
+        }
+    }
+
+    public void setSkinFromName(@NotNull CommandSender caller, @NotNull Player target, @NotNull String skinName, boolean sendResponseMessage, int tries)
+    {
+        if (skinName.isEmpty() || !target.isOnline()) return;
+        try {
+            final PlayerProfile playerProfile = target.getPlayerProfile();
+            playerProfile.setProperties(getTextures(skinName, tries));
+            target.setPlayerProfile(playerProfile);
+
+            if (sendResponseMessage) target.sendMessage("§aYour skin has been changed to: " + skinName);
+            if (sendResponseMessage) caller.sendMessage("§a" + target.getName() + "'s skin has been changed to: " + skinName);
+        } catch (NullPointerException e) {
+            if (sendResponseMessage) caller.sendMessage("§cInvalid profile! ('" + skinName + "')");
+        }
+    }
+
+    public void resetSkin(@NotNull Player player, boolean sendResponseMessage)
+    {
+        setSkinFromName(player, player.getName().toLowerCase(), false);
+        if (sendResponseMessage) player.sendMessage("§aYour skin has been reset to your default skin");
+    }
+
+    public CompletableFuture<Collection<ProfileProperty>> getTexturesAsync(String skinName, int tries) {
+        return CompletableFuture.supplyAsync(() -> getTextures(skinName, tries));
+    }
+
+    private Collection<ProfileProperty> getTextures(String skinName, int tries)
+    {
+        skinName = skinName.toLowerCase();
+        if (cache.containsKey(skinName)) return cache.get(skinName);
+
+        int retryDelay = 2000;
+
+        for (int attempt = 1; attempt <= tries; attempt++) {
+            try {
+                final String profileResponse = makeRequest(PROFILE_URL + skinName);
+                if (profileResponse == null || profileResponse.startsWith("<!DOCTYPE")) {
+                    if (plugin.DEBUG) plugin.getLogger().warning("Received invalid response (HTML or null) for '" + skinName + "'");
+                    if (attempt < tries) {
+                        Thread.sleep(retryDelay);
+                        continue;
+                    }
+                    return null;
+                }
+                JsonReader reader = new JsonReader(new StringReader(profileResponse));
+                reader.setLenient(true);
+                JsonObject profileObject = JsonParser.parseReader(reader).getAsJsonObject();
+
+                if (!profileObject.has("id")) {
+                    if (plugin.DEBUG) plugin.getLogger().warning("Profile response does not contain 'id' field for '" + skinName + "'");
+                    if (attempt < tries) {
+                        Thread.sleep(retryDelay);
+                        continue;
+                    }
+                    return null;
+                }
+
+                final String uuid = profileObject.get("id").getAsString();
+
+                final String skinResponse = makeRequest(SKIN_URL.formatted(uuid));
+                if (skinResponse == null || skinResponse.startsWith("<!DOCTYPE")) {
+                    if (plugin.DEBUG) plugin.getLogger().warning("Received invalid response (HTML or null) for skin data of '" + skinName + "'");
+                    if (attempt < tries) {
+                        Thread.sleep(retryDelay);
+                        continue;
+                    }
+                    return null;
+                }
+                final JsonObject skinObject = JsonParser.parseString(skinResponse).getAsJsonObject().get("properties").getAsJsonArray().get(0).getAsJsonObject();
+                final String value = skinObject.get("value").getAsString();
+                final String signature = skinObject.get("signature").getAsString();
+                final ProfileProperty profileProperty = new ProfileProperty("textures", value, signature);
+
+                cache.put(skinName, List.of(profileProperty));
+
+                return List.of(profileProperty);
+            } catch (JsonSyntaxException | IllegalStateException e) {
+                if (plugin.DEBUG) plugin.getLogger().warning("Failed to get textures for '" + skinName + "'! -> " + e.getMessage());
+            } catch (Exception e) {
+                if (plugin.DEBUG) plugin.getLogger().warning("Unexpected error while trying to get textures for '" + skinName + "'! -> " + e.getMessage());
+            }
+        }
+
+        if (plugin.DEBUG) plugin.getLogger().warning("Failed to get textures for " + skinName + " after " + tries + " unsuccessful attempts!");
+        return null;
+    }
+
+    public String makeRequest(String url)
+    {
+        try {
+            final HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
+            final HttpResponse<String> response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+            return response.body();
+        } catch (IOException | InterruptedException e) {
+            if (plugin.DEBUG) plugin.getLogger().warning("Request failed for " + url + " -> " + e.getMessage());
+            return "";
+        }
+    }
+}

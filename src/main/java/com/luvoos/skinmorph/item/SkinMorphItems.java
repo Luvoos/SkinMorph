@@ -1,0 +1,87 @@
+package com.luvoos.skinmorph.item;
+
+import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
+import com.luvoos.skinmorph.SkinManager;
+import com.luvoos.skinmorph.SkinMorph;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
+
+public class SkinMorphItems {
+
+    private static final SkinMorph plugin = SkinMorph.instance;
+
+    public static ItemStack addFavorite;
+
+    public static void init() {
+        initItem_addFavorite();
+    }
+
+    public static CompletableFuture<ItemStack> playerHead(String name) {
+        return CompletableFuture.supplyAsync(() -> {
+            ItemStack item = new ItemStack(Material.PLAYER_HEAD);
+            SkullMeta meta = (SkullMeta) item.getItemMeta();
+            PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID(), name);
+
+            Collection<ProfileProperty> cachedProperties = SkinManager.cache.get(name);
+
+            CompletableFuture<Collection<ProfileProperty>> propertiesFuture =
+                    cachedProperties != null
+                            ? CompletableFuture.completedFuture(cachedProperties)
+                            : plugin.skinManager.getTexturesAsync(name, 3);
+
+            return propertiesFuture.thenApply(properties -> {
+                if (properties != null) profile.setProperties(properties);
+                meta.setPlayerProfile(profile);
+                meta.setDisplayName("§r§a" + name.toLowerCase());
+                meta.setLore(List.of(
+                        "§r§f§lLEFT CLICK §r§ato apply skin§r",
+                        "§r§f§lRIGHT CLICK §r§cto remove skin§r"
+                ));
+                item.setItemMeta(meta);
+                return item;
+            });
+        }).thenCompose(f -> f); // Flatten nested CompletableFuture
+    }
+
+
+    public static ItemStack changeYourSkin(Player player)
+    {
+        ItemStack item = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta meta = (SkullMeta) item.getItemMeta();
+        PlayerProfile profile = Bukkit.createProfile(player.getUniqueId(), player.getName());
+        meta.setPlayerProfile(profile);
+        meta.setDisplayName("§eChange your skin");
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    public static ItemStack resetYourSkin(Player player)
+    {
+        ItemStack item = new ItemStack(Material.BARRIER);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("§eReset your skin");
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    private static void initItem_addFavorite() {
+        ItemStack item = new ItemStack(Material.BOOK);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("§eAdd favorite");
+        item.setItemMeta(meta);
+        addFavorite = item;
+    }
+}

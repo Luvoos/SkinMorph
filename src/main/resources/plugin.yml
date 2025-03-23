@@ -1,0 +1,12 @@
+main: com.luvoos.skinmorph.SkinMorph
+name: SkinMorph
+description: Lightweight skin changing plugin
+author: Luvoos
+version: 0.2
+api-version: 1.16
+
+commands:
+  skin:
+    description: Change your or another player's skin
+    usage: /skin (<skinName>) (<targetName>)
+    permission: skinmorph.command.skin
