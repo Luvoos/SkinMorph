@@ -17,16 +17,14 @@ public class EventListener implements Listener {
     private final FavoritesManager favoritesManager;
     private final SkinManager skinManager;
 
-    public EventListener(SkinMorph plugin, FavoritesManager favoritesManager, SkinManager skinManager)
-    {
+    public EventListener(SkinMorph plugin, FavoritesManager favoritesManager, SkinManager skinManager) {
         this.plugin = plugin;
         this.favoritesManager = favoritesManager;
         this.skinManager = skinManager;
     }
 
     @EventHandler
-    public void onJoin(final PlayerJoinEvent event)
-    {
+    public void onJoin(final PlayerJoinEvent event) {
         final Player player = event.getPlayer();
 
         skinManager.getTexturesAsync(player.getName().toLowerCase(), 3); // Add the player's textures to cache
@@ -36,8 +34,7 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
-    public void onQuit(final PlayerQuitEvent event)
-    {
+    public void onQuit(final PlayerQuitEvent event) {
         final Player player = event.getPlayer();
     }
 

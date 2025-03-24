@@ -43,7 +43,6 @@ public final class SkinMorph extends JavaPlugin {
         favoritesManager = new FavoritesManager(this, skinManager);
         favoritesManager.preloadFavorites();
         menu = new SkinMorphMenu(this, favoritesManager, skinManager);
-        SkinMorphItems.init();
         SEND_RESPONSES = getConfig().getBoolean("sendResponses");
         DEBUG = getConfig().getBoolean("debug");
         getCommand("skin").setExecutor(new SkinCommand());

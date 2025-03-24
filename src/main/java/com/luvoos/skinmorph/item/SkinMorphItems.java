@@ -20,12 +20,6 @@ public class SkinMorphItems {
 
     private static final SkinMorph plugin = SkinMorph.instance;
 
-    public static ItemStack addFavorite;
-
-    public static void init() {
-        initItem_addFavorite();
-    }
-
     public static CompletableFuture<ItemStack> playerHead(String name) {
         return CompletableFuture.supplyAsync(() -> {
             ItemStack item = new ItemStack(Material.PLAYER_HEAD);
@@ -54,32 +48,32 @@ public class SkinMorphItems {
     }
 
 
-    public static ItemStack changeYourSkin(Player player)
+    public static ItemStack changeSkin(Player player)
     {
         ItemStack item = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         PlayerProfile profile = Bukkit.createProfile(player.getUniqueId(), player.getName());
         meta.setPlayerProfile(profile);
-        meta.setDisplayName("§eChange your skin");
+        meta.setDisplayName("§eChange skin");
         item.setItemMeta(meta);
         return item;
     }
 
-    public static ItemStack resetYourSkin(Player player)
+    public static ItemStack resetSkin(Player player)
     {
         ItemStack item = new ItemStack(Material.BARRIER);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("§eReset your skin");
+        meta.setDisplayName("§eReset skin");
         item.setItemMeta(meta);
         return item;
     }
 
-    private static void initItem_addFavorite() {
+    public static ItemStack addFavorite() {
         ItemStack item = new ItemStack(Material.BOOK);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName("§eAdd favorite");
         item.setItemMeta(meta);
-        addFavorite = item;
+        return item;
     }
 
     public static ItemStack previousPage()

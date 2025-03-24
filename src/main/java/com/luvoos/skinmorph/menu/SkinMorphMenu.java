@@ -7,10 +7,12 @@ import com.luvoos.skinmorph.SkinMorphInputType;
 import com.luvoos.skinmorph.item.SkinMorphItems;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -50,9 +52,9 @@ public class SkinMorphMenu implements Listener {
         int startIndex = getCurrentPage(player) * FAVORITES_PER_PAGE;
         int endIndex = Math.min(startIndex + FAVORITES_PER_PAGE, favorites.size());
 
-        menu.setItem(3, SkinMorphItems.resetYourSkin(player));
-        menu.setItem(4, SkinMorphItems.changeYourSkin(player));
-        menu.setItem(5, SkinMorphItems.addFavorite);
+        menu.setItem(3, SkinMorphItems.resetSkin(player));
+        menu.setItem(4, SkinMorphItems.changeSkin(player));
+        menu.setItem(5, SkinMorphItems.addFavorite());
 
         List<ItemStack> itemsOnPage = new ArrayList<>();
         for (int i = startIndex; i < endIndex; i++) {
@@ -91,13 +93,14 @@ public class SkinMorphMenu implements Listener {
         if (!(event.getWhoClicked() instanceof final Player player)) return;
         if (event.getView().getTitle().startsWith("Skin Menu                 Page ")) {
             event.setCancelled(true);
-
             ItemStack clickedItem = event.getCurrentItem();
             if (clickedItem == null || !clickedItem.hasItemMeta() ) return;
+            event.setCursor(null);
+            player.updateInventory();
 
             String itemName = clickedItem.getItemMeta().getDisplayName();
 
-            if (itemName.contains("Change your skin")) {
+            if (itemName.contains("Change skin")) {
                 awaitInput(player, SkinMorphInputType.CHANGE_SKIN_SELF);
             }
 
@@ -105,7 +108,7 @@ public class SkinMorphMenu implements Listener {
                 awaitInput(player, SkinMorphInputType.ADD_FAVORITE);
             }
 
-            if (itemName.contains("Reset your skin")) {
+            if (itemName.contains("Reset skin")) {
                 skinManager.resetSkin(player, true);
             }
 
@@ -175,6 +178,12 @@ public class SkinMorphMenu implements Listener {
         }.runTaskTimerAsynchronously(plugin, 0, 20);
     }
 
+    @EventHandler
+    public void onInventoryDrag(final InventoryDragEvent event)
+    {
+        if (event.getView().getTitle().startsWith("Skin Menu                 Page ")) event.setCancelled(true);
+    }
+
     private int getCurrentPage(@NotNull Player player)
     {
         return currentPages.get(player.getUniqueId());
@@ -195,7 +204,8 @@ public class SkinMorphMenu implements Listener {
         currentPages.put(player.getUniqueId(), getCurrentPage(player) - 1);
     }
 
-    private int totalPages(@NotNull final Player player) {
+    private int totalPages(@NotNull final Player player)
+    {
         return (int) Math.ceil((double) favoritesManager.getFavorites(player).size() / FAVORITES_PER_PAGE) - 1;
     }
 }
