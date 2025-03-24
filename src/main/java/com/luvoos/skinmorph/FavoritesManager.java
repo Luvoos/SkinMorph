@@ -62,7 +62,7 @@ public class FavoritesManager {
         return config.getStringList("players." + uuid);
     }
 
-    public void addFavorite(@NotNull Player player, @NotNull String skinName)
+    public void addFavorite(@NotNull Player player, @NotNull String skinName, boolean sendResponse)
     {
         final String uuid = player.getUniqueId().toString();
         List<String> favorites = getFavorites(player);
@@ -72,9 +72,10 @@ public class FavoritesManager {
             saveFile();
         }
         reloadFavorites();
+        if (sendResponse && player.isOnline()) player.sendMessage("§aAdded §e" + skinName.toLowerCase() + " §ato your favorites!");
     }
 
-    public void removeFavorite(@NotNull Player player, @NotNull String skinName)
+    public void removeFavorite(@NotNull Player player, @NotNull String skinName, boolean sendResponse)
     {
         final String uuid = player.getUniqueId().toString();
         List<String> favorites = getFavorites(player);
@@ -84,14 +85,16 @@ public class FavoritesManager {
             saveFile();
         }
         reloadFavorites();
+        if (sendResponse && player.isOnline()) player.sendMessage("§cRemoved §e" + skinName.toLowerCase() + " §cfrom your favorites!");
     }
 
     public void preloadFavorites()
     {
+        plugin.getLogger().info("Loading favorites...");
         for (String skinName : getAllFavorites()) {
             skinManager.getTexturesAsync(skinName, 3);
-            plugin.getLogger().info("Loaded favorite " + skinName);
         }
+        plugin.getLogger().info("Loaded all " + getAllFavorites().size() + " favorites!");
     }
 
     public void reloadFavorites()

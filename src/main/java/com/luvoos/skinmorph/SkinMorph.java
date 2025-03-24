@@ -1,7 +1,7 @@
 package com.luvoos.skinmorph;
 
 import com.luvoos.skinmorph.command.SkinCommand;
-import com.luvoos.skinmorph.command.TabCompleterImpl;
+import com.luvoos.skinmorph.command.SkinMorphTabCompleter;
 import com.luvoos.skinmorph.event.EventListener;
 import com.luvoos.skinmorph.item.SkinMorphItems;
 import com.luvoos.skinmorph.menu.SkinMorphMenu;
@@ -47,7 +47,7 @@ public final class SkinMorph extends JavaPlugin {
         SEND_RESPONSES = getConfig().getBoolean("sendResponses");
         DEBUG = getConfig().getBoolean("debug");
         getCommand("skin").setExecutor(new SkinCommand());
-        getCommand("skin").setTabCompleter(new TabCompleterImpl());
+        getCommand("skin").setTabCompleter(new SkinMorphTabCompleter());
         getServer().getPluginManager().registerEvents(menu, this);
         getServer().getPluginManager().registerEvents(new EventListener(this, favoritesManager, skinManager), this);
     }

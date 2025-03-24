@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TabCompleterImpl implements TabCompleter {
+public class SkinMorphTabCompleter implements TabCompleter {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args)
@@ -20,17 +20,17 @@ public class TabCompleterImpl implements TabCompleter {
 
         if (args.length == 1) {
             completions.add("set"); // /skin set
-            completions.add("reset");
+            completions.add("reset"); // /skin reset
             completions.add("help"); // /skin help
-        } else if (args.length == 2 && args[0].equalsIgnoreCase("set")) {
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("set")) { // /skin set SELF
             if (sender instanceof final Player player) {
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                     completions.add(onlinePlayer.getName());
                 }
             }
-        } else if (args.length == 2 && args[0].equalsIgnoreCase("help")) {
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("help")) { // /skin help
 
-        } else if (args.length == 3 && args[0].equalsIgnoreCase("set")) {
+        } else if (args.length == 3 && args[0].equalsIgnoreCase("set")) { // /skin set OTHER
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 completions.add(onlinePlayer.getName());
             }
