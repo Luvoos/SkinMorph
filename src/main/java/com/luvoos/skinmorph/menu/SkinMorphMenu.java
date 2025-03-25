@@ -19,6 +19,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 public class SkinMorphMenu implements Listener {
@@ -38,9 +39,8 @@ public class SkinMorphMenu implements Listener {
         this.skinManager = skinManager;
     }
 
-    public void open(@NotNull final Player player, int page) throws ExecutionException, InterruptedException
-    {
-        currentPages.put(player.getUniqueId(), page);
+    public void open(@NotNull final Player player, int page) throws ExecutionException, InterruptedException {
+        setCurrentPage(player, page);
 
         List<String> favorites = favoritesManager.getFavorites(player);
         if (favorites == null) favorites = new ArrayList<>();
@@ -56,32 +56,21 @@ public class SkinMorphMenu implements Listener {
         menu.setItem(4, SkinMorphItems.changeSkin(player));
         menu.setItem(5, SkinMorphItems.addFavorite());
 
-        List<ItemStack> itemsOnPage = new ArrayList<>();
-        for (int i = startIndex; i < endIndex; i++) {
-            final int slot = (i - startIndex) + 9;
-            SkinMorphItems.playerHead(favorites.get(i)).thenAccept(item -> {
-                // Add item to the list
-                itemsOnPage.add(item);
-
-                // Ensure inventory updates happen on the main thread
-                Bukkit.getScheduler().runTask(plugin, () -> {
-                    menu.setItem(slot, item);
-                });
-            });
-        }
-
         boolean hasNextPage = endIndex < favorites.size();
         boolean hasPreviousPage = getCurrentPage(player) > 1;
-
-        for (int i = 0; i < itemsOnPage.size(); i++) {
-            menu.setItem(i + 9, itemsOnPage.get(i));
-        }
 
         if (hasPreviousPage) {
             menu.setItem(36, SkinMorphItems.previousPage());
         }
         if (hasNextPage) {
             menu.setItem(44, SkinMorphItems.nextPage());
+        }
+
+        for (int i = startIndex; i < endIndex; i++) {
+            final int slot = (i - startIndex) + 9;
+            SkinMorphItems.playerHead(favorites.get(i)).thenAccept(item -> {
+                Bukkit.getScheduler().runTask(plugin, () -> menu.setItem(slot, item)); // update inv back main thread
+            });
         }
 
         player.openInventory(menu);
@@ -154,8 +143,9 @@ public class SkinMorphMenu implements Listener {
      */
     private void awaitInput(@NotNull final Player player, @NotNull SkinMorphInputType inputType)
     {
+        awaitingInput.remove(player.getUniqueId());
         player.closeInventory();
-        player.sendMessage("§aPlease enter a skin name in chat within the next 20 seconds!");
+        if (inputType == SkinMorphInputType.ADD_FAVORITE || inputType == SkinMorphInputType.CHANGE_SKIN_SELF || inputType == SkinMorphInputType.REMOVE_FAVORITE) player.sendMessage("§aPlease enter a skin name in chat within the next 20 seconds!");
         inputWaitingTimes.put(player.getUniqueId(), 20);
         awaitingInput.put(player.getUniqueId(), inputType);
         new BukkitRunnable() {
@@ -168,7 +158,7 @@ public class SkinMorphMenu implements Listener {
                         this.cancel();
                         awaitingInput.remove(player.getUniqueId());
                         inputWaitingTimes.remove(player.getUniqueId());
-                        player.sendMessage("§cChat input expired!");
+                        if (player.isOnline()) player.sendMessage("§cChat input expired!");
                     }
                 } else {
                     this.cancel();

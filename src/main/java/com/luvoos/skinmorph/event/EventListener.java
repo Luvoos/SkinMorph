@@ -36,6 +36,7 @@ public class EventListener implements Listener {
     @EventHandler
     public void onQuit(final PlayerQuitEvent event) {
         final Player player = event.getPlayer();
+        if (plugin.menu.awaitingInput.containsKey(player.getUniqueId())) plugin.menu.awaitingInput.remove(player.getUniqueId());
     }
 
     @EventHandler
@@ -45,15 +46,13 @@ public class EventListener implements Listener {
 
         if (plugin.menu.awaitingInput.containsKey(player.getUniqueId()) && plugin.menu.awaitingInput.get(player.getUniqueId()) == SkinMorphInputType.CHANGE_SKIN_SELF) {
             event.setCancelled(true);
-            String noSpacesText = text.replace(" ", "");
-            skinManager.setSkinFromName(player, noSpacesText, true);
+            skinManager.setSkinFromName(player, text, true);
             plugin.menu.awaitingInput.remove(player.getUniqueId());
         }
 
         if (plugin.menu.awaitingInput.containsKey(player.getUniqueId()) && plugin.menu.awaitingInput.get(player.getUniqueId()) == SkinMorphInputType.ADD_FAVORITE) {
             event.setCancelled(true);
-            String noSpacesText = text.replace(" ", "");
-            favoritesManager.addFavorite(player, noSpacesText, true);
+            favoritesManager.addFavorite(player, text, true);
             plugin.menu.awaitingInput.remove(player.getUniqueId());
         }
     }

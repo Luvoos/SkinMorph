@@ -66,26 +66,34 @@ public class FavoritesManager {
     {
         final String uuid = player.getUniqueId().toString();
         List<String> favorites = getFavorites(player);
-        if (!favorites.contains(skinName.toLowerCase())) {
-            favorites.add(skinName.toLowerCase());
+        String noSpacesSkinName = skinName.replace(" ", "");
+        if (!favorites.contains(noSpacesSkinName.toLowerCase())) {
+            favorites.add(noSpacesSkinName.toLowerCase());
             config.set("players." + uuid, favorites);
             saveFile();
+        } else {
+            if (sendResponse && player.isOnline()) player.sendMessage("§e" + noSpacesSkinName.toLowerCase() + " §ais already in your favorites!");
+            return;
         }
         reloadFavorites();
-        if (sendResponse && player.isOnline()) player.sendMessage("§aAdded §e" + skinName.toLowerCase() + " §ato your favorites!");
+        if (sendResponse && player.isOnline()) player.sendMessage("§aAdded §e" + noSpacesSkinName.toLowerCase() + " §ato your favorites!");
     }
 
     public void removeFavorite(@NotNull Player player, @NotNull String skinName, boolean sendResponse)
     {
         final String uuid = player.getUniqueId().toString();
         List<String> favorites = getFavorites(player);
-        if (favorites.contains(skinName.toLowerCase())) {
-            favorites.remove(skinName.toLowerCase());
+        String noSpacesSkinName = skinName.replace(" ", "");
+        if (favorites.contains(noSpacesSkinName.toLowerCase())) {
+            favorites.remove(noSpacesSkinName.toLowerCase());
             config.set("players." + uuid, favorites);
             saveFile();
+        } else {
+            if (sendResponse && player.isOnline()) player.sendMessage("§e" + noSpacesSkinName.toLowerCase() + " §cis not in your favorites!");
+            return;
         }
         reloadFavorites();
-        if (sendResponse && player.isOnline()) player.sendMessage("§cRemoved §e" + skinName.toLowerCase() + " §cfrom your favorites!");
+        if (sendResponse && player.isOnline()) player.sendMessage("§cRemoved §e" + noSpacesSkinName.toLowerCase() + " §cfrom your favorites!");
     }
 
     public void preloadFavorites()

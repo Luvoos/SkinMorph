@@ -34,14 +34,15 @@ public class SkinManager {
     public void setSkinFromName(@NotNull Player target, @NotNull String skinName, boolean sendResponse)
     {
         if (skinName.isEmpty() || !target.isOnline()) return;
+        String noSpacesSkinName = skinName.replace(" ", "");
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
                 final PlayerProfile profile = target.getPlayerProfile();
-                Collection<ProfileProperty> textures = getTextures(skinName, 2); // might be slow
+                Collection<ProfileProperty> textures = getTextures(noSpacesSkinName, 2); // might be slow
 
                 if (textures == null) {
-                    if (sendResponse) target.sendMessage("§cInvalid profile! ('" + skinName.toLowerCase() + "')");
+                    if (sendResponse) target.sendMessage("§cInvalid profile! ('" + noSpacesSkinName.toLowerCase() + "')");
                     return;
                 }
 
@@ -50,7 +51,7 @@ public class SkinManager {
                 // apply skin on main thread
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     target.setPlayerProfile(profile);
-                    if (sendResponse) target.sendMessage("§aYour skin has been changed to §e" + skinName.toLowerCase());
+                    if (sendResponse) target.sendMessage("§aYour skin has been changed to §e" + noSpacesSkinName.toLowerCase());
                 });
 
             } catch (Exception e) {
@@ -63,14 +64,15 @@ public class SkinManager {
     public void setSkinFromName(@NotNull Player target, @NotNull String skinName, boolean sendResponse, int tries)
     {
         if (skinName.isEmpty() || !target.isOnline()) return;
+        String noSpacesSkinName = skinName.replace(" ", "");
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
                 final PlayerProfile profile = target.getPlayerProfile();
-                Collection<ProfileProperty> textures = getTextures(skinName, tries); // might be slow
+                Collection<ProfileProperty> textures = getTextures(noSpacesSkinName, tries); // might be slow
 
                 if (textures == null) {
-                    if (sendResponse) target.sendMessage("§cInvalid profile! ('" + skinName.toLowerCase() + "')");
+                    if (sendResponse) target.sendMessage("§cInvalid profile! ('" + noSpacesSkinName.toLowerCase() + "')");
                     return;
                 }
 
@@ -79,7 +81,7 @@ public class SkinManager {
                 // apply skin on main thread
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     target.setPlayerProfile(profile);
-                    if (sendResponse) target.sendMessage("§aYour skin has been changed to §e" + skinName.toLowerCase());
+                    if (sendResponse) target.sendMessage("§aYour skin has been changed to §e" + noSpacesSkinName.toLowerCase());
                 });
 
             } catch (Exception e) {
@@ -91,14 +93,15 @@ public class SkinManager {
     public void setSkinFromName(@NotNull CommandSender caller, @NotNull Player target, @NotNull String skinName, boolean sendResponse)
     {
         if (skinName.isEmpty() || !target.isOnline()) return;
+        String noSpacesSkinName = skinName.replace(" ", "");
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
                 final PlayerProfile profile = target.getPlayerProfile();
-                Collection<ProfileProperty> textures = getTextures(skinName, 2); // might be slow
+                Collection<ProfileProperty> textures = getTextures(noSpacesSkinName, 2); // might be slow
 
                 if (textures == null) {
-                    if (sendResponse) target.sendMessage("§cInvalid profile! ('" + skinName.toLowerCase() + "')");
+                    if (sendResponse) target.sendMessage("§cInvalid profile! ('" + noSpacesSkinName.toLowerCase() + "')");
                     return;
                 }
 
@@ -107,8 +110,8 @@ public class SkinManager {
                 // apply skin on main thread
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     target.setPlayerProfile(profile);
-                    if (sendResponse) target.sendMessage("§aYour skin has been changed to §e" + skinName.toLowerCase());
-                    if (sendResponse) caller.sendMessage("§a" + target.getName() + "'s skin has been changed to §e" + skinName.toLowerCase());
+                    if (sendResponse) target.sendMessage("§aYour skin has been changed to §e" + noSpacesSkinName.toLowerCase());
+                    if (sendResponse) caller.sendMessage("§a" + target.getName() + "'s skin has been changed to §e" + noSpacesSkinName.toLowerCase());
                 });
 
             } catch (Exception e) {
@@ -120,14 +123,15 @@ public class SkinManager {
     public void setSkinFromName(@NotNull CommandSender caller, @NotNull Player target, @NotNull String skinName, boolean sendResponse, int tries)
     {
         if (skinName.isEmpty() || !target.isOnline()) return;
+        String noSpacesSkinName = skinName.replace(" ", "");
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
                 final PlayerProfile profile = target.getPlayerProfile();
-                Collection<ProfileProperty> textures = getTextures(skinName, tries); // might be slow
+                Collection<ProfileProperty> textures = getTextures(noSpacesSkinName, tries); // might be slow
 
                 if (textures == null) {
-                    if (sendResponse) target.sendMessage("§cInvalid profile! ('" + skinName.toLowerCase() + "')");
+                    if (sendResponse) target.sendMessage("§cInvalid profile! ('" + noSpacesSkinName.toLowerCase() + "')");
                     return;
                 }
 
@@ -136,8 +140,8 @@ public class SkinManager {
                 // apply skin on main thread
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     target.setPlayerProfile(profile);
-                    if (sendResponse) target.sendMessage("§aYour skin has been changed to §e" + skinName.toLowerCase());
-                    if (sendResponse) caller.sendMessage("§a" + target.getName() + "'s skin has been changed to §e" + skinName.toLowerCase());
+                    if (sendResponse) target.sendMessage("§aYour skin has been changed to §e" + noSpacesSkinName.toLowerCase());
+                    if (sendResponse) caller.sendMessage("§a" + target.getName() + "'s skin has been changed to §e" + noSpacesSkinName.toLowerCase());
                 });
 
             } catch (Exception e) {

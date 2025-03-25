@@ -69,7 +69,7 @@ public class SkinMorphItems {
     }
 
     public static ItemStack addFavorite() {
-        ItemStack item = new ItemStack(Material.BOOK);
+        ItemStack item = new ItemStack(Material.KNOWLEDGE_BOOK);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName("§eAdd favorite");
         item.setItemMeta(meta);
@@ -93,5 +93,4 @@ public class SkinMorphItems {
         item.setItemMeta(meta);
         return item;
     }
-
 }
