@@ -3,7 +3,6 @@ package com.luvoos.skinmorph;
 import com.luvoos.skinmorph.command.SkinCommand;
 import com.luvoos.skinmorph.command.SkinMorphTabCompleter;
 import com.luvoos.skinmorph.event.EventListener;
-import com.luvoos.skinmorph.item.SkinMorphItems;
 import com.luvoos.skinmorph.menu.SkinMorphMenu;
 import org.bukkit.plugin.java.JavaPlugin;
 

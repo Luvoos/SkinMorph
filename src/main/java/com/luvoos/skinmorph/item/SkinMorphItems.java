@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -55,6 +56,9 @@ public class SkinMorphItems {
         PlayerProfile profile = Bukkit.createProfile(player.getUniqueId(), player.getName());
         meta.setPlayerProfile(profile);
         meta.setDisplayName("§eChange skin");
+        List<String> lore = new ArrayList<>();
+        lore.add("§r§7Your current skin: §e" + plugin.skinManager.getCurrentSkin(player));
+        meta.setLore(lore);
         item.setItemMeta(meta);
         return item;
     }

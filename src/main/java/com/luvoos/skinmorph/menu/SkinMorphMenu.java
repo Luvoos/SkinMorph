@@ -7,7 +7,6 @@ import com.luvoos.skinmorph.SkinMorphInputType;
 import com.luvoos.skinmorph.item.SkinMorphItems;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -19,7 +18,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 
 public class SkinMorphMenu implements Listener {
@@ -29,8 +28,8 @@ public class SkinMorphMenu implements Listener {
     private final SkinManager skinManager;
     private final int FAVORITES_PER_PAGE = 27;
     private final Map<UUID, Integer> currentPages = new HashMap<>();
-    public final Map<UUID, SkinMorphInputType> awaitingInput = new HashMap<>();
-    private final Map<UUID, Integer> inputWaitingTimes = new HashMap<>();
+    public final Map<UUID, SkinMorphInputType> awaitingInput = new ConcurrentHashMap<>();
+    private final Map<UUID, Integer> inputWaitingTimes = new ConcurrentHashMap<>();
 
     public SkinMorphMenu(SkinMorph plugin, FavoritesManager favoritesManager, SkinManager skinManager)
     {
@@ -69,7 +68,7 @@ public class SkinMorphMenu implements Listener {
         for (int i = startIndex; i < endIndex; i++) {
             final int slot = (i - startIndex) + 9;
             SkinMorphItems.playerHead(favorites.get(i)).thenAccept(item -> {
-                Bukkit.getScheduler().runTask(plugin, () -> menu.setItem(slot, item)); // update inv back main thread
+                Bukkit.getScheduler().runTask(plugin, () -> menu.setItem(slot, item));
             });
         }
 
@@ -105,6 +104,7 @@ public class SkinMorphMenu implements Listener {
                 String skinName = itemName.replace("§a", "");
                 if (event.isLeftClick()) {
                     skinManager.setSkinFromName(player, skinName, true);
+                    player.closeInventory();
                 } else if (event.isRightClick()) {
                     favoritesManager.removeFavorite(player, skinName, true);
                     open(player, (getCurrentPage(player) <= totalPages(player) ? getCurrentPage(player) : getCurrentPage(player) - 1));

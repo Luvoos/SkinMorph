@@ -17,30 +17,35 @@ public class EventListener implements Listener {
     private final FavoritesManager favoritesManager;
     private final SkinManager skinManager;
 
-    public EventListener(SkinMorph plugin, FavoritesManager favoritesManager, SkinManager skinManager) {
+    public EventListener(SkinMorph plugin, FavoritesManager favoritesManager, SkinManager skinManager)
+    {
         this.plugin = plugin;
         this.favoritesManager = favoritesManager;
         this.skinManager = skinManager;
     }
 
     @EventHandler
-    public void onJoin(final PlayerJoinEvent event) {
+    public void onJoin(final PlayerJoinEvent event)
+    {
         final Player player = event.getPlayer();
 
         skinManager.getTexturesAsync(player.getName().toLowerCase(), 3); // Add the player's textures to cache
         favoritesManager.addFavorite(player, "Notch", false);
 
-        plugin.getLogger().info("join");
+        skinManager.setCurrentSkin(player, player.getName());
     }
 
     @EventHandler
-    public void onQuit(final PlayerQuitEvent event) {
+    public void onQuit(final PlayerQuitEvent event)
+    {
         final Player player = event.getPlayer();
         if (plugin.menu.awaitingInput.containsKey(player.getUniqueId())) plugin.menu.awaitingInput.remove(player.getUniqueId());
+        SkinManager.currentSkins.remove(player.getUniqueId());
     }
 
     @EventHandler
-    public void onChat(final AsyncPlayerChatEvent event) {
+    public void onChat(final AsyncPlayerChatEvent event)
+    {
         final Player player = event.getPlayer();
         final String text = event.getMessage();
 
