@@ -22,12 +22,19 @@ public class SkinMorphTabCompleter implements TabCompleter {
             completions.add("set"); // /skin set
             completions.add("reset"); // /skin reset
             completions.add("help"); // /skin help
+            completions.add("favorites"); // /skin favorites add/remove
+            completions.add("random"); // /skin random
         } else if (args.length == 2 && args[0].equalsIgnoreCase("set")) { // /skin set SELF
             if (sender instanceof final Player player) {
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                     completions.add(onlinePlayer.getName());
                 }
             }
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("random")) {
+
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("favorites")) {
+            completions.add("add");
+            completions.add("remove");
         } else if (args.length == 2 && args[0].equalsIgnoreCase("help")) { // /skin help
 
         } else if (args.length == 3 && args[0].equalsIgnoreCase("set")) { // /skin set OTHER

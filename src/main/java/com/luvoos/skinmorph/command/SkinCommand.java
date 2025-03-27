@@ -43,7 +43,15 @@ public class SkinCommand implements CommandExecutor {
         }
 
         if (args.length == 1 && args[0].equalsIgnoreCase("set")) {
-            sender.sendMessage("You need to enter a skin name");
+            sender.sendMessage("§cYou need to enter a skin name!");
+        }
+
+        if (args.length == 1 && args[0].equalsIgnoreCase("random")) {
+            if (!(sender instanceof final Player player)) {
+                sender.sendMessage(ChatColor.RED + "You can only do this as a player!");
+                return true;
+            }
+            plugin.skinManager.applyRandomSkin(player, true);
         }
 
         if (args.length == 1 && args[0].equalsIgnoreCase("help")) {
@@ -56,7 +64,7 @@ public class SkinCommand implements CommandExecutor {
             }
         }
 
-        if (args.length == 2 && sender.hasPermission("skinmorph.changeskin.self") && args[0].equalsIgnoreCase("set")) {
+        if (args.length == 2 && args[0].equalsIgnoreCase("set") && sender.hasPermission("skinmorph.changeskin.self")) {
             if (!(sender instanceof final Player player)) {
                 sender.sendMessage(ChatColor.RED + "You can only do this as a player!");
                 return true;
@@ -65,7 +73,7 @@ public class SkinCommand implements CommandExecutor {
             plugin.skinManager.setSkinFromName(player, skinNameInput, true);
         }
 
-        if (args.length == 3 && sender.hasPermission("skinmorph.changeskin.others")) {
+        if (args.length == 3 && args[0].equalsIgnoreCase("set") && sender.hasPermission("skinmorph.changeskin.others")) {
             if (Bukkit.getPlayer(args[2]) == null) {
                 sender.sendMessage("§cCouldn't find online player '" + args[2] + "'!");
                 return true;
@@ -75,6 +83,27 @@ public class SkinCommand implements CommandExecutor {
             String skinName = args[1];
             plugin.skinManager.setSkinFromName(sender, target, skinName, true);
         }
+
+        if ((args.length == 2 || args.length == 3) && args[0].equalsIgnoreCase("favorites")) {
+
+        }
+
+        if (args.length == 3 && args[0].equalsIgnoreCase("favorites") && args[1].equalsIgnoreCase("add")) {
+            if (!(sender instanceof final Player player)) {
+                sender.sendMessage(ChatColor.RED + "You can only do this as a player!");
+                return true;
+            }
+            plugin.favoritesManager.addFavorite(player, args[2], true);
+        }
+
+        if (args.length == 3 && args[0].equalsIgnoreCase("favorites") && args[1].equalsIgnoreCase("remove")) {
+            if (!(sender instanceof final Player player)) {
+                sender.sendMessage(ChatColor.RED + "You can only do this as a player!");
+                return true;
+            }
+            plugin.favoritesManager.removeFavorite(player, args[2], true);
+        }
+
         return true;
-    }
+        }
 }

@@ -38,7 +38,8 @@ public class SkinMorphMenu implements Listener {
         this.skinManager = skinManager;
     }
 
-    public void open(@NotNull final Player player, int page) throws ExecutionException, InterruptedException {
+    public void open(@NotNull final Player player, int page) throws ExecutionException, InterruptedException
+    {
         setCurrentPage(player, page);
 
         List<String> favorites = favoritesManager.getFavorites(player);
@@ -48,9 +49,10 @@ public class SkinMorphMenu implements Listener {
 
         Inventory menu = Bukkit.createInventory(null, 9 * 5, "Skin Menu                 Page " + page + "/" + (totalPages));
 
-        int startIndex = getCurrentPage(player) * FAVORITES_PER_PAGE;
+        int startIndex = (getCurrentPage(player) - 1) * FAVORITES_PER_PAGE;
         int endIndex = Math.min(startIndex + FAVORITES_PER_PAGE, favorites.size());
 
+        menu.setItem(2, SkinMorphItems.randomSkin(player));
         menu.setItem(3, SkinMorphItems.resetSkin(player));
         menu.setItem(4, SkinMorphItems.changeSkin(player));
         menu.setItem(5, SkinMorphItems.addFavorite());
@@ -67,7 +69,7 @@ public class SkinMorphMenu implements Listener {
 
         for (int i = startIndex; i < endIndex; i++) {
             final int slot = (i - startIndex) + 9;
-            SkinMorphItems.playerHead(favorites.get(i)).thenAccept(item -> {
+            SkinMorphItems.favoriteSkinHead(favorites.get(i)).thenAccept(item -> {
                 Bukkit.getScheduler().runTask(plugin, () -> menu.setItem(slot, item));
             });
         }
@@ -98,6 +100,10 @@ public class SkinMorphMenu implements Listener {
 
             if (itemName.contains("Reset skin")) {
                 skinManager.resetSkin(player, true);
+            }
+
+            if (itemName.contains("Random skin")) {
+                skinManager.applyRandomSkin(player, true);
             }
 
             if (itemName.startsWith("§a")) {
@@ -196,6 +202,6 @@ public class SkinMorphMenu implements Listener {
 
     private int totalPages(@NotNull final Player player)
     {
-        return (int) Math.ceil((double) favoritesManager.getFavorites(player).size() / FAVORITES_PER_PAGE) - 1;
+        return (int) Math.ceil((double) favoritesManager.getFavorites(player).size() / FAVORITES_PER_PAGE);
     }
 }

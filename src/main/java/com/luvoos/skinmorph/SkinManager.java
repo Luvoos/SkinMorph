@@ -55,7 +55,7 @@ public class SkinManager {
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     target.setPlayerProfile(profile);
                     setCurrentSkin(target, noSpacesSkinName);
-                    if (sendResponse) target.sendMessage("§aYour skin has been changed to §e" + noSpacesSkinName.toLowerCase());
+                    if (sendResponse) target.sendMessage("§aYour skin has been changed to §e" + noSpacesSkinName.toLowerCase() + "§a!");
                 });
 
             } catch (Exception e) {
@@ -90,7 +90,7 @@ public class SkinManager {
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     target.setPlayerProfile(profile);
                     setCurrentSkin(target, noSpacesSkinName);
-                    if (sendResponse) target.sendMessage("§aYour skin has been changed to §e" + noSpacesSkinName.toLowerCase());
+                    if (sendResponse) target.sendMessage("§aYour skin has been changed to §e" + noSpacesSkinName.toLowerCase() + "§a!");
                 });
 
             } catch (Exception e) {
@@ -125,8 +125,8 @@ public class SkinManager {
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     target.setPlayerProfile(profile);
                     setCurrentSkin(target, noSpacesSkinName);
-                    if (sendResponse) target.sendMessage("§aYour skin has been changed to §e" + noSpacesSkinName.toLowerCase());
-                    if (sendResponse) caller.sendMessage("§a" + target.getName() + "'s skin has been changed to §e" + noSpacesSkinName.toLowerCase());
+                    if (sendResponse) target.sendMessage("§aYour skin has been changed to §e" + noSpacesSkinName.toLowerCase() + "§a!");
+                    if (sendResponse) caller.sendMessage("§a" + target.getName() + "'s skin has been changed to §e" + noSpacesSkinName.toLowerCase() + "§a!");
                 });
 
             } catch (Exception e) {
@@ -161,8 +161,8 @@ public class SkinManager {
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     target.setPlayerProfile(profile);
                     setCurrentSkin(target, noSpacesSkinName);
-                    if (sendResponse) target.sendMessage("§aYour skin has been changed to §e" + noSpacesSkinName.toLowerCase());
-                    if (sendResponse) caller.sendMessage("§a" + target.getName() + "'s skin has been changed to §e" + noSpacesSkinName.toLowerCase());
+                    if (sendResponse) target.sendMessage("§aYour skin has been changed to §e" + noSpacesSkinName.toLowerCase() + "§a!");
+                    if (sendResponse) caller.sendMessage("§a" + target.getName() + "'s skin has been changed to §e" + noSpacesSkinName.toLowerCase() + "§a!");
                 });
 
             } catch (Exception e) {
@@ -175,7 +175,13 @@ public class SkinManager {
     {
         setSkinFromName(player, player.getName().toLowerCase(), false);
         player.closeInventory();
-        if (sendResponse) player.sendMessage("§aYour skin has been reset to your §edefault skin");
+        if (sendResponse) player.sendMessage("§aYour skin has been reset to your §edefault skin§a!");
+    }
+
+    public void applyRandomSkin(@NotNull Player player, boolean sendResponse) {
+        String randomSkin = plugin.favoritesManager.getRandomFavorite(player);
+        setSkinFromName(player, randomSkin, false);
+        if (sendResponse) player.sendMessage("§aRandomly picked... §e" + randomSkin.toLowerCase() + "§a!");
     }
 
     public CompletableFuture<Collection<ProfileProperty>> getTexturesAsync(String skinName, int tries)
@@ -252,7 +258,7 @@ public class SkinManager {
             return response.body();
         } catch (IOException | InterruptedException e) {
             if (plugin.DEBUG) plugin.getLogger().warning("Request failed for " + url + " -> " + e.getMessage());
-            return "";
+            return null;
         }
     }
 

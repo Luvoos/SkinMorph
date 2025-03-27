@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class FavoritesManager {
 
@@ -93,6 +94,18 @@ public class FavoritesManager {
         }
         reloadFavorites();
         if (sendResponse && player.isOnline()) player.sendMessage("§cRemoved §e" + noSpacesSkinName.toLowerCase() + " §cfrom your favorites!");
+    }
+
+    public String getRandomFavorite(@NotNull Player player)
+    {
+        final String uuid = player.getUniqueId().toString();
+        List<String> favorites = getFavorites(player);
+        if (favorites == null || favorites.isEmpty()) return null;
+        List<String> loadedFavorites = new ArrayList<>();
+        for (String s : favorites) {
+            if (SkinManager.cache.containsKey(s.toLowerCase())) loadedFavorites.add(s);
+        }
+        return favorites.get(ThreadLocalRandom.current().nextInt(loadedFavorites.size()));
     }
 
     public void preloadFavorites()

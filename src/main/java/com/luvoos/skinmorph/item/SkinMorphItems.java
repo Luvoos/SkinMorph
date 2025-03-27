@@ -21,7 +21,8 @@ public class SkinMorphItems {
 
     private static final SkinMorph plugin = SkinMorph.instance;
 
-    public static CompletableFuture<ItemStack> playerHead(String name) {
+    public static CompletableFuture<ItemStack> favoriteSkinHead(String name)
+    {
         return CompletableFuture.supplyAsync(() -> {
             ItemStack item = new ItemStack(Material.PLAYER_HEAD);
             SkullMeta meta = (SkullMeta) item.getItemMeta();
@@ -45,9 +46,8 @@ public class SkinMorphItems {
                 item.setItemMeta(meta);
                 return item;
             });
-        }).thenCompose(f -> f); // Flatten nested CompletableFuture
+        }).thenCompose(f -> f);
     }
-
 
     public static ItemStack changeSkin(Player player)
     {
@@ -63,6 +63,21 @@ public class SkinMorphItems {
         return item;
     }
 
+    public static ItemStack randomSkin(Player player)
+    {
+        ItemStack item = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta meta = (SkullMeta) item.getItemMeta();
+        PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID());
+        profile.setProperty(new ProfileProperty("textures", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDM0ZTA2M2NhZmI0NjdhNWM4ZGU0M2VjNzg2MTkzOTlmMzY5ZjRhNTI0MzRkYTgwMTdhOTgzY2RkOTI1MTZhMCJ9fX0="));
+        meta.setPlayerProfile(profile);
+        meta.setDisplayName("§eRandom skin");
+        List<String> lore = new ArrayList<>();
+        lore.add("§r§7Randomly choose a favorite");
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+        return item;
+    }
+
     public static ItemStack resetSkin(Player player)
     {
         ItemStack item = new ItemStack(Material.BARRIER);
@@ -72,7 +87,8 @@ public class SkinMorphItems {
         return item;
     }
 
-    public static ItemStack addFavorite() {
+    public static ItemStack addFavorite()
+    {
         ItemStack item = new ItemStack(Material.KNOWLEDGE_BOOK);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName("§eAdd favorite");
@@ -82,19 +98,24 @@ public class SkinMorphItems {
 
     public static ItemStack previousPage()
     {
-        ItemStack item = new ItemStack(Material.ARROW);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("§ePrevious Page");
-        item.setItemMeta(meta);
-        return item;
+        return headFromBase64("§r§ePrevious Page", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDA4OWQwZTBjODhlNTI1MDAzOGU2NTlmNTA4ZWJkYTViNjVhNWJlMGJmYzQxMDNkMGUxMmZhYmE0MDE4ZDVjYiJ9fX0=");
     }
 
     public static ItemStack nextPage()
     {
-        ItemStack item = new ItemStack(Material.ARROW);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("§eNext Page");
+        return headFromBase64("§r§eNext Page", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDA4OWQwZTBjODhlNTI1MDAzOGU2NTlmNTA4ZWJkYTViNjVhNWJlMGJmYzQxMDNkMGUxMmZhYmE0MDE4ZDVjYiJ9fX0=");
+    }
+
+    public static ItemStack headFromBase64(String name, String base64)
+    {
+        ItemStack item = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta meta = (SkullMeta) item.getItemMeta();
+        PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID());
+        profile.setProperty(new ProfileProperty("textures", base64));
+        meta.setPlayerProfile(profile);
+        meta.setDisplayName(name);
         item.setItemMeta(meta);
+
         return item;
     }
 }
