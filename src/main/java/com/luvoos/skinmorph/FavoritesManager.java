@@ -105,7 +105,7 @@ public class FavoritesManager {
         for (String s : favorites) {
             if (SkinManager.cache.containsKey(s.toLowerCase())) loadedFavorites.add(s);
         }
-        return favorites.get(ThreadLocalRandom.current().nextInt(loadedFavorites.size()));
+        return loadedFavorites.get(ThreadLocalRandom.current().nextInt(loadedFavorites.size()));
     }
 
     public void preloadFavorites()
