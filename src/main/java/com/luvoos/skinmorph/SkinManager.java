@@ -54,7 +54,8 @@ public class SkinManager {
 
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     target.setPlayerProfile(profile);
-                    setCurrentSkin(target, noSpacesSkinName);
+                    setCurrentSkin(target, noSpacesSkinName.toLowerCase());
+                    plugin.selectedSkinsManager.setSelectedSkin(target, skinName);
                     if (sendResponse) target.sendMessage("§aYour skin has been changed to §e" + noSpacesSkinName.toLowerCase() + "§a!");
                 });
 
@@ -89,7 +90,8 @@ public class SkinManager {
 
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     target.setPlayerProfile(profile);
-                    setCurrentSkin(target, noSpacesSkinName);
+                    setCurrentSkin(target, noSpacesSkinName.toLowerCase());
+                    plugin.selectedSkinsManager.setSelectedSkin(target, skinName);
                     if (sendResponse) target.sendMessage("§aYour skin has been changed to §e" + noSpacesSkinName.toLowerCase() + "§a!");
                 });
 
@@ -106,7 +108,7 @@ public class SkinManager {
 
         if (wearsSkin(target, skinName)) {
             if (sendResponse) target.sendMessage("§aYou're already wearing that skin! ('§e" + noSpacesSkinName.toLowerCase() + "§a')");
-            if (sendResponse) caller.sendMessage("§a" + target.getName() + " are already wearing that skin! ('§e" + noSpacesSkinName.toLowerCase() + "§a')");
+            if (sendResponse) caller.sendMessage("§a" + target.getName() + " is already wearing that skin! ('§e" + noSpacesSkinName.toLowerCase() + "§a')");
             return;
         }
 
@@ -124,7 +126,8 @@ public class SkinManager {
 
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     target.setPlayerProfile(profile);
-                    setCurrentSkin(target, noSpacesSkinName);
+                    setCurrentSkin(target, noSpacesSkinName.toLowerCase());
+                    plugin.selectedSkinsManager.setSelectedSkin(target, skinName);
                     if (sendResponse) target.sendMessage("§aYour skin has been changed to §e" + noSpacesSkinName.toLowerCase() + "§a!");
                     if (sendResponse) caller.sendMessage("§a" + target.getName() + "'s skin has been changed to §e" + noSpacesSkinName.toLowerCase() + "§a!");
                 });
@@ -142,7 +145,7 @@ public class SkinManager {
 
         if (wearsSkin(target, skinName)) {
             if (sendResponse) target.sendMessage("§aYou're already wearing that skin! ('§e" + noSpacesSkinName.toLowerCase() + "§a')");
-            if (sendResponse) caller.sendMessage("§a" + target.getName() + " are already wearing that skin! ('§e" + noSpacesSkinName.toLowerCase() + "§a')");
+            if (sendResponse) caller.sendMessage("§a" + target.getName() + " is already wearing that skin! ('§e" + noSpacesSkinName.toLowerCase() + "§a')");
             return;
         }
 
@@ -160,7 +163,8 @@ public class SkinManager {
 
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     target.setPlayerProfile(profile);
-                    setCurrentSkin(target, noSpacesSkinName);
+                    setCurrentSkin(target, noSpacesSkinName.toLowerCase());
+                    plugin.selectedSkinsManager.setSelectedSkin(target, skinName);
                     if (sendResponse) target.sendMessage("§aYour skin has been changed to §e" + noSpacesSkinName.toLowerCase() + "§a!");
                     if (sendResponse) caller.sendMessage("§a" + target.getName() + "'s skin has been changed to §e" + noSpacesSkinName.toLowerCase() + "§a!");
                 });
@@ -194,7 +198,7 @@ public class SkinManager {
         skinName = skinName.toLowerCase();
         if (cache.containsKey(skinName)) return cache.get(skinName);
 
-        int retryDelay = 1000;
+        int retryDelay = 500;
 
         for (int attempt = 1; attempt <= tries; attempt++) {
             try {
@@ -272,7 +276,7 @@ public class SkinManager {
     public String getCurrentSkin(@NotNull final Player player)
     {
         final UUID uuid = player.getUniqueId();
-        return currentSkins.getOrDefault(uuid, null);
+        return currentSkins.get(uuid);
     }
 
     public boolean wearsSkin(@NotNull final Player player, @NotNull String skinName)

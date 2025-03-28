@@ -1,9 +1,6 @@
 package com.luvoos.skinmorph.event;
 
-import com.luvoos.skinmorph.FavoritesManager;
-import com.luvoos.skinmorph.SkinManager;
-import com.luvoos.skinmorph.SkinMorph;
-import com.luvoos.skinmorph.SkinMorphInputType;
+import com.luvoos.skinmorph.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,23 +14,30 @@ public class EventListener implements Listener {
     private final SkinMorph plugin;
     private final FavoritesManager favoritesManager;
     private final SkinManager skinManager;
+    private final SelectedSkinsManager selectedSkinsManager;
 
-    public EventListener(SkinMorph plugin, FavoritesManager favoritesManager, SkinManager skinManager)
+    public EventListener(SkinMorph plugin, FavoritesManager favoritesManager, SkinManager skinManager, SelectedSkinsManager selectedSkinsManager)
     {
         this.plugin = plugin;
         this.favoritesManager = favoritesManager;
         this.skinManager = skinManager;
+        this.selectedSkinsManager = selectedSkinsManager;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(final PlayerJoinEvent event)
     {
         final Player player = event.getPlayer();
 
-        skinManager.getTexturesAsync(player.getName().toLowerCase(), 3); // Add the player's textures to cache
-        favoritesManager.addFavorite(player, "Notch", false);
+        selectedSkinsManager.addPlayer(player);
 
-        skinManager.setCurrentSkin(player, player.getName());
+        skinManager.getTexturesAsync(player.getName(), 3); // Add the player's textures to cache
+
+        if (plugin.SESSION_AGNOSTIC_SKINS) {
+            skinManager.setSkinFromName(player, selectedSkinsManager.getSelectedSkin(player), false);
+        } else {
+            skinManager.setSkinFromName(player, player.getName().toLowerCase(), false);
+        }
     }
 
     @EventHandler

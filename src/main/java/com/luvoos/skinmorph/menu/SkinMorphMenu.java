@@ -202,6 +202,7 @@ public class SkinMorphMenu implements Listener {
 
     private int totalPages(@NotNull final Player player)
     {
-        return (int) Math.ceil((double) favoritesManager.getFavorites(player).size() / FAVORITES_PER_PAGE);
+        int favoritesSize = favoritesManager.getFavorites(player).size();
+        return (favoritesSize > 0) ? (int) Math.ceil((double) favoritesSize / FAVORITES_PER_PAGE) : 1;
     }
 }

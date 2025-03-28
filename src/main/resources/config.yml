@@ -1,2 +1,3 @@
 sendResponses: true
 debug: false
+sessionAgnosticSkins: true
