@@ -242,6 +242,8 @@ public class SkinManager {
 
                 cache.put(skinName, List.of(profileProperty));
 
+
+                if (plugin.DEBUG) plugin.getLogger().info("Successfully loaded textures for '" + skinName + "'!");
                 return List.of(profileProperty);
             } catch (JsonSyntaxException | IllegalStateException e) {
                 if (plugin.DEBUG) plugin.getLogger().warning("Failed to get textures for '" + skinName + "'! -> " + e.getMessage());

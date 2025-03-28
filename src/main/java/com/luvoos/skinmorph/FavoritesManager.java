@@ -110,11 +110,10 @@ public class FavoritesManager {
 
     public void preloadFavorites()
     {
-        plugin.getLogger().info("Loading favorites...");
+        plugin.getLogger().info("Loading " + getAllFavorites().size() + " favorites...");
         for (String skinName : getAllFavorites()) {
             skinManager.getTexturesAsync(skinName, 3);
         }
-        plugin.getLogger().info("Loaded all " + getAllFavorites().size() + " favorites!");
     }
 
     public void reloadFavorites()

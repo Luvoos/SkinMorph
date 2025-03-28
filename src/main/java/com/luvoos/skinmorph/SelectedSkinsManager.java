@@ -83,11 +83,10 @@ public class SelectedSkinsManager {
 
     public void preloadSelectedSkins()
     {
-        plugin.getLogger().info("Loading selected skins...");
+        plugin.getLogger().info("Loading " + getAllSelectedSkins().size() + " selected skins...");
         for (String skinName : getAllSelectedSkins()) {
             skinManager.getTexturesAsync(skinName, 3);
         }
-        plugin.getLogger().info("Loaded all " + getAllSelectedSkins().size() + " selected skins!");
     }
 
     public void reloadSelectedSkins()

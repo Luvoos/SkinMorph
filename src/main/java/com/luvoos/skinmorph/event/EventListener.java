@@ -36,7 +36,7 @@ public class EventListener implements Listener {
         if (plugin.SESSION_AGNOSTIC_SKINS) {
             skinManager.setSkinFromName(player, selectedSkinsManager.getSelectedSkin(player), false);
         } else {
-            skinManager.setSkinFromName(player, player.getName().toLowerCase(), false);
+            skinManager.setCurrentSkin(player, player.getName());
         }
     }
 
