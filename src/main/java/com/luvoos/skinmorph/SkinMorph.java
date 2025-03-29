@@ -53,7 +53,7 @@ public final class SkinMorph extends JavaPlugin {
         DEBUG = getConfig().getBoolean("debug");
         SESSION_AGNOSTIC_SKINS = getConfig().getBoolean("sessionAgnosticSkins");
         getCommand("skin").setExecutor(new SkinCommand());
-        getCommand("skin").setTabCompleter(new SkinMorphTabCompleter());
+        getCommand("skin").setTabCompleter(new SkinMorphTabCompleter(this));
         getServer().getPluginManager().registerEvents(menu, this);
         getServer().getPluginManager().registerEvents(new EventListener(this, favoritesManager, skinManager, selectedSkinsManager), this);
     }

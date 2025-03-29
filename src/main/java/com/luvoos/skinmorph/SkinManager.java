@@ -175,11 +175,19 @@ public class SkinManager {
         });
     }
 
-    public void resetSkin(@NotNull Player player, boolean sendResponse)
+    public void resetSkin(@NotNull Player target, boolean sendResponse)
     {
-        setSkinFromName(player, player.getName().toLowerCase(), false);
-        player.closeInventory();
-        if (sendResponse) player.sendMessage("§aYour skin has been reset to your §edefault skin§a!");
+        setSkinFromName(target, target.getName().toLowerCase(), false);
+        target.closeInventory();
+        if (sendResponse) target.sendMessage("§aYour skin has been reset to your §edefault skin§a!");
+    }
+
+    public void resetSkin(@NotNull CommandSender caller , @NotNull Player target, boolean sendResponse)
+    {
+        setSkinFromName(target, target.getName().toLowerCase(), false);
+        target.closeInventory();
+        if (sendResponse) target.sendMessage("§aYour skin has been reset to your §edefault skin§a!");
+        if (sendResponse) caller.sendMessage("§a" + target.getName() + "'s skin has been reset to their §edefault skin§a!");
     }
 
     public void applyRandomSkin(@NotNull Player player, boolean sendResponse) {

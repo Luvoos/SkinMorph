@@ -1,5 +1,6 @@
 package com.luvoos.skinmorph.command;
 
+import com.luvoos.skinmorph.SkinMorph;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -12,6 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SkinMorphTabCompleter implements TabCompleter {
+
+    private final SkinMorph plugin;
+
+    public SkinMorphTabCompleter(SkinMorph plugin)
+    {
+        this.plugin = plugin;
+    }
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args)
@@ -29,6 +37,8 @@ public class SkinMorphTabCompleter implements TabCompleter {
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                     completions.add(onlinePlayer.getName());
                 }
+                List<String> favorites = plugin.favoritesManager.getFavorites(player);
+                if (favorites != null && !favorites.isEmpty()) completions.addAll(favorites);
             }
         } else if (args.length == 2 && args[0].equalsIgnoreCase("random")) {
 
@@ -38,6 +48,10 @@ public class SkinMorphTabCompleter implements TabCompleter {
         } else if (args.length == 2 && args[0].equalsIgnoreCase("help")) { // /skin help
 
         } else if (args.length == 3 && args[0].equalsIgnoreCase("set")) { // /skin set OTHER
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                completions.add(onlinePlayer.getName());
+            }
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("reset")) {
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 completions.add(onlinePlayer.getName());
             }

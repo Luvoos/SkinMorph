@@ -19,7 +19,7 @@ public class SkinCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args)
     {
         if (!sender.hasPermission("skinmorph.command.skin")) {
-            sender.sendMessage(ChatColor.RED + "You don't have permission to do that!");
+            sender.sendMessage("§cYou don't have permission to do that!");
             return true;
         }
 
@@ -30,7 +30,7 @@ public class SkinCommand implements CommandExecutor {
 
         if (args.length == 0) {
             if (!(sender instanceof final Player player)) {
-                sender.sendMessage(ChatColor.RED + "You can only do this as a player!");
+                sender.sendMessage("§cYou can only do this as a player!");
                 return true;
             }
             try {
@@ -55,13 +55,33 @@ public class SkinCommand implements CommandExecutor {
         }
 
         if (args.length == 1 && args[0].equalsIgnoreCase("help")) {
-            sender.sendMessage("Skin Help Message");
+            sender.sendMessage(
+                    "§b§lSkin Morph Help",
+                    "/skin - Open the Skin Menu",
+                    "/skin set <skinName> - Set your own skin",
+                    "/skin set <skinName> <targetName> - Set another player's skin",
+                    "/skin reset - Reset your skin",
+                    "/skin reset <targetName> - Reset another player's skin",
+                    "/skin favorites add <skinName> - Add a favorite",
+                    "/skin favorites remove <skinName> - Remove a favorite",
+                    "/skin random - Apply a random skin from your favorites",
+                    "/skin help - Displays this help message"
+            );
         }
 
         if (args.length == 1 && args[0].equalsIgnoreCase("reset")) {
             if (sender instanceof final Player player) {
                 plugin.skinManager.resetSkin(player, true);
             }
+        }
+
+        if (args.length == 2 && args[0].equalsIgnoreCase("reset")) {
+            if (Bukkit.getPlayer(args[1]) == null) {
+                sender.sendMessage("§cCouldn't find online player '" + args[2] + "'!");
+                return true;
+            }
+            Player target = Bukkit.getPlayer(args[1]);
+            plugin.skinManager.resetSkin(sender, target, true);
         }
 
         if (args.length == 2 && args[0].equalsIgnoreCase("set") && sender.hasPermission("skinmorph.changeskin.self")) {
