@@ -77,7 +77,7 @@ public class SkinCommand implements CommandExecutor {
 
         if (args.length == 2 && args[0].equalsIgnoreCase("reset")) {
             if (Bukkit.getPlayer(args[1]) == null) {
-                sender.sendMessage("§cCouldn't find online player '" + args[2] + "'!");
+                sender.sendMessage("§cCouldn't find online player '" + args[1] + "'!");
                 return true;
             }
             Player target = Bukkit.getPlayer(args[1]);
