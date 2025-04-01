@@ -202,7 +202,7 @@ public class SkinManager {
     {
         String randomSkin = plugin.favoritesManager.getRandomFavorite(player);
         if (randomSkin.isEmpty()) {
-            player.sendMessage("§cYou need to have at least §e2 §cfavorites to do that!");
+            if (sendResponse) player.sendMessage("§cYou need to have at least §e2 §cfavorites to do that!");
             return;
         }
         setSkinFromName(player, randomSkin, false);
