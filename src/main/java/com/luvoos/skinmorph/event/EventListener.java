@@ -9,6 +9,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.concurrent.ExecutionException;
+
 public class EventListener implements Listener {
 
     private final SkinMorph plugin;
@@ -49,7 +51,7 @@ public class EventListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onChat(final AsyncPlayerChatEvent event)
+    public void onChat(final AsyncPlayerChatEvent event) throws ExecutionException, InterruptedException
     {
         final Player player = event.getPlayer();
         final String text = event.getMessage();

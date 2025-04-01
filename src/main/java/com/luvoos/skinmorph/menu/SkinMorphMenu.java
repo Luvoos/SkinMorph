@@ -52,7 +52,7 @@ public class SkinMorphMenu implements Listener {
         int startIndex = (getCurrentPage(player) - 1) * FAVORITES_PER_PAGE;
         int endIndex = Math.min(startIndex + FAVORITES_PER_PAGE, favorites.size());
 
-        menu.setItem(2, SkinMorphItems.randomSkin(player));
+        if (favorites.size() > 1) menu.setItem(2, SkinMorphItems.randomSkin(player));
         menu.setItem(3, SkinMorphItems.resetSkin(player));
         menu.setItem(4, SkinMorphItems.changeSkin(player));
         menu.setItem(5, SkinMorphItems.addFavorite());

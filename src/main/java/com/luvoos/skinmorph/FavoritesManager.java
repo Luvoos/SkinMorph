@@ -1,5 +1,6 @@
 package com.luvoos.skinmorph;
 
+import com.destroystokyo.paper.profile.ProfileProperty;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -9,7 +10,10 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class FavoritesManager {
@@ -62,11 +66,16 @@ public class FavoritesManager {
         return config.getStringList("players." + uuid);
     }
 
-    public void addFavorite(@NotNull Player player, @NotNull String skinName, boolean sendResponse)
+    public void addFavorite(@NotNull Player player, @NotNull String skinName, boolean sendResponse) throws ExecutionException, InterruptedException
     {
         final String uuid = player.getUniqueId().toString();
         List<String> favorites = getFavorites(player);
         String noSpacesSkinName = skinName.replace(" ", "");
+        CompletableFuture<Collection<ProfileProperty>> textures = skinManager.getTexturesAsync(skinName, 3);
+        if (textures.get() == null) {
+            player.sendMessage("§cInvalid profile! ('§e" + noSpacesSkinName.toLowerCase() + "§c')");
+            return;
+        }
         if (!favorites.contains(noSpacesSkinName.toLowerCase())) {
             favorites.add(noSpacesSkinName.toLowerCase());
             config.set("players." + uuid, favorites);
@@ -100,7 +109,7 @@ public class FavoritesManager {
     {
         final String uuid = player.getUniqueId().toString();
         List<String> favorites = getFavorites(player);
-        if (favorites == null || favorites.isEmpty()) return null;
+        if (favorites == null || favorites.isEmpty() || favorites.size() < 2) return "";
         List<String> loadedFavorites = new ArrayList<>();
         for (String s : favorites) {
             if (SkinManager.cache.containsKey(s.toLowerCase())) loadedFavorites.add(s);

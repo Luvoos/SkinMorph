@@ -43,7 +43,7 @@ public class SkinManager {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
                 final PlayerProfile profile = target.getPlayerProfile();
-                Collection<ProfileProperty> textures = getTextures(noSpacesSkinName, 2);
+                Collection<ProfileProperty> textures = getTextures(noSpacesSkinName, 3);
 
                 if (textures == null) {
                     if (sendResponse) target.sendMessage("§cInvalid profile! ('§e" + noSpacesSkinName.toLowerCase() + "§c')");
@@ -115,7 +115,7 @@ public class SkinManager {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
                 final PlayerProfile profile = target.getPlayerProfile();
-                Collection<ProfileProperty> textures = getTextures(noSpacesSkinName, 2);
+                Collection<ProfileProperty> textures = getTextures(noSpacesSkinName, 3);
 
                 if (textures == null) {
                     if (sendResponse) target.sendMessage("§cInvalid profile! ('§e" + noSpacesSkinName.toLowerCase() + "§c')");
@@ -177,21 +177,34 @@ public class SkinManager {
 
     public void resetSkin(@NotNull Player target, boolean sendResponse)
     {
-        setSkinFromName(target, target.getName().toLowerCase(), false);
         target.closeInventory();
+        if (wearsSkin(target, target.getName().toLowerCase())) {
+            if (sendResponse) target.sendMessage("§aYou're already wearing your §edefault skin§a!");
+            return;
+        }
+        setSkinFromName(target, target.getName().toLowerCase(), false);
         if (sendResponse) target.sendMessage("§aYour skin has been reset to your §edefault skin§a!");
     }
 
     public void resetSkin(@NotNull CommandSender caller , @NotNull Player target, boolean sendResponse)
     {
+        if (wearsSkin(target, target.getName().toLowerCase())) {
+            if (sendResponse) target.sendMessage("§aYou're already wearing your §edefault skin§a!");
+            if (sendResponse) caller.sendMessage("§a" + target.getName() + " is already wearing their §edefault skin§a!");
+            return;
+        }
         setSkinFromName(target, target.getName().toLowerCase(), false);
-        target.closeInventory();
         if (sendResponse) target.sendMessage("§aYour skin has been reset to your §edefault skin§a!");
         if (sendResponse) caller.sendMessage("§a" + target.getName() + "'s skin has been reset to their §edefault skin§a!");
     }
 
-    public void applyRandomSkin(@NotNull Player player, boolean sendResponse) {
+    public void applyRandomSkin(@NotNull Player player, boolean sendResponse)
+    {
         String randomSkin = plugin.favoritesManager.getRandomFavorite(player);
+        if (randomSkin.isEmpty()) {
+            player.sendMessage("§cYou need to have at least §e2 §cfavorites to do that!");
+            return;
+        }
         setSkinFromName(player, randomSkin, false);
         if (sendResponse) player.sendMessage("§aRandomly picked... §e" + randomSkin.toLowerCase() + "§a!");
     }
@@ -259,8 +272,6 @@ public class SkinManager {
                 if (plugin.DEBUG) plugin.getLogger().warning("Unexpected error while trying to get textures for '" + skinName + "'! -> " + e.getMessage());
             }
         }
-
-        if (plugin.DEBUG) plugin.getLogger().warning("Failed to get textures for " + skinName + " after " + tries + " unsuccessful attempts!");
         return null;
     }
 

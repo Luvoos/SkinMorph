@@ -106,14 +106,14 @@ public class SkinMorphItems {
         return headFromBase64("§r§eNext Page", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDA4OWQwZTBjODhlNTI1MDAzOGU2NTlmNTA4ZWJkYTViNjVhNWJlMGJmYzQxMDNkMGUxMmZhYmE0MDE4ZDVjYiJ9fX0=");
     }
 
-    public static ItemStack headFromBase64(String name, String base64)
+    public static ItemStack headFromBase64(String displayName, String base64)
     {
         ItemStack item = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID());
         profile.setProperty(new ProfileProperty("textures", base64));
         meta.setPlayerProfile(profile);
-        meta.setDisplayName(name);
+        meta.setDisplayName(displayName);
         item.setItemMeta(meta);
 
         return item;
