@@ -36,7 +36,7 @@ public class SkinManager {
         String noSpacesSkinName = skinName.replace(" ", "");
 
         if (wearsSkin(target, skinName)) {
-            if (sendResponse) target.sendMessage("§aYou're already wearing that skin! ('§e" + noSpacesSkinName.toLowerCase() + "§a')");
+            if (plugin.SEND_RESPONSES && sendResponse) target.sendMessage("§aYou're already wearing that skin! ('§e" + noSpacesSkinName.toLowerCase() + "§a')");
             return;
         }
 
@@ -46,7 +46,7 @@ public class SkinManager {
                 Collection<ProfileProperty> textures = getTextures(noSpacesSkinName, 3);
 
                 if (textures == null) {
-                    if (sendResponse) target.sendMessage("§cInvalid profile! ('§e" + noSpacesSkinName.toLowerCase() + "§c')");
+                    if (plugin.SEND_RESPONSES && sendResponse) target.sendMessage("§cInvalid profile! ('§e" + noSpacesSkinName.toLowerCase() + "§c')");
                     return;
                 }
 
@@ -56,11 +56,11 @@ public class SkinManager {
                     target.setPlayerProfile(profile);
                     setCurrentSkin(target, noSpacesSkinName.toLowerCase());
                     plugin.selectedSkinsManager.setSelectedSkin(target, skinName);
-                    if (sendResponse) target.sendMessage("§aYour skin has been changed to §e" + noSpacesSkinName.toLowerCase() + "§a!");
+                    if (plugin.SEND_RESPONSES && sendResponse) target.sendMessage("§aYour skin has been changed to §e" + noSpacesSkinName.toLowerCase() + "§a!");
                 });
 
             } catch (Exception e) {
-                if (sendResponse) target.sendMessage("§cError changing skin: " + e.getMessage());
+                if (plugin.SEND_RESPONSES && sendResponse) target.sendMessage("§cError changing skin: " + e.getMessage());
             }
         });
     }
@@ -72,7 +72,7 @@ public class SkinManager {
         String noSpacesSkinName = skinName.replace(" ", "");
 
         if (wearsSkin(target, skinName)) {
-            if (sendResponse) target.sendMessage("§aYou're already wearing that skin! ('§e" + noSpacesSkinName.toLowerCase() + "§a')");
+            if (plugin.SEND_RESPONSES && sendResponse) target.sendMessage("§aYou're already wearing that skin! ('§e" + noSpacesSkinName.toLowerCase() + "§a')");
             return;
         }
 
@@ -82,7 +82,7 @@ public class SkinManager {
                 Collection<ProfileProperty> textures = getTextures(noSpacesSkinName, tries);
 
                 if (textures == null) {
-                    if (sendResponse) target.sendMessage("§cInvalid profile! ('§e" + noSpacesSkinName.toLowerCase() + "§c')");
+                    if (plugin.SEND_RESPONSES && sendResponse) target.sendMessage("§cInvalid profile! ('§e" + noSpacesSkinName.toLowerCase() + "§c')");
                     return;
                 }
 
@@ -92,11 +92,11 @@ public class SkinManager {
                     target.setPlayerProfile(profile);
                     setCurrentSkin(target, noSpacesSkinName.toLowerCase());
                     plugin.selectedSkinsManager.setSelectedSkin(target, skinName);
-                    if (sendResponse) target.sendMessage("§aYour skin has been changed to §e" + noSpacesSkinName.toLowerCase() + "§a!");
+                    if (plugin.SEND_RESPONSES && sendResponse) target.sendMessage("§aYour skin has been changed to §e" + noSpacesSkinName.toLowerCase() + "§a!");
                 });
 
             } catch (Exception e) {
-                if (sendResponse) target.sendMessage("§cError changing skin: " + e.getMessage());
+                if (plugin.SEND_RESPONSES && sendResponse) target.sendMessage("§cError changing skin: " + e.getMessage());
             }
         });
     }
@@ -107,7 +107,7 @@ public class SkinManager {
         String noSpacesSkinName = skinName.replace(" ", "");
 
         if (wearsSkin(target, skinName)) {
-            if (sendResponse) caller.sendMessage("§a" + target.getName() + " is already wearing that skin! ('§e" + noSpacesSkinName.toLowerCase() + "§a')");
+            if (plugin.SEND_RESPONSES && sendResponse) caller.sendMessage("§a" + target.getName() + " is already wearing that skin! ('§e" + noSpacesSkinName.toLowerCase() + "§a')");
             return;
         }
 
@@ -117,7 +117,7 @@ public class SkinManager {
                 Collection<ProfileProperty> textures = getTextures(noSpacesSkinName, 3);
 
                 if (textures == null) {
-                    if (sendResponse) caller.sendMessage("§cInvalid profile! ('§e" + noSpacesSkinName.toLowerCase() + "§c')");
+                    if (plugin.SEND_RESPONSES && sendResponse) caller.sendMessage("§cInvalid profile! ('§e" + noSpacesSkinName.toLowerCase() + "§c')");
                     return;
                 }
 
@@ -127,13 +127,13 @@ public class SkinManager {
                     target.setPlayerProfile(profile);
                     setCurrentSkin(target, noSpacesSkinName.toLowerCase());
                     plugin.selectedSkinsManager.setSelectedSkin(target, skinName);
-                    if (sendResponse) target.sendMessage("§aYour skin has been changed to §e" + noSpacesSkinName.toLowerCase() + "§a!");
+                    if (plugin.SEND_RESPONSES && sendResponse) target.sendMessage("§aYour skin has been changed to §e" + noSpacesSkinName.toLowerCase() + "§a!");
                     boolean endsWithS = target.getName().endsWith("s") || target.getName().endsWith("S");
-                    if (sendResponse) caller.sendMessage("§a" + target.getName() + (endsWithS ? "'" : "'s") + " skin has been changed to §e" + noSpacesSkinName.toLowerCase() + "§a!");
+                    if (plugin.SEND_RESPONSES && sendResponse) caller.sendMessage("§a" + target.getName() + (endsWithS ? "'" : "'s") + " skin has been changed to §e" + noSpacesSkinName.toLowerCase() + "§a!");
                 });
 
             } catch (Exception e) {
-                if (sendResponse) caller.sendMessage("§cError changing skin: " + e.getMessage());
+                if (plugin.SEND_RESPONSES && sendResponse) caller.sendMessage("§cError changing skin: " + e.getMessage());
             }
         });
     }
@@ -144,7 +144,7 @@ public class SkinManager {
         String noSpacesSkinName = skinName.replace(" ", "");
 
         if (wearsSkin(target, skinName)) {
-            if (sendResponse) caller.sendMessage("§a" + target.getName() + " is already wearing that skin! ('§e" + noSpacesSkinName.toLowerCase() + "§a')");
+            if (plugin.SEND_RESPONSES && sendResponse) caller.sendMessage("§a" + target.getName() + " is already wearing that skin! ('§e" + noSpacesSkinName.toLowerCase() + "§a')");
             return;
         }
 
@@ -154,7 +154,7 @@ public class SkinManager {
                 Collection<ProfileProperty> textures = getTextures(noSpacesSkinName, tries);
 
                 if (textures == null) {
-                    if (sendResponse) caller.sendMessage("§cInvalid profile! ('§e" + noSpacesSkinName.toLowerCase() + "§c')");
+                    if (plugin.SEND_RESPONSES && sendResponse) caller.sendMessage("§cInvalid profile! ('§e" + noSpacesSkinName.toLowerCase() + "§c')");
                     return;
                 }
 
@@ -164,13 +164,13 @@ public class SkinManager {
                     target.setPlayerProfile(profile);
                     setCurrentSkin(target, noSpacesSkinName.toLowerCase());
                     plugin.selectedSkinsManager.setSelectedSkin(target, skinName);
-                    if (sendResponse) target.sendMessage("§aYour skin has been changed to §e" + noSpacesSkinName.toLowerCase() + "§a!");
+                    if (plugin.SEND_RESPONSES && sendResponse) target.sendMessage("§aYour skin has been changed to §e" + noSpacesSkinName.toLowerCase() + "§a!");
                     boolean endsWithS = target.getName().endsWith("s") || target.getName().endsWith("S");
-                    if (sendResponse) caller.sendMessage("§a" + target.getName() + (endsWithS ? "'" : "'s") + " skin has been changed to §e" + noSpacesSkinName.toLowerCase() + "§a!");
+                    if (plugin.SEND_RESPONSES && sendResponse) caller.sendMessage("§a" + target.getName() + (endsWithS ? "'" : "'s") + " skin has been changed to §e" + noSpacesSkinName.toLowerCase() + "§a!");
                 });
 
             } catch (Exception e) {
-                if (sendResponse) caller.sendMessage("§cError changing skin: " + e.getMessage());
+                if (plugin.SEND_RESPONSES && sendResponse) caller.sendMessage("§cError changing skin: " + e.getMessage());
             }
         });
     }
@@ -179,34 +179,34 @@ public class SkinManager {
     {
         target.closeInventory();
         if (wearsSkin(target, target.getName().toLowerCase())) {
-            if (sendResponse) target.sendMessage("§aYou're already wearing your §edefault skin§a!");
+            if (plugin.SEND_RESPONSES && sendResponse) target.sendMessage("§aYou're already wearing your §edefault skin§a!");
             return;
         }
         setSkinFromName(target, target.getName().toLowerCase(), false);
-        if (sendResponse) target.sendMessage("§aYour skin has been reset to your §edefault skin§a!");
+        if (plugin.SEND_RESPONSES && sendResponse) target.sendMessage("§aYour skin has been reset to your §edefault skin§a!");
     }
 
     public void resetSkin(@NotNull CommandSender caller , @NotNull Player target, boolean sendResponse)
     {
         if (wearsSkin(target, target.getName().toLowerCase())) {
-            if (sendResponse) caller.sendMessage("§a" + target.getName() + " is already wearing their §edefault skin§a!");
+            if (plugin.SEND_RESPONSES && sendResponse) caller.sendMessage("§a" + target.getName() + " is already wearing their §edefault skin§a!");
             return;
         }
         setSkinFromName(target, target.getName().toLowerCase(), false);
-        if (sendResponse) target.sendMessage("§aYour skin has been reset to your §edefault skin§a!");
+        if (plugin.SEND_RESPONSES && sendResponse) target.sendMessage("§aYour skin has been reset to your §edefault skin§a!");
         boolean endsWithS = target.getName().endsWith("s") || target.getName().endsWith("S");
-        if (sendResponse) caller.sendMessage("§a" + target.getName() + (endsWithS ? "'" : "'s") + " skin has been reset to their §edefault skin§a!");
+        if (plugin.SEND_RESPONSES && sendResponse) caller.sendMessage("§a" + target.getName() + (endsWithS ? "'" : "'s") + " skin has been reset to their §edefault skin§a!");
     }
 
     public void applyRandomSkin(@NotNull Player player, boolean sendResponse)
     {
         String randomSkin = plugin.favoritesManager.getRandomFavorite(player);
         if (randomSkin.isEmpty()) {
-            if (sendResponse) player.sendMessage("§cYou need to have at least §e2 §cfavorites to do that!");
+            if (plugin.SEND_RESPONSES && sendResponse) player.sendMessage("§cYou need to have at least §e2 §cfavorites to do that!");
             return;
         }
         setSkinFromName(player, randomSkin, false);
-        if (sendResponse) player.sendMessage("§aRandomly picked... §e" + randomSkin.toLowerCase() + "§a!");
+        if (plugin.SEND_RESPONSES && sendResponse) player.sendMessage("§aRandomly picked... §e" + randomSkin.toLowerCase() + "§a!");
     }
 
     public CompletableFuture<Collection<ProfileProperty>> getTexturesAsync(String skinName, int tries)

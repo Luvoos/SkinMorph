@@ -81,11 +81,11 @@ public class FavoritesManager {
             config.set("players." + uuid, favorites);
             saveFile();
         } else {
-            if (sendResponse && player.isOnline()) player.sendMessage("§e" + noSpacesSkinName.toLowerCase() + " §ais already in your favorites!");
+            if (plugin.SEND_RESPONSES && sendResponse && player.isOnline()) player.sendMessage("§e" + noSpacesSkinName.toLowerCase() + " §ais already in your favorites!");
             return;
         }
         reloadFavorites();
-        if (sendResponse && player.isOnline()) player.sendMessage("§aAdded §e" + noSpacesSkinName.toLowerCase() + " §ato your favorites!");
+        if (plugin.SEND_RESPONSES && sendResponse && player.isOnline()) player.sendMessage("§aAdded §e" + noSpacesSkinName.toLowerCase() + " §ato your favorites!");
     }
 
     public void removeFavorite(@NotNull Player player, @NotNull String skinName, boolean sendResponse)
@@ -98,11 +98,11 @@ public class FavoritesManager {
             config.set("players." + uuid, favorites);
             saveFile();
         } else {
-            if (sendResponse && player.isOnline()) player.sendMessage("§e" + noSpacesSkinName.toLowerCase() + " §cis not in your favorites!");
+            if (plugin.SEND_RESPONSES && sendResponse && player.isOnline()) player.sendMessage("§e" + noSpacesSkinName.toLowerCase() + " §cis not in your favorites!");
             return;
         }
         reloadFavorites();
-        if (sendResponse && player.isOnline()) player.sendMessage("§cRemoved §e" + noSpacesSkinName.toLowerCase() + " §cfrom your favorites!");
+        if (plugin.SEND_RESPONSES && sendResponse && player.isOnline()) player.sendMessage("§cRemoved §e" + noSpacesSkinName.toLowerCase() + " §cfrom your favorites!");
     }
 
     public String getRandomFavorite(@NotNull Player player)
