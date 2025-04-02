@@ -73,7 +73,7 @@ public class FavoritesManager {
         String noSpacesSkinName = skinName.replace(" ", "");
         CompletableFuture<Collection<ProfileProperty>> textures = skinManager.getTexturesAsync(skinName, 3);
         if (textures.get() == null) {
-            player.sendMessage("§cInvalid profile! ('§e" + noSpacesSkinName.toLowerCase() + "§c')");
+            if (plugin.SEND_RESPONSES && sendResponse) player.sendMessage("§cInvalid profile! ('§e" + noSpacesSkinName.toLowerCase() + "§c')");
             return;
         }
         if (!favorites.contains(noSpacesSkinName.toLowerCase())) {
