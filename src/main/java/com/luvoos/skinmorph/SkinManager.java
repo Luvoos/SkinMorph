@@ -222,6 +222,7 @@ public class SkinManager {
 
         if (skinName.length() > 16) {
             plugin.getLogger().warning("'" + skinName + "' exceeds the maximum username length (16)!");
+            //throw new IllegalArgumentException("'" + skinName + "' exceeds the maximum username length (16)!");
             return null;
         }
 
