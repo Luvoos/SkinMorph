@@ -104,6 +104,7 @@ public class SkinMorphMenu implements Listener {
 
             if (itemName.contains("Random skin")) {
                 skinManager.applyRandomSkin(player, true);
+                player.closeInventory();
             }
 
             if (itemName.startsWith("§a")) {

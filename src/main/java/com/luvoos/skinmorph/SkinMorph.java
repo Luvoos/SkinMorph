@@ -34,7 +34,7 @@ public final class SkinMorph extends JavaPlugin {
     @Override
     public void onDisable()
     {
-        getLogger().info("SkinMorph was disabled!");
+        getLogger().info("SkinMorph was disabled! Goodbye!");
     }
 
     private void init()

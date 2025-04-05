@@ -45,16 +45,24 @@ public class SkinMorphTabCompleter implements TabCompleter {
         } else if (args.length == 2 && args[0].equalsIgnoreCase("favorites")) {
             completions.add("add");
             completions.add("remove");
-        } else if (args.length == 2 && args[0].equalsIgnoreCase("help")) { // /skin help
-
-        } else if (args.length == 3 && args[0].equalsIgnoreCase("set")) { // /skin set OTHER
-            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                completions.add(onlinePlayer.getName());
+        } else if (args.length == 3 && args[0].equalsIgnoreCase("favorites")) {
+            if (args[1].equalsIgnoreCase("add")) {
+                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) completions.add(onlinePlayer.getName());
+                if (sender instanceof final Player player) {
+                    boolean containsCurrentSkin = completions.stream().anyMatch(s -> s.equalsIgnoreCase(plugin.skinManager.getCurrentSkin(player)));
+                    if (!plugin.favoritesManager.isFavorite(player, plugin.skinManager.getCurrentSkin(player)) && !containsCurrentSkin) {
+                        completions.add(plugin.skinManager.getCurrentSkin(player));
+                    }
+                }
+            }
+            if (args[1].equalsIgnoreCase("remove")) {
+                if (sender instanceof final Player player) {
+                    List<String> favorites = plugin.favoritesManager.getFavorites(player);
+                    if (favorites != null && !favorites.isEmpty()) completions.addAll(favorites);
+                }
             }
         } else if (args.length == 2 && args[0].equalsIgnoreCase("reset")) {
-            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                completions.add(onlinePlayer.getName());
-            }
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) completions.add(onlinePlayer.getName());
         }
 
         return completions;
