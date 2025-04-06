@@ -17,6 +17,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -29,8 +30,9 @@ public class SkinManager {
     private final SkinMorph plugin = SkinMorph.instance;
     public static final String PROFILE_URL = "https://api.mojang.com/users/profiles/minecraft/";
     public static final String SKIN_URL = "https://sessionserver.mojang.com/session/minecraft/profile/%s?unsigned=false";
-    public static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
+    public static final HttpClient HTTP_CLIENT = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).connectTimeout(Duration.ofSeconds(10)).build();
     public static final Map<String, Collection<ProfileProperty>> cache = new ConcurrentHashMap<>();
+    //public static final Map<String, Boolean> validityCache = new ConcurrentHashMap<>();
     public static final Map<UUID, String> currentSkins = new ConcurrentHashMap<>();
 
     public void setSkinFromName(@NotNull Player target, @NotNull String skinName, boolean sendResponse)
@@ -189,7 +191,7 @@ public class SkinManager {
         if (plugin.SEND_RESPONSES && sendResponse) target.sendMessage("§aYour skin has been reset to your §edefault skin§a!");
     }
 
-    public void resetSkin(@NotNull CommandSender caller , @NotNull Player target, boolean sendResponse)
+    public void resetSkin(@NotNull CommandSender caller, @NotNull Player target, boolean sendResponse)
     {
         if (wearsSkin(target, target.getName().toLowerCase())) {
             if (plugin.SEND_RESPONSES && sendResponse) caller.sendMessage("§a" + target.getName() + " is already wearing their §edefault skin§a!");
@@ -201,15 +203,27 @@ public class SkinManager {
         if (plugin.SEND_RESPONSES && sendResponse) caller.sendMessage("§a" + target.getName() + (endsWithS ? "'" : "'s") + " skin has been reset to their §edefault skin§a!");
     }
 
-    public void applyRandomSkin(@NotNull Player player, boolean sendResponse)
+    public void applyRandomSkin(@NotNull Player target, boolean sendResponse)
     {
-        String randomSkin = plugin.favoritesManager.getRandomFavorite(player);
+        String randomSkin = plugin.favoritesManager.getRandomFavorite(target);
         if (randomSkin.isEmpty()) {
-            if (plugin.SEND_RESPONSES && sendResponse) player.sendMessage("§cYou need to have at least §e2 §cfavorites to do that!");
+            if (plugin.SEND_RESPONSES && sendResponse) target.sendMessage("§cYou need to have at least §e2 §cfavorites to do that!");
             return;
         }
-        setSkinFromName(player, randomSkin, false);
-        if (plugin.SEND_RESPONSES && sendResponse) player.sendMessage("§aRandomly picked... §e" + randomSkin.toLowerCase() + "§a!");
+        setSkinFromName(target, randomSkin, false);
+        if (plugin.SEND_RESPONSES && sendResponse) target.sendMessage("§aRandomly picked... §e" + randomSkin.toLowerCase() + "§a!");
+    }
+
+    public void applyRandomSkin(@NotNull CommandSender caller, @NotNull Player target, boolean sendResponse)
+    {
+        String randomSkin = plugin.favoritesManager.getRandomFavorite(target);
+        if (randomSkin.isEmpty()) {
+            if (plugin.SEND_RESPONSES && sendResponse) caller.sendMessage("§c" + target.getName() + " needs to have at least §e2 §cfavorites to do that!");
+            return;
+        }
+        setSkinFromName(target, randomSkin, false);
+        if (plugin.SEND_RESPONSES && sendResponse) target.sendMessage("§aRandomly picked... §e" + randomSkin.toLowerCase() + "§a!");
+        if (plugin.SEND_RESPONSES && sendResponse) caller.sendMessage("§aRandomly picked... §e" + randomSkin.toLowerCase() + "§a!");
     }
 
     public CompletableFuture<Collection<ProfileProperty>> getTexturesAsync(String skinName, int tries)
@@ -223,13 +237,19 @@ public class SkinManager {
         skinName = skinName.replace(" ", "");
         if (cache.containsKey(skinName)) return cache.get(skinName);
 
+//        if (validityCache.containsKey(skinName) && !validityCache.get(skinName)) {
+//            plugin.getLogger().warning("'" + skinName + "' is marked as invalid and therefore skipped!");
+//            return null;
+//        }
+
         if (skinName.length() > 16) {
             plugin.getLogger().warning("'" + skinName + "' exceeds the maximum username length (16)!");
             //throw new IllegalArgumentException("'" + skinName + "' exceeds the maximum username length (16)!");
+            //validityCache.put(skinName, false);
             return null;
         }
 
-        int retryDelay = 500;
+        int retryDelay = 2000;
 
         for (int attempt = 1; attempt <= tries; attempt++) {
             try {
@@ -240,6 +260,7 @@ public class SkinManager {
                         Thread.sleep(retryDelay);
                         continue;
                     }
+                    //validityCache.put(skinName, false);
                     return null;
                 }
                 JsonReader reader = new JsonReader(new StringReader(profileResponse));
@@ -252,6 +273,7 @@ public class SkinManager {
                         Thread.sleep(retryDelay);
                         continue;
                     }
+                    //validityCache.put(skinName, false);
                     return null;
                 }
 
@@ -264,6 +286,7 @@ public class SkinManager {
                         Thread.sleep(retryDelay);
                         continue;
                     }
+                    //validityCache.put(skinName, false);
                     return null;
                 }
                 final JsonObject skinObject = JsonParser.parseString(skinResponse).getAsJsonObject().get("properties").getAsJsonArray().get(0).getAsJsonObject();
@@ -272,7 +295,7 @@ public class SkinManager {
                 final ProfileProperty profileProperty = new ProfileProperty("textures", value, signature);
 
                 cache.put(skinName, List.of(profileProperty));
-
+                //validityCache.put(skinName, true);
 
                 if (plugin.DEBUG) plugin.getLogger().info("Successfully loaded textures for '" + skinName + "'!");
                 return List.of(profileProperty);
@@ -282,6 +305,7 @@ public class SkinManager {
                 if (plugin.DEBUG) plugin.getLogger().warning("Unexpected error while trying to get textures for '" + skinName + "'! -> " + e.getMessage());
             }
         }
+        //validityCache.put(skinName, false);
         return null;
     }
 

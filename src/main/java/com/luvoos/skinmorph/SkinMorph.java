@@ -2,7 +2,7 @@ package com.luvoos.skinmorph;
 
 import com.luvoos.skinmorph.command.SkinCommand;
 import com.luvoos.skinmorph.command.SkinMorphTabCompleter;
-import com.luvoos.skinmorph.event.EventListener;
+import com.luvoos.skinmorph.event.SkinMorphListener;
 import com.luvoos.skinmorph.menu.SkinMorphMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -46,7 +46,7 @@ public final class SkinMorph extends JavaPlugin {
         selectedSkinsManager.preloadSelectedSkins();
         favoritesManager = new FavoritesManager(this, skinManager);
         Bukkit.getScheduler().runTaskLater(this, () -> {
-            favoritesManager.preloadFavorites();
+            favoritesManager.preloadAllFavorites();
         }, 60L); // load favorites 3 seconds later to make sure selected skins are fully loaded first
         menu = new SkinMorphMenu(this, favoritesManager, skinManager);
         SEND_RESPONSES = getConfig().getBoolean("sendResponses");
@@ -55,6 +55,6 @@ public final class SkinMorph extends JavaPlugin {
         getCommand("skin").setExecutor(new SkinCommand());
         getCommand("skin").setTabCompleter(new SkinMorphTabCompleter(this));
         getServer().getPluginManager().registerEvents(menu, this);
-        getServer().getPluginManager().registerEvents(new EventListener(this, favoritesManager, skinManager, selectedSkinsManager), this);
+        getServer().getPluginManager().registerEvents(new SkinMorphListener(this, favoritesManager, skinManager, selectedSkinsManager), this);
     }
 }

@@ -87,11 +87,15 @@ public class SkinMorphItems {
         return item;
     }
 
-    public static ItemStack addFavorite()
+    public static ItemStack manageFavorites()
     {
         ItemStack item = new ItemStack(Material.KNOWLEDGE_BOOK);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("§eAdd favorite");
+        meta.setDisplayName("§eManage favorites...");
+        List<String> lore = new ArrayList<>();
+        lore.add("§r§f§lLEFT CLICK §r§ato add favorite");
+        lore.add("§r§f§lRIGHT CLICK §r§cto remove favorite");
+        meta.setLore(lore);
         item.setItemMeta(meta);
         return item;
     }

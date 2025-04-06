@@ -41,7 +41,9 @@ public class SkinMorphTabCompleter implements TabCompleter {
                 if (favorites != null && !favorites.isEmpty()) completions.addAll(favorites);
             }
         } else if (args.length == 2 && args[0].equalsIgnoreCase("random")) {
-
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                completions.add(onlinePlayer.getName());
+            }
         } else if (args.length == 2 && args[0].equalsIgnoreCase("favorites")) {
             completions.add("add");
             completions.add("remove");

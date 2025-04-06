@@ -11,14 +11,14 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.concurrent.ExecutionException;
 
-public class EventListener implements Listener {
+public class SkinMorphListener implements Listener {
 
     private final SkinMorph plugin;
     private final FavoritesManager favoritesManager;
     private final SkinManager skinManager;
     private final SelectedSkinsManager selectedSkinsManager;
 
-    public EventListener(SkinMorph plugin, FavoritesManager favoritesManager, SkinManager skinManager, SelectedSkinsManager selectedSkinsManager)
+    public SkinMorphListener(SkinMorph plugin, FavoritesManager favoritesManager, SkinManager skinManager, SelectedSkinsManager selectedSkinsManager)
     {
         this.plugin = plugin;
         this.favoritesManager = favoritesManager;
@@ -65,6 +65,12 @@ public class EventListener implements Listener {
         if (plugin.menu.awaitingInput.containsKey(player.getUniqueId()) && plugin.menu.awaitingInput.get(player.getUniqueId()) == SkinMorphInputType.ADD_FAVORITE) {
             event.setCancelled(true);
             favoritesManager.addFavorite(player, text, true);
+            plugin.menu.awaitingInput.remove(player.getUniqueId());
+        }
+
+        if (plugin.menu.awaitingInput.containsKey(player.getUniqueId()) && plugin.menu.awaitingInput.get(player.getUniqueId()) == SkinMorphInputType.REMOVE_FAVORITE) {
+            event.setCancelled(true);
+            favoritesManager.removeFavorite(player, text, true);
             plugin.menu.awaitingInput.remove(player.getUniqueId());
         }
     }

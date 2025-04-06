@@ -55,7 +55,7 @@ public class SkinMorphMenu implements Listener {
         if (favorites.size() > 1) menu.setItem(2, SkinMorphItems.randomSkin(player));
         menu.setItem(3, SkinMorphItems.resetSkin(player));
         menu.setItem(4, SkinMorphItems.changeSkin(player));
-        menu.setItem(5, SkinMorphItems.addFavorite());
+        menu.setItem(5, SkinMorphItems.manageFavorites());
 
         boolean hasNextPage = endIndex < favorites.size();
         boolean hasPreviousPage = getCurrentPage(player) > 1;
@@ -94,8 +94,12 @@ public class SkinMorphMenu implements Listener {
                 awaitInput(player, SkinMorphInputType.CHANGE_SKIN_SELF);
             }
 
-            if (itemName.contains("Add favorite")) {
-                awaitInput(player, SkinMorphInputType.ADD_FAVORITE);
+            if (itemName.contains("Manage favorites...")) {
+                if (event.isLeftClick()) {
+                    awaitInput(player, SkinMorphInputType.ADD_FAVORITE);
+                } else if (event.isRightClick()) {
+                    awaitInput(player, SkinMorphInputType.REMOVE_FAVORITE);
+                }
             }
 
             if (itemName.contains("Reset skin")) {
@@ -144,7 +148,7 @@ public class SkinMorphMenu implements Listener {
     }
 
     /**
-     * Await skin name input from a player
+     * Await chat input from a player
      * @param player
      * @param inputType
      */

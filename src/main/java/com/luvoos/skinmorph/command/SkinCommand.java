@@ -54,6 +54,15 @@ public class SkinCommand implements CommandExecutor {
             plugin.skinManager.applyRandomSkin(player, true);
         }
 
+        if (args.length == 2 && args[0].equalsIgnoreCase("random")) {
+            if (Bukkit.getPlayer(args[1]) == null) {
+                sender.sendMessage("§cCouldn't find online player '" + args[1] + "'!");
+                return true;
+            }
+            Player target = Bukkit.getPlayer(args[1]);
+            plugin.skinManager.applyRandomSkin(sender, target, true);
+        }
+
         if (args.length == 1 && args[0].equalsIgnoreCase("help")) {
             sender.sendMessage(
                     "§b§lSkin Morph Help",

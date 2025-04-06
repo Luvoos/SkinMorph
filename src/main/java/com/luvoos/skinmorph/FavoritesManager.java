@@ -126,11 +126,11 @@ public class FavoritesManager {
         return loadedFavorites.get(ThreadLocalRandom.current().nextInt(loadedFavorites.size()));
     }
 
-    public void preloadFavorites()
+    public void preloadAllFavorites()
     {
-        plugin.getLogger().info("Loading " + getAllFavorites().size() + " favorites...");
+        plugin.getLogger().info("Loading " + getAllFavorites().size() + " favorite(s)...");
         for (String skinName : getAllFavorites()) {
-            skinManager.getTexturesAsync(skinName, 3);
+            skinManager.getTexturesAsync(skinName, 5);
         }
     }
 
