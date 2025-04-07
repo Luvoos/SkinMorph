@@ -4,7 +4,6 @@ import com.luvoos.skinmorph.command.SkinCommand;
 import com.luvoos.skinmorph.command.SkinMorphTabCompleter;
 import com.luvoos.skinmorph.event.SkinMorphListener;
 import com.luvoos.skinmorph.menu.SkinMorphMenu;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class SkinMorph extends JavaPlugin {
@@ -45,9 +44,9 @@ public final class SkinMorph extends JavaPlugin {
         selectedSkinsManager = new SelectedSkinsManager(this, skinManager);
         selectedSkinsManager.preloadSelectedSkins();
         favoritesManager = new FavoritesManager(this, skinManager);
-        Bukkit.getScheduler().runTaskLater(this, () -> {
-            favoritesManager.preloadAllFavorites();
-        }, 60L); // load favorites 3 seconds later to make sure selected skins are fully loaded first
+//        Bukkit.getScheduler().runTaskLater(this, () -> {
+//            favoritesManager.preloadAllFavorites();
+//        }, 60L); // load favorites 3 seconds later to make sure selected skins are fully loaded first
         menu = new SkinMorphMenu(this, favoritesManager, skinManager);
         SEND_RESPONSES = getConfig().getBoolean("sendResponses");
         DEBUG = getConfig().getBoolean("debug");

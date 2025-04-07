@@ -1,4 +1,4 @@
-package com.luvoos.skinmorph;
+package com.luvoos.skinmorph.data;
 
 public enum SkinMorphInputType {
     CHANGE_SKIN_SELF,

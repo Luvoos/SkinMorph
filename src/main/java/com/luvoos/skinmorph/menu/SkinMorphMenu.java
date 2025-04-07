@@ -3,7 +3,7 @@ package com.luvoos.skinmorph.menu;
 import com.luvoos.skinmorph.FavoritesManager;
 import com.luvoos.skinmorph.SkinManager;
 import com.luvoos.skinmorph.SkinMorph;
-import com.luvoos.skinmorph.SkinMorphInputType;
+import com.luvoos.skinmorph.data.SkinMorphInputType;
 import com.luvoos.skinmorph.item.SkinMorphItems;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -90,8 +90,12 @@ public class SkinMorphMenu implements Listener {
 
             String itemName = clickedItem.getItemMeta().getDisplayName();
 
-            if (itemName.contains("Change skin")) {
-                awaitInput(player, SkinMorphInputType.CHANGE_SKIN_SELF);
+            if (itemName.contains("Change skin...")) {
+                if (event.isLeftClick()) {
+                    awaitInput(player, SkinMorphInputType.CHANGE_SKIN_SELF);
+                } else if (event.isRightClick()) {
+                    awaitInput(player, SkinMorphInputType.CHANGE_SKIN_OTHERS);
+                }
             }
 
             if (itemName.contains("Manage favorites...")) {
@@ -156,7 +160,7 @@ public class SkinMorphMenu implements Listener {
     {
         awaitingInput.remove(player.getUniqueId());
         player.closeInventory();
-        if (inputType == SkinMorphInputType.ADD_FAVORITE || inputType == SkinMorphInputType.CHANGE_SKIN_SELF || inputType == SkinMorphInputType.REMOVE_FAVORITE) player.sendMessage("§aPlease enter a skin name in chat within the next 20 seconds!");
+        if (inputType == SkinMorphInputType.ADD_FAVORITE || inputType == SkinMorphInputType.CHANGE_SKIN_SELF || inputType == SkinMorphInputType.REMOVE_FAVORITE || inputType == SkinMorphInputType.CHANGE_SKIN_OTHERS) player.sendMessage("§aPlease enter a skin name in chat within the next 20 seconds!");
         inputWaitingTimes.put(player.getUniqueId(), 20);
         awaitingInput.put(player.getUniqueId(), inputType);
         new BukkitRunnable() {

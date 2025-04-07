@@ -134,6 +134,14 @@ public class FavoritesManager {
         }
     }
 
+    public void preloadFavorites(@NotNull Player player)
+    {
+        plugin.getLogger().info("Loading " + getAllFavorites().size() + " favorite(s) for " + player.getName());
+        for (String skinName : getFavorites(player)) {
+            skinManager.getTexturesAsync(skinName, 5);
+        }
+    }
+
     public void reloadFavorites()
     {
         plugin.reloadConfig();
