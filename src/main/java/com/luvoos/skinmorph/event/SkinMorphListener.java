@@ -68,15 +68,15 @@ public class SkinMorphListener implements Listener {
 
         if (plugin.menu.awaitingInput.containsKey(player.getUniqueId()) && plugin.menu.awaitingInput.get(player.getUniqueId()) == SkinMorphInputType.CHANGE_SKIN_OTHERS) {
             event.setCancelled(true);
-            String[] parts = text.split(" ", 2);
+            String[] parts = text.split(";", 2);
             String first = parts[0];
             String second = parts.length > 1 ? parts[1] : "";
-            if (Bukkit.getPlayer(second) == null) {
+            if (Bukkit.getPlayer(second.replace(" ", "").toLowerCase()) == null) {
                 player.sendMessage("§cCouldn't find online player '" + second + "'!");
                 plugin.menu.awaitingInput.remove(player.getUniqueId());
                 return;
             }
-            skinManager.setSkinFromName(player, Bukkit.getPlayer(second), first, true);
+            skinManager.setSkinFromName(player, Bukkit.getPlayer(second.replace(" ", "").toLowerCase()), first, true);
             plugin.menu.awaitingInput.remove(player.getUniqueId());
         }
 

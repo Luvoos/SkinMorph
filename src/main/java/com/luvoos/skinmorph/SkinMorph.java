@@ -44,9 +44,6 @@ public final class SkinMorph extends JavaPlugin {
         selectedSkinsManager = new SelectedSkinsManager(this, skinManager);
         selectedSkinsManager.preloadSelectedSkins();
         favoritesManager = new FavoritesManager(this, skinManager);
-//        Bukkit.getScheduler().runTaskLater(this, () -> {
-//            favoritesManager.preloadAllFavorites();
-//        }, 60L); // load favorites 3 seconds later to make sure selected skins are fully loaded first
         menu = new SkinMorphMenu(this, favoritesManager, skinManager);
         SEND_RESPONSES = getConfig().getBoolean("sendResponses");
         DEBUG = getConfig().getBoolean("debug");
