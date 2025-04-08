@@ -59,7 +59,7 @@ public class SkinMorphItems {
         List<String> lore = new ArrayList<>();
         lore.add("§r§f§lLEFT CLICK §r§afor yourself§r");
         lore.add("§r§f§lRIGHT CLICK §r§afor another player§r");
-        lore.add("§r§7Your current skin: §e" + plugin.skinManager.getCurrentSkin(player));
+        lore.add("§r§7Your current skin: §e" + plugin.skinManager.getCurrentSkin(player) + ((player.getName().equalsIgnoreCase(plugin.skinManager.getCurrentSkin(player))) ? " (default)" : ""));
         meta.setLore(lore);
         item.setItemMeta(meta);
         return item;
