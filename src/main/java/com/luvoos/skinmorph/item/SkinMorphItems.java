@@ -55,7 +55,7 @@ public class SkinMorphItems {
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         PlayerProfile profile = Bukkit.createProfile(player.getUniqueId(), player.getName());
         meta.setPlayerProfile(profile);
-        meta.setDisplayName("§eChange skin...");
+        meta.setDisplayName("§eChange skin");
         List<String> lore = new ArrayList<>();
         lore.add("§r§f§lLEFT CLICK §r§afor yourself§r");
         lore.add("§r§f§lRIGHT CLICK §r§afor another player§r");
@@ -75,6 +75,8 @@ public class SkinMorphItems {
         meta.setDisplayName("§eRandom skin");
         List<String> lore = new ArrayList<>();
         lore.add("§r§7Randomly choose a favorite");
+        lore.add("§r§f§lLEFT CLICK §r§afor yourself§r");
+        lore.add("§r§f§lRIGHT CLICK §r§afor another player§r");
         meta.setLore(lore);
         item.setItemMeta(meta);
         return item;
@@ -85,6 +87,10 @@ public class SkinMorphItems {
         ItemStack item = new ItemStack(Material.BARRIER);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName("§eReset skin");
+        List<String> lore = new ArrayList<>();
+        lore.add("§r§f§lLEFT CLICK §r§afor yourself§r");
+        lore.add("§r§f§lRIGHT CLICK §r§afor another player§r");
+        meta.setLore(lore);
         item.setItemMeta(meta);
         return item;
     }
@@ -93,7 +99,7 @@ public class SkinMorphItems {
     {
         ItemStack item = new ItemStack(Material.KNOWLEDGE_BOOK);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("§eManage favorites...");
+        meta.setDisplayName("§eManage favorites");
         List<String> lore = new ArrayList<>();
         lore.add("§r§f§lLEFT CLICK §r§ato add favorite");
         lore.add("§r§f§lRIGHT CLICK §r§cto remove favorite");

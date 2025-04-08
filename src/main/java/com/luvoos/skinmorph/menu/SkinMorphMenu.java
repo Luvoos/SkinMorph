@@ -3,7 +3,7 @@ package com.luvoos.skinmorph.menu;
 import com.luvoos.skinmorph.FavoritesManager;
 import com.luvoos.skinmorph.SkinManager;
 import com.luvoos.skinmorph.SkinMorph;
-import com.luvoos.skinmorph.data.SkinMorphInputType;
+import com.luvoos.skinmorph.type.SkinMorphInputType;
 import com.luvoos.skinmorph.item.SkinMorphItems;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -90,7 +90,7 @@ public class SkinMorphMenu implements Listener {
 
             String itemName = clickedItem.getItemMeta().getDisplayName();
 
-            if (itemName.contains("Change skin...")) {
+            if (itemName.contains("Change skin")) {
                 if (event.isLeftClick()) {
                     awaitInput(player, SkinMorphInputType.CHANGE_SKIN_SELF);
                 } else if (event.isRightClick()) {
@@ -98,7 +98,7 @@ public class SkinMorphMenu implements Listener {
                 }
             }
 
-            if (itemName.contains("Manage favorites...")) {
+            if (itemName.contains("Manage favorites")) {
                 if (event.isLeftClick()) {
                     awaitInput(player, SkinMorphInputType.ADD_FAVORITE);
                 } else if (event.isRightClick()) {
@@ -107,12 +107,20 @@ public class SkinMorphMenu implements Listener {
             }
 
             if (itemName.contains("Reset skin")) {
-                skinManager.resetSkin(player, true);
+                if (event.isLeftClick()) {
+                    skinManager.resetSkin(player, true);
+                } else if (event.isRightClick()) {
+                    awaitInput(player, SkinMorphInputType.RESET_SKIN_OTHERS);
+                }
             }
 
             if (itemName.contains("Random skin")) {
-                skinManager.applyRandomSkin(player, true);
-                player.closeInventory();
+                if (event.isLeftClick()) {
+                    skinManager.applyRandomSkin(player, true);
+                    player.closeInventory();
+                } else if (event.isRightClick()) {
+                    awaitInput(player, SkinMorphInputType.RANDOM_SKIN_OTHERS);
+                }
             }
 
             if (itemName.startsWith("§a")) {
@@ -160,7 +168,9 @@ public class SkinMorphMenu implements Listener {
     {
         awaitingInput.remove(player.getUniqueId());
         player.closeInventory();
-        if (inputType == SkinMorphInputType.ADD_FAVORITE || inputType == SkinMorphInputType.CHANGE_SKIN_SELF || inputType == SkinMorphInputType.REMOVE_FAVORITE || inputType == SkinMorphInputType.CHANGE_SKIN_OTHERS) player.sendMessage("§aPlease enter a skin name in chat within the next 20 seconds!");
+        if (inputType == SkinMorphInputType.ADD_FAVORITE || inputType == SkinMorphInputType.CHANGE_SKIN_SELF || inputType == SkinMorphInputType.REMOVE_FAVORITE) player.sendMessage("§aPlease enter a skin name in chat within the next 20 seconds!");
+        if (inputType == SkinMorphInputType.CHANGE_SKIN_OTHERS) player.sendMessage("§aPlease enter a skin name and a target username in chat separated by a space!");
+        if (inputType == SkinMorphInputType.RESET_SKIN_OTHERS || inputType == SkinMorphInputType.RANDOM_SKIN_OTHERS) player.sendMessage("§aPlease enter a target username in chat!");
         inputWaitingTimes.put(player.getUniqueId(), 20);
         awaitingInput.put(player.getUniqueId(), inputType);
         new BukkitRunnable() {

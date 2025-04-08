@@ -1,8 +1,8 @@
 package com.luvoos.skinmorph.event;
 
 import com.luvoos.skinmorph.*;
-import com.luvoos.skinmorph.data.ChangeSkinOthersRequest;
-import com.luvoos.skinmorph.data.SkinMorphInputType;
+import com.luvoos.skinmorph.type.SkinMorphInputType;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -11,9 +11,6 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 
 public class SkinMorphListener implements Listener {
@@ -22,7 +19,6 @@ public class SkinMorphListener implements Listener {
     private final FavoritesManager favoritesManager;
     private final SkinManager skinManager;
     private final SelectedSkinsManager selectedSkinsManager;
-    public static final Map<UUID, ChangeSkinOthersRequest> csoReqs = new ConcurrentHashMap<>();
 
     public SkinMorphListener(SkinMorph plugin, FavoritesManager favoritesManager, SkinManager skinManager, SelectedSkinsManager selectedSkinsManager)
     {
@@ -70,6 +66,20 @@ public class SkinMorphListener implements Listener {
             plugin.menu.awaitingInput.remove(player.getUniqueId());
         }
 
+        if (plugin.menu.awaitingInput.containsKey(player.getUniqueId()) && plugin.menu.awaitingInput.get(player.getUniqueId()) == SkinMorphInputType.CHANGE_SKIN_OTHERS) {
+            event.setCancelled(true);
+            String[] parts = text.split(" ", 2);
+            String first = parts[0];
+            String second = parts.length > 1 ? parts[1] : "";
+            if (Bukkit.getPlayer(second) == null) {
+                player.sendMessage("§cCouldn't find online player '" + second + "'!");
+                plugin.menu.awaitingInput.remove(player.getUniqueId());
+                return;
+            }
+            skinManager.setSkinFromName(player, Bukkit.getPlayer(second), first, true);
+            plugin.menu.awaitingInput.remove(player.getUniqueId());
+        }
+
         if (plugin.menu.awaitingInput.containsKey(player.getUniqueId()) && plugin.menu.awaitingInput.get(player.getUniqueId()) == SkinMorphInputType.ADD_FAVORITE) {
             event.setCancelled(true);
             favoritesManager.addFavorite(player, text, true);
@@ -82,8 +92,28 @@ public class SkinMorphListener implements Listener {
             plugin.menu.awaitingInput.remove(player.getUniqueId());
         }
 
-        if (plugin.menu.awaitingInput.containsKey(player.getUniqueId()) && plugin.menu.awaitingInput.get(player.getUniqueId()) == SkinMorphInputType.CHANGE_SKIN_OTHERS) {
+        if (plugin.menu.awaitingInput.containsKey(player.getUniqueId()) && plugin.menu.awaitingInput.get(player.getUniqueId()) == SkinMorphInputType.RESET_SKIN_OTHERS) {
+            event.setCancelled(true);
+            String normalizedText = text.replace(" ", "").toLowerCase();
+            if (Bukkit.getPlayer(normalizedText) == null) {
+                player.sendMessage("§cCouldn't find online player '" + normalizedText + "'!");
+                plugin.menu.awaitingInput.remove(player.getUniqueId());
+                return;
+            }
+            skinManager.resetSkin(player, Bukkit.getPlayer(normalizedText), true);
+            plugin.menu.awaitingInput.remove(player.getUniqueId());
+        }
 
+        if (plugin.menu.awaitingInput.containsKey(player.getUniqueId()) && plugin.menu.awaitingInput.get(player.getUniqueId()) == SkinMorphInputType.RANDOM_SKIN_OTHERS) {
+            event.setCancelled(true);
+            String normalizedText = text.replace(" ", "").toLowerCase();
+            if (Bukkit.getPlayer(normalizedText) == null) {
+                player.sendMessage("§cCouldn't find online player '" + normalizedText + "'!");
+                plugin.menu.awaitingInput.remove(player.getUniqueId());
+                return;
+            }
+            skinManager.applyRandomSkin(player, Bukkit.getPlayer(normalizedText), true);
+            plugin.menu.awaitingInput.remove(player.getUniqueId());
         }
     }
 }
