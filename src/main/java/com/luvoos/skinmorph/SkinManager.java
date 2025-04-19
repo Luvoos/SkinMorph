@@ -328,6 +328,12 @@ public class SkinManager {
         return CompletableFuture.supplyAsync(() -> getTextures(skinName, tries));
     }
 
+    /**
+     * Get textures by username
+     * @param skinName (username)
+     * @param tries How many attempts the plugin should make to retrieve the textures
+     * @return Collection<ProfileProperty> the textures
+     */
     private Collection<ProfileProperty> getTextures(String skinName, int tries)
     {
         skinName = skinName.toLowerCase();
@@ -399,6 +405,7 @@ public class SkinManager {
         try {
             final HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
             final HttpResponse<String> response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+            if (plugin.DEBUG) plugin.getLogger().warning("Request for " + url + " -> " + response.statusCode());
             return response.body();
         } catch (IOException | InterruptedException e) {
             if (plugin.DEBUG) plugin.getLogger().warning("Request failed for " + url + " -> " + e.getMessage());

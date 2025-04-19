@@ -20,6 +20,7 @@ import java.util.concurrent.CompletableFuture;
 public class SkinMorphItems {
 
     private static final SkinMorph plugin = SkinMorph.instance;
+    private static final String pageSwitcherBase64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDA4OWQwZTBjODhlNTI1MDAzOGU2NTlmNTA4ZWJkYTViNjVhNWJlMGJmYzQxMDNkMGUxMmZhYmE0MDE4ZDVjYiJ9fX0=";
 
     public static CompletableFuture<ItemStack> favoriteSkinHead(String name)
     {
@@ -110,12 +111,12 @@ public class SkinMorphItems {
 
     public static ItemStack previousPage()
     {
-        return headFromBase64("§r§ePrevious Page", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDA4OWQwZTBjODhlNTI1MDAzOGU2NTlmNTA4ZWJkYTViNjVhNWJlMGJmYzQxMDNkMGUxMmZhYmE0MDE4ZDVjYiJ9fX0=");
+        return headFromBase64("§r§ePrevious Page", pageSwitcherBase64);
     }
 
     public static ItemStack nextPage()
     {
-        return headFromBase64("§r§eNext Page", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDA4OWQwZTBjODhlNTI1MDAzOGU2NTlmNTA4ZWJkYTViNjVhNWJlMGJmYzQxMDNkMGUxMmZhYmE0MDE4ZDVjYiJ9fX0=");
+        return headFromBase64("§r§eNext Page", pageSwitcherBase64);
     }
 
     public static ItemStack headFromBase64(String displayName, String base64)

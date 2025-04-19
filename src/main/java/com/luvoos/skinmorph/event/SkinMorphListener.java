@@ -72,7 +72,7 @@ public class SkinMorphListener implements Listener {
             String first = parts[0];
             String second = parts.length > 1 ? parts[1] : "";
             if (Bukkit.getPlayer(second.replace(" ", "").toLowerCase()) == null) {
-                player.sendMessage("§cCouldn't find online player '" + second + "'!");
+                player.sendMessage("§cCouldn't find online player '" + second.replace(" ", "").toLowerCase() + "'!");
                 plugin.menu.awaitingInput.remove(player.getUniqueId());
                 return;
             }

@@ -170,8 +170,8 @@ public class SkinMorphMenu implements Listener {
         inputWaitingTimes.remove(player.getUniqueId());
         player.closeInventory();
         if (inputType == SkinMorphInputType.ADD_FAVORITE || inputType == SkinMorphInputType.CHANGE_SKIN_SELF || inputType == SkinMorphInputType.REMOVE_FAVORITE) player.sendMessage("§aPlease enter a skin name in chat within the next 20 seconds!");
-        if (inputType == SkinMorphInputType.CHANGE_SKIN_OTHERS) player.sendMessage("§aPlease enter a skin name and a target username in chat separated by a semicolon (;)!");
-        if (inputType == SkinMorphInputType.RESET_SKIN_OTHERS || inputType == SkinMorphInputType.RANDOM_SKIN_OTHERS) player.sendMessage("§aPlease enter a target username in chat!");
+        if (inputType == SkinMorphInputType.CHANGE_SKIN_OTHERS) player.sendMessage("§aPlease enter a skin name and a target username in chat separated by a semicolon (;) within the next 20 seconds!");
+        if (inputType == SkinMorphInputType.RESET_SKIN_OTHERS || inputType == SkinMorphInputType.RANDOM_SKIN_OTHERS) player.sendMessage("§aPlease enter a target username in chat within the next 20 seconds!");
         inputWaitingTimes.put(player.getUniqueId(), 20);
         awaitingInput.put(player.getUniqueId(), inputType);
         new BukkitRunnable() {
