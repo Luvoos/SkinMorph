@@ -329,10 +329,10 @@ public class SkinManager {
     }
 
     /**
-     * Get textures by username
+     * Get textures by skinName (username)
      * @param skinName (username)
      * @param tries How many attempts the plugin should make to retrieve the textures
-     * @return Collection<ProfileProperty> the textures
+     * @return Collection of ProfileProperties containing the textures
      */
     private Collection<ProfileProperty> getTextures(String skinName, int tries)
     {

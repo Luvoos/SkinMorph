@@ -20,7 +20,8 @@ import java.util.concurrent.CompletableFuture;
 public class SkinMorphItems {
 
     private static final SkinMorph plugin = SkinMorph.instance;
-    private static final String pageSwitcherBase64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDA4OWQwZTBjODhlNTI1MDAzOGU2NTlmNTA4ZWJkYTViNjVhNWJlMGJmYzQxMDNkMGUxMmZhYmE0MDE4ZDVjYiJ9fX0=";
+    private static final String PAGE_SWITCH_BASE64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDA4OWQwZTBjODhlNTI1MDAzOGU2NTlmNTA4ZWJkYTViNjVhNWJlMGJmYzQxMDNkMGUxMmZhYmE0MDE4ZDVjYiJ9fX0=";
+    private static final String RANDOM_SKIN_BASE64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDM0ZTA2M2NhZmI0NjdhNWM4ZGU0M2VjNzg2MTkzOTlmMzY5ZjRhNTI0MzRkYTgwMTdhOTgzY2RkOTI1MTZhMCJ9fX0=";
 
     public static CompletableFuture<ItemStack> favoriteSkinHead(String name)
     {
@@ -71,7 +72,7 @@ public class SkinMorphItems {
         ItemStack item = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID());
-        profile.setProperty(new ProfileProperty("textures", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDM0ZTA2M2NhZmI0NjdhNWM4ZGU0M2VjNzg2MTkzOTlmMzY5ZjRhNTI0MzRkYTgwMTdhOTgzY2RkOTI1MTZhMCJ9fX0="));
+        profile.setProperty(new ProfileProperty("textures", RANDOM_SKIN_BASE64));
         meta.setPlayerProfile(profile);
         meta.setDisplayName("§eRandom skin");
         List<String> lore = new ArrayList<>();
@@ -111,12 +112,12 @@ public class SkinMorphItems {
 
     public static ItemStack previousPage()
     {
-        return headFromBase64("§r§ePrevious Page", pageSwitcherBase64);
+        return headFromBase64("§r§ePrevious Page", PAGE_SWITCH_BASE64);
     }
 
     public static ItemStack nextPage()
     {
-        return headFromBase64("§r§eNext Page", pageSwitcherBase64);
+        return headFromBase64("§r§eNext Page", PAGE_SWITCH_BASE64);
     }
 
     public static ItemStack headFromBase64(String displayName, String base64)
