@@ -296,7 +296,7 @@ public class SkinManager {
             return;
         }
         setSkinFromName(target, randomSkin, false);
-        if (plugin.SEND_RESPONSES && sendResponse) target.sendMessage("§aRandomly picked... §e" + randomSkin.toLowerCase() + "§a!");
+        if (plugin.SEND_RESPONSES && sendResponse) target.sendMessage("§aRandomly picked and applied skin '§e" + randomSkin.toLowerCase() + "§a'!");
     }
 
     public void applyRandomSkin(@NotNull CommandSender caller, @NotNull Player target, boolean sendResponse)
@@ -307,8 +307,8 @@ public class SkinManager {
             return;
         }
         setSkinFromName(target, randomSkin, false);
-        if (plugin.SEND_RESPONSES && sendResponse) target.sendMessage("§aRandomly picked... §e" + randomSkin.toLowerCase() + "§a!");
-        if (plugin.SEND_RESPONSES && sendResponse) caller.sendMessage("§aRandomly picked... §e" + randomSkin.toLowerCase() + "§a!");
+        if (plugin.SEND_RESPONSES && sendResponse) target.sendMessage("§aRandomly picked and applied skin '§e" + randomSkin.toLowerCase() + "§a'!");
+        if (plugin.SEND_RESPONSES && sendResponse) caller.sendMessage("§aRandomly picked and applied skin '§e" + randomSkin.toLowerCase() + "§a'!");
     }
 
     public void applyRandomSkin(@NotNull Player caller, @NotNull Player target, boolean sendResponse)
@@ -319,8 +319,8 @@ public class SkinManager {
             return;
         }
         setSkinFromName(target, randomSkin, false);
-        if (plugin.SEND_RESPONSES && sendResponse) target.sendMessage("§aRandomly picked... §e" + randomSkin.toLowerCase() + "§a!");
-        if (plugin.SEND_RESPONSES && sendResponse) caller.sendMessage("§aRandomly picked... §e" + randomSkin.toLowerCase() + "§a!");
+        if (plugin.SEND_RESPONSES && sendResponse) target.sendMessage("§aRandomly picked and applied skin '§e" + randomSkin.toLowerCase() + "§a'!");
+        if (plugin.SEND_RESPONSES && sendResponse) caller.sendMessage("§aRandomly picked and applied skin '§e" + randomSkin.toLowerCase() + "§a'!");
     }
 
     public CompletableFuture<Collection<ProfileProperty>> getTexturesAsync(String skinName, int tries)
