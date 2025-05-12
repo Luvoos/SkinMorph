@@ -6,7 +6,9 @@ import com.luvoos.skinmorph.SkinManager;
 import com.luvoos.skinmorph.SkinMorph;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -23,7 +25,7 @@ public class SkinMorphItems {
     private static final String PAGE_SWITCH_BASE64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDA4OWQwZTBjODhlNTI1MDAzOGU2NTlmNTA4ZWJkYTViNjVhNWJlMGJmYzQxMDNkMGUxMmZhYmE0MDE4ZDVjYiJ9fX0=";
     private static final String RANDOM_SKIN_BASE64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDM0ZTA2M2NhZmI0NjdhNWM4ZGU0M2VjNzg2MTkzOTlmMzY5ZjRhNTI0MzRkYTgwMTdhOTgzY2RkOTI1MTZhMCJ9fX0=";
 
-    public static CompletableFuture<ItemStack> favoriteSkinHead(String name)
+    public static CompletableFuture<ItemStack> favoriteSkinHead(Player player, String name)
     {
         return CompletableFuture.supplyAsync(() -> {
             ItemStack item = new ItemStack(Material.PLAYER_HEAD);

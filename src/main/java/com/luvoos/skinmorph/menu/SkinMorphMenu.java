@@ -69,7 +69,7 @@ public class SkinMorphMenu implements Listener {
 
         for (int i = startIndex; i < endIndex; i++) {
             final int slot = (i - startIndex) + 9;
-            SkinMorphItems.favoriteSkinHead(favorites.get(i)).thenAccept(item -> {
+            SkinMorphItems.favoriteSkinHead(player, favorites.get(i)).thenAccept(item -> {
                 Bukkit.getScheduler().runTask(plugin, () -> menu.setItem(slot, item));
             });
         }
