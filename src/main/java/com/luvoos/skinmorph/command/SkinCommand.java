@@ -137,7 +137,6 @@ public class SkinCommand implements CommandExecutor {
                 }
             }
         }
-
         return true;
-        }
+    }
 }
