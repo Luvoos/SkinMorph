@@ -69,7 +69,7 @@ public class SkinMorphListener implements Listener {
             plugin.menu.awaitingInput.remove(player.getUniqueId());
         }
 
-        if (plugin.menu.awaitingInput.containsKey(player.getUniqueId()) && plugin.menu.awaitingInput.get(player.getUniqueId()) == SkinMorphInputType.CHANGE_SKIN_OTHERS) {
+        if (plugin.menu.awaitingInput.containsKey(player.getUniqueId()) && plugin.menu.awaitingInput.get(player.getUniqueId()) == SkinMorphInputType.CHANGE_SKIN_OTHER) {
             event.setCancelled(true);
             String[] parts = text.split(";", 2);
             String first = parts[0];
@@ -95,7 +95,7 @@ public class SkinMorphListener implements Listener {
             plugin.menu.awaitingInput.remove(player.getUniqueId());
         }
 
-        if (plugin.menu.awaitingInput.containsKey(player.getUniqueId()) && plugin.menu.awaitingInput.get(player.getUniqueId()) == SkinMorphInputType.RESET_SKIN_OTHERS) {
+        if (plugin.menu.awaitingInput.containsKey(player.getUniqueId()) && plugin.menu.awaitingInput.get(player.getUniqueId()) == SkinMorphInputType.RESET_SKIN_OTHER) {
             event.setCancelled(true);
             String normalizedText = text.replace(" ", "").toLowerCase();
             if (Bukkit.getPlayer(normalizedText) == null) {
@@ -107,7 +107,7 @@ public class SkinMorphListener implements Listener {
             plugin.menu.awaitingInput.remove(player.getUniqueId());
         }
 
-        if (plugin.menu.awaitingInput.containsKey(player.getUniqueId()) && plugin.menu.awaitingInput.get(player.getUniqueId()) == SkinMorphInputType.RANDOM_SKIN_OTHERS) {
+        if (plugin.menu.awaitingInput.containsKey(player.getUniqueId()) && plugin.menu.awaitingInput.get(player.getUniqueId()) == SkinMorphInputType.RANDOM_SKIN_OTHER) {
             event.setCancelled(true);
             String normalizedText = text.replace(" ", "").toLowerCase();
             if (Bukkit.getPlayer(normalizedText) == null) {

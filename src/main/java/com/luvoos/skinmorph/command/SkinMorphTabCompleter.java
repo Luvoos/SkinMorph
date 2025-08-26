@@ -40,6 +40,12 @@ public class SkinMorphTabCompleter implements TabCompleter {
                 List<String> favorites = plugin.favoritesManager.getFavorites(player);
                 if (favorites != null && !favorites.isEmpty()) completions.addAll(favorites);
             }
+        } else if (args.length == 3 && args[0].equalsIgnoreCase("set")) { // /skin set OTHER
+            if (sender instanceof final Player player) {
+                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                    completions.add(onlinePlayer.getName());
+                }
+            }
         } else if (args.length == 2 && args[0].equalsIgnoreCase("random")) {
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 completions.add(onlinePlayer.getName());
