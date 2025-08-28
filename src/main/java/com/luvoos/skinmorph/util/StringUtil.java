@@ -3,9 +3,9 @@ package com.luvoos.skinmorph.util;
 public class StringUtil {
 
     /**
-     * Normalize a string by putting it in lower-case and removing spaces
+     * Normalize a string by putting it in lowercase and removing spaces
      * @param s
-     * @return
+     * @return Normalized string
      */
     public static String normalize(String s)
     {
