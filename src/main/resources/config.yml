@@ -1,3 +1,2 @@
-sendResponses: true
-debug: false
+playerFeedback: true
 sessionAgnosticSkins: true

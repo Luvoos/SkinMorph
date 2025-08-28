@@ -13,7 +13,7 @@ public final class SkinMorph extends JavaPlugin {
     public FavoritesManager favoritesManager;
     public SelectedSkinsManager selectedSkinsManager;
     public SkinMorphMenu menu;
-    public boolean SEND_RESPONSES;
+    public boolean PLAYER_FEEDBACK;
     public boolean DEBUG;
     public boolean SESSION_AGNOSTIC_SKINS;
 
@@ -45,7 +45,7 @@ public final class SkinMorph extends JavaPlugin {
         selectedSkinsManager.preloadSelectedSkins();
         favoritesManager = new FavoritesManager(this, skinManager);
         menu = new SkinMorphMenu(this, favoritesManager, skinManager);
-        SEND_RESPONSES = getConfig().getBoolean("sendResponses");
+        PLAYER_FEEDBACK = getConfig().getBoolean("playerFeedback");
         DEBUG = getConfig().getBoolean("debug");
         SESSION_AGNOSTIC_SKINS = getConfig().getBoolean("sessionAgnosticSkins");
         getCommand("skin").setExecutor(new SkinCommand());

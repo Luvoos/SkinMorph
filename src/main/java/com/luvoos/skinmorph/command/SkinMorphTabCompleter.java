@@ -30,7 +30,7 @@ public class SkinMorphTabCompleter implements TabCompleter {
             completions.add("set"); // /skin set
             completions.add("reset"); // /skin reset
             completions.add("help"); // /skin help
-            completions.add("favorites"); // /skin favorites add/remove
+            completions.add("favorites"); // /skin favorites
             completions.add("random"); // /skin random
         } else if (args.length == 2 && args[0].equalsIgnoreCase("set")) { // /skin set SELF
             if (sender instanceof final Player player) {
