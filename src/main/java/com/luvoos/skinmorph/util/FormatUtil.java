@@ -1,6 +1,6 @@
 package com.luvoos.skinmorph.util;
 
-public class StringUtil {
+public class FormatUtil {
 
     /**
      * Normalize a string by putting it in lowercase and removing spaces
@@ -10,7 +10,8 @@ public class StringUtil {
     public static String normalize(String s)
     {
         s = s.toLowerCase();
-        s.replace(" ", "");
+        s = s.replace(" ", "");
         return s;
     }
+
 }
