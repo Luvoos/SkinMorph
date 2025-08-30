@@ -95,13 +95,13 @@ public class SkinMorphMenu implements Listener {
         if (event.getView().getTitle().startsWith("Skin Menu                 Page ") && menuInventories.contains(event.getClickedInventory())) {
             event.setCancelled(true);
             ItemStack clickedItem = event.getCurrentItem();
-            if (clickedItem == null || !clickedItem.hasItemMeta() ) return;
+            if (clickedItem == null || !clickedItem.hasItemMeta()) return;
             event.setCursor(null);
             player.updateInventory();
 
             String itemName = clickedItem.getItemMeta().getDisplayName();
 
-            if (itemName.contains("Change skin")) {
+            if (itemName.contains("Change Skin")) {
                 if (event.isLeftClick()) {
                     awaitInput(player, SkinMorphInputType.CHANGE_SKIN_SELF);
                 } else if (event.isRightClick()) {
@@ -109,7 +109,7 @@ public class SkinMorphMenu implements Listener {
                 }
             }
 
-            if (itemName.contains("Manage favorites")) {
+            if (itemName.contains("Manage Favorites")) {
                 if (event.isLeftClick()) {
                     awaitInput(player, SkinMorphInputType.ADD_FAVORITE);
                 } else if (event.isRightClick()) {
@@ -117,7 +117,7 @@ public class SkinMorphMenu implements Listener {
                 }
             }
 
-            if (itemName.contains("Reset skin")) {
+            if (itemName.contains("Reset Skin")) {
                 if (event.isLeftClick()) {
                     skinManager.resetSkin(player, true);
                 } else if (event.isRightClick()) {
@@ -125,7 +125,7 @@ public class SkinMorphMenu implements Listener {
                 }
             }
 
-            if (itemName.contains("Random skin")) {
+            if (itemName.contains("Random Skin")) {
                 if (event.isLeftClick()) {
                     skinManager.applyRandomSkin(player, true);
                     player.closeInventory();
