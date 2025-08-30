@@ -4,6 +4,7 @@ import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
 import com.luvoos.skinmorph.SkinManager;
 import com.luvoos.skinmorph.SkinMorph;
+import com.luvoos.skinmorph.util.FormatUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -25,30 +26,48 @@ public class SkinMorphItems {
 
     public static CompletableFuture<ItemStack> favoriteSkinHead(Player player, String name)
     {
-        return CompletableFuture.supplyAsync(() -> {
-            ItemStack item = new ItemStack(Material.PLAYER_HEAD);
-            SkullMeta meta = (SkullMeta) item.getItemMeta();
-            PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID(), name);
+        // check cache async
+        Collection<ProfileProperty> cached = SkinManager.cache.get(name);
 
-            Collection<ProfileProperty> cachedProperties = SkinManager.cache.get(name);
+        CompletableFuture<Collection<ProfileProperty>> future =
+                cached != null
+                        ? CompletableFuture.completedFuture(cached)
+                        : plugin.skinManager.getTexturesAsync(name, 3);
 
-            CompletableFuture<Collection<ProfileProperty>> propertiesFuture =
-                    cachedProperties != null
-                            ? CompletableFuture.completedFuture(cachedProperties)
-                            : plugin.skinManager.getTexturesAsync(name, 3);
+        // once we have textures, switch back to main thread to perform bukkit operations
+        return future.thenCompose(profileProperties -> {
+            CompletableFuture<ItemStack> itemFuture = new CompletableFuture<>();
 
-            return propertiesFuture.thenApply(properties -> {
-                if (properties != null) profile.setProperties(properties);
-                meta.setPlayerProfile(profile);
-                meta.setDisplayName("§r§a" + name.toLowerCase());
-                meta.setLore(List.of(
-                        "§r§f§lLEFT CLICK §r§ato apply skin§r",
-                        "§r§f§lRIGHT CLICK §r§cto remove skin§r"
-                ));
-                item.setItemMeta(meta);
-                return item;
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                try {
+                    // build item
+                    ItemStack item = new ItemStack(Material.PLAYER_HEAD);
+                    SkullMeta meta = (SkullMeta) item.getItemMeta();
+
+                    PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID(), name);
+                    if (profileProperties != null) {
+                        profile.setProperties(profileProperties);
+                    }
+
+                    meta.setPlayerProfile(profile);
+                    meta.setDisplayName("§r§a" + FormatUtil.normalize(name));
+                    meta.setLore(List.of(
+                            "§r§f§lLEFT CLICK §r§ato apply skin§r",
+                            "§r§f§lRIGHT CLICK §r§cto remove skin§r"
+                    ));
+
+                    item.setItemMeta(meta);
+
+                    itemFuture.complete(item);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    // if something goes wrong we return default steve head
+                    itemFuture.complete(new ItemStack(Material.PLAYER_HEAD));
+                }
             });
-        }).thenCompose(f -> f);
+
+            return itemFuture;
+        });
     }
 
     public static ItemStack changeSkin(Player player)

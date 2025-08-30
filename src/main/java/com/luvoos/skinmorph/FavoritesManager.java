@@ -67,7 +67,7 @@ public class FavoritesManager {
         return config.getStringList("players." + uuid);
     }
 
-    public void addFavorite(@NotNull Player player, @NotNull String skinName, boolean sendResponse) throws ExecutionException, InterruptedException
+    public void addFavorite(@NotNull Player player, @NotNull String skinName, boolean playerFeedback) throws ExecutionException, InterruptedException
     {
         final String uuid = player.getUniqueId().toString();
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
@@ -76,7 +76,7 @@ public class FavoritesManager {
             CompletableFuture<Collection<ProfileProperty>> textures = skinManager.getTexturesAsync(skinName, 3);
             try {
                 if (textures.get() == null) {
-                    if (plugin.PLAYER_FEEDBACK && sendResponse) player.sendMessage("§cInvalid profile! ('§e" + noSpacesSkinName.toLowerCase() + "§c')");
+                    if (plugin.PLAYER_FEEDBACK && playerFeedback) player.sendMessage("§cInvalid profile! ('§e" + noSpacesSkinName.toLowerCase() + "§c')");
                     return;
                 }
             } catch (InterruptedException e) {
@@ -89,15 +89,15 @@ public class FavoritesManager {
                 config.set("players." + uuid, favorites);
                 saveFile();
             } else {
-                if (plugin.PLAYER_FEEDBACK && sendResponse && player.isOnline()) player.sendMessage("§e" + noSpacesSkinName.toLowerCase() + " §ais already in your favorites!");
+                if (plugin.PLAYER_FEEDBACK && playerFeedback && player.isOnline()) player.sendMessage("§e" + noSpacesSkinName.toLowerCase() + " §ais already in your favorites!");
                 return;
             }
             reloadFavorites();
-            if (plugin.PLAYER_FEEDBACK && sendResponse && player.isOnline()) player.sendMessage("§aAdded §e" + noSpacesSkinName.toLowerCase() + " §ato your favorites!");
+            if (plugin.PLAYER_FEEDBACK && playerFeedback && player.isOnline()) player.sendMessage("§aAdded §e" + noSpacesSkinName.toLowerCase() + " §ato your favorites!");
         });
     }
 
-    public void removeFavorite(@NotNull Player player, @NotNull String skinName, boolean sendResponse)
+    public void removeFavorite(@NotNull Player player, @NotNull String skinName, boolean playerFeedback)
     {
         final String uuid = player.getUniqueId().toString();
         List<String> favorites = getFavorites(player);
@@ -107,11 +107,11 @@ public class FavoritesManager {
             config.set("players." + uuid, favorites);
             saveFile();
         } else {
-            if (plugin.PLAYER_FEEDBACK && sendResponse && player.isOnline()) player.sendMessage("§e" + noSpacesSkinName.toLowerCase() + " §cis not in your favorites!");
+            if (plugin.PLAYER_FEEDBACK && playerFeedback && player.isOnline()) player.sendMessage("§e" + noSpacesSkinName.toLowerCase() + " §cis not in your favorites!");
             return;
         }
         reloadFavorites();
-        if (plugin.PLAYER_FEEDBACK && sendResponse && player.isOnline()) player.sendMessage("§cRemoved §e" + noSpacesSkinName.toLowerCase() + " §cfrom your favorites!");
+        if (plugin.PLAYER_FEEDBACK && playerFeedback && player.isOnline()) player.sendMessage("§cRemoved §e" + noSpacesSkinName.toLowerCase() + " §cfrom your favorites!");
     }
 
     public String getRandomFavorite(@NotNull Player player)
