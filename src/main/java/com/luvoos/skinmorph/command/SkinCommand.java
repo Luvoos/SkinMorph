@@ -55,7 +55,7 @@ public class SkinCommand implements CommandExecutor {
                     plugin.skinManager.setSkinFromName(player, skinNameInput, true);
                 } else if (len == 3) {
                     if (Bukkit.getPlayer(args[2]) == null) {
-                        sender.sendMessage("§cCouldn't find online player '" + args[2] + "'!");
+                        sender.sendMessage("§cCouldn't find online player '§e" + args[2] + "§c'!");
                         return true;
                     }
 
@@ -74,7 +74,7 @@ public class SkinCommand implements CommandExecutor {
                     plugin.skinManager.applyRandomSkin(player, true);
                 } else if (len == 2) {
                     if (Bukkit.getPlayer(args[1]) == null) {
-                        sender.sendMessage("§cCouldn't find online player '" + args[1] + "'!");
+                        sender.sendMessage("§cCouldn't find online player '§e" + args[1] + "§c'!");
                         return true;
                     }
                     Player target = Bukkit.getPlayer(args[1]);
@@ -104,7 +104,7 @@ public class SkinCommand implements CommandExecutor {
                     }
                 } else if (len == 2) {
                     if (Bukkit.getPlayer(args[1]) == null) {
-                        sender.sendMessage("§cCouldn't find online player '" + args[1] + "'!");
+                        sender.sendMessage("§cCouldn't find online player '§e" + args[1] + "§c'!");
                         return true;
                     }
                     Player target = Bukkit.getPlayer(args[1]);

@@ -28,6 +28,7 @@ public class SkinMorphMenu implements Listener {
     private final SkinManager skinManager;
     private final int FAVORITES_PER_PAGE = 27;
     private final Map<UUID, Integer> currentPages = new HashMap<>();
+    private final Map<Inventory, String> menuInventories = new HashMap<>();
     public final Map<UUID, SkinMorphInputType> awaitingInput = new ConcurrentHashMap<>();
     private final Map<UUID, Integer> inputWaitingTimes = new ConcurrentHashMap<>();
 
@@ -48,6 +49,8 @@ public class SkinMorphMenu implements Listener {
         int totalPages = totalPages(player);
 
         Inventory menu = Bukkit.createInventory(null, 9 * 5, "Skin Menu                 Page " + page + "/" + (totalPages));
+
+        menuInventories.put(menu, "skin_morph_menu");
 
         int startIndex = (getCurrentPage(player) - 1) * FAVORITES_PER_PAGE;
         int endIndex = Math.min(startIndex + FAVORITES_PER_PAGE, favorites.size());
@@ -72,6 +75,12 @@ public class SkinMorphMenu implements Listener {
             SkinMorphItems.favoriteSkinHead(player, favorites.get(i)).thenAccept(item -> {
                 Bukkit.getScheduler().runTask(plugin, () -> menu.setItem(slot, item));
             });
+        }
+
+        for (int i = 0; i < menu.getSize(); i++) {
+            if (menu.getItem(i) == null) {
+                menu.setItem(i, SkinMorphItems.background());
+            }
         }
 
         player.openInventory(menu);
@@ -155,7 +164,7 @@ public class SkinMorphMenu implements Listener {
     {
         final Player player = (Player) event.getPlayer();
         if (event.getView().getTitle().startsWith("Skin Menu                 Page ")) {
-
+            menuInventories.remove(event.getInventory());
         }
     }
 

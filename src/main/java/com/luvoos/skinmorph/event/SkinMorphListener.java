@@ -75,7 +75,7 @@ public class SkinMorphListener implements Listener {
             String first = parts[0];
             String second = parts.length > 1 ? parts[1] : "";
             if (Bukkit.getPlayer(second.replace(" ", "").toLowerCase()) == null) {
-                player.sendMessage("§cCouldn't find online player '" + second.replace(" ", "").toLowerCase() + "'!");
+                player.sendMessage("§cCouldn't find online player '§e" + second.replace(" ", "").toLowerCase() + "§c'!");
                 plugin.menu.awaitingInput.remove(player.getUniqueId());
                 return;
             }
@@ -99,7 +99,7 @@ public class SkinMorphListener implements Listener {
             event.setCancelled(true);
             String normalizedText = text.replace(" ", "").toLowerCase();
             if (Bukkit.getPlayer(normalizedText) == null) {
-                player.sendMessage("§cCouldn't find online player '" + normalizedText + "'!");
+                player.sendMessage("§cCouldn't find online player '§e" + normalizedText + "§c'!");
                 plugin.menu.awaitingInput.remove(player.getUniqueId());
                 return;
             }
@@ -111,7 +111,7 @@ public class SkinMorphListener implements Listener {
             event.setCancelled(true);
             String normalizedText = text.replace(" ", "").toLowerCase();
             if (Bukkit.getPlayer(normalizedText) == null) {
-                player.sendMessage("§cCouldn't find online player '" + normalizedText + "'!");
+                player.sendMessage("§cCouldn't find online player '§e" + normalizedText + "§c'!");
                 plugin.menu.awaitingInput.remove(player.getUniqueId());
                 return;
             }

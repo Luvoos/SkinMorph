@@ -95,7 +95,7 @@ public class SkinMorphItems {
         meta.setPlayerProfile(profile);
         meta.setDisplayName("§eRandom skin");
         List<String> lore = new ArrayList<>();
-        lore.add("§r§7Randomly choose a favorite");
+        lore.add("§r§7Randomly pick from favorites");
         lore.add("§r§f§lLEFT CLICK §r§afor yourself§r");
         lore.add("§r§f§lRIGHT CLICK §r§afor another player§r");
         meta.setLore(lore);
@@ -118,7 +118,7 @@ public class SkinMorphItems {
 
     public static ItemStack manageFavorites()
     {
-        ItemStack item = new ItemStack(Material.KNOWLEDGE_BOOK);
+        ItemStack item = new ItemStack(Material.BOOK);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName("§eManage favorites");
         List<String> lore = new ArrayList<>();
@@ -137,6 +137,15 @@ public class SkinMorphItems {
     public static ItemStack nextPage()
     {
         return headFromBase64("§r§eNext Page", PAGE_SWITCH_BASE64);
+    }
+
+    public static ItemStack background()
+    {
+        ItemStack item = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(" ");
+        item.setItemMeta(meta);
+        return item;
     }
 
     public static ItemStack headFromBase64(String displayName, String base64)
