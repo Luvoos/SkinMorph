@@ -70,6 +70,8 @@ public class SkinMorphMenu implements Listener {
             menu.setItem(44, SkinMorphItems.nextPage());
         }
 
+        menu.setItem(40, SkinMorphItems.close());
+
         for (int i = startIndex; i < endIndex; i++) {
             final int slot = (i - startIndex) + 9;
             SkinMorphItems.favoriteSkinHead(player, favorites.get(i)).thenAccept(item -> {
@@ -90,7 +92,7 @@ public class SkinMorphMenu implements Listener {
     public void onInventoryClick(final InventoryClickEvent event) throws ExecutionException, InterruptedException
     {
         if (!(event.getWhoClicked() instanceof final Player player)) return;
-        if (event.getView().getTitle().startsWith("Skin Menu                 Page ")) {
+        if (event.getView().getTitle().startsWith("Skin Menu                 Page ") && menuInventories.containsKey(event.getClickedInventory())) {
             event.setCancelled(true);
             ItemStack clickedItem = event.getCurrentItem();
             if (clickedItem == null || !clickedItem.hasItemMeta() ) return;
@@ -156,6 +158,10 @@ public class SkinMorphMenu implements Listener {
                     open(player, getCurrentPage(player));
                 }
             }
+
+            if (itemName.contains("Close")) {
+                player.closeInventory();
+            }
         }
     }
 
@@ -163,7 +169,7 @@ public class SkinMorphMenu implements Listener {
     public void onInventoryClose(final InventoryCloseEvent event)
     {
         final Player player = (Player) event.getPlayer();
-        if (event.getView().getTitle().startsWith("Skin Menu                 Page ")) {
+        if (event.getView().getTitle().startsWith("Skin Menu                 Page ") && menuInventories.containsKey(event.getInventory())) {
             menuInventories.remove(event.getInventory());
         }
     }

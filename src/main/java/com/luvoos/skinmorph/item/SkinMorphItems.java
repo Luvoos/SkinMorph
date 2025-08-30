@@ -61,8 +61,14 @@ public class SkinMorphItems {
                     itemFuture.complete(item);
                 } catch (Exception e) {
                     e.printStackTrace();
+
                     // if something goes wrong we return default steve head
-                    itemFuture.complete(new ItemStack(Material.PLAYER_HEAD));
+                    ItemStack fallbackItem = new ItemStack(Material.PLAYER_HEAD);
+                    ItemMeta meta = fallbackItem.getItemMeta();
+                    meta.setDisplayName("§cFailed to load.");
+                    fallbackItem.setItemMeta(meta);
+
+                    itemFuture.complete(fallbackItem);
                 }
             });
 
@@ -78,9 +84,9 @@ public class SkinMorphItems {
         meta.setPlayerProfile(profile);
         meta.setDisplayName("§eChange skin");
         List<String> lore = new ArrayList<>();
+        lore.add("§r§7Your current skin: §e" + plugin.skinManager.getCurrentSkin(player) + ((player.getName().equalsIgnoreCase(plugin.skinManager.getCurrentSkin(player))) ? " (default)" : ""));
         lore.add("§r§f§lLEFT CLICK §r§afor yourself§r");
         lore.add("§r§f§lRIGHT CLICK §r§afor another player§r");
-        lore.add("§r§7Your current skin: §e" + plugin.skinManager.getCurrentSkin(player) + ((player.getName().equalsIgnoreCase(plugin.skinManager.getCurrentSkin(player))) ? " (default)" : ""));
         meta.setLore(lore);
         item.setItemMeta(meta);
         return item;
@@ -144,6 +150,15 @@ public class SkinMorphItems {
         ItemStack item = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(" ");
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    public static ItemStack close()
+    {
+        ItemStack item = new ItemStack(Material.BARRIER);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("§cClose");
         item.setItemMeta(meta);
         return item;
     }
