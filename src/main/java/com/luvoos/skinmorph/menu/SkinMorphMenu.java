@@ -27,8 +27,8 @@ public class SkinMorphMenu implements Listener {
     private final FavoritesManager favoritesManager;
     private final SkinManager skinManager;
     private final int FAVORITES_PER_PAGE = 27;
+    private final Set<Inventory> menuInventories = new HashSet<>();
     private final Map<UUID, Integer> currentPages = new HashMap<>();
-    private final Map<Inventory, String> menuInventories = new HashMap<>();
     public final Map<UUID, SkinMorphInputType> awaitingInput = new ConcurrentHashMap<>();
     private final Map<UUID, Integer> inputWaitingTimes = new ConcurrentHashMap<>();
 
@@ -50,7 +50,7 @@ public class SkinMorphMenu implements Listener {
 
         Inventory menu = Bukkit.createInventory(null, 9 * 5, "Skin Menu                 Page " + page + "/" + (totalPages));
 
-        menuInventories.put(menu, "skin_morph_menu");
+        menuInventories.add(menu);
 
         int startIndex = (getCurrentPage(player) - 1) * FAVORITES_PER_PAGE;
         int endIndex = Math.min(startIndex + FAVORITES_PER_PAGE, favorites.size());
@@ -92,7 +92,7 @@ public class SkinMorphMenu implements Listener {
     public void onInventoryClick(final InventoryClickEvent event) throws ExecutionException, InterruptedException
     {
         if (!(event.getWhoClicked() instanceof final Player player)) return;
-        if (event.getView().getTitle().startsWith("Skin Menu                 Page ") && menuInventories.containsKey(event.getClickedInventory())) {
+        if (event.getView().getTitle().startsWith("Skin Menu                 Page ") && menuInventories.contains(event.getClickedInventory())) {
             event.setCancelled(true);
             ItemStack clickedItem = event.getCurrentItem();
             if (clickedItem == null || !clickedItem.hasItemMeta() ) return;
@@ -169,7 +169,7 @@ public class SkinMorphMenu implements Listener {
     public void onInventoryClose(final InventoryCloseEvent event)
     {
         final Player player = (Player) event.getPlayer();
-        if (event.getView().getTitle().startsWith("Skin Menu                 Page ") && menuInventories.containsKey(event.getInventory())) {
+        if (event.getView().getTitle().startsWith("Skin Menu                 Page ") && menuInventories.contains(event.getInventory())) {
             menuInventories.remove(event.getInventory());
         }
     }
