@@ -48,7 +48,7 @@ public class SkinMorphMenu implements Listener {
 
         int totalPages = totalPages(player);
 
-        Inventory menu = Bukkit.createInventory(null, 9 * 5, "Skin Menu                 Page " + page + "/" + (totalPages));
+        Inventory menu = Bukkit.createInventory(null, 9 * 5, "Skin Menu                 Page " + page + "/" + totalPages);
 
         menuInventories.add(menu);
 
