@@ -26,12 +26,13 @@ public class SkinMorphItems {
 
     public static CompletableFuture<ItemStack> favoriteSkinHead(Player player, String name)
     {
-        // check cache async
+        // check cache
         Collection<ProfileProperty> cached = SkinManager.cache.get(name);
 
         CompletableFuture<Collection<ProfileProperty>> future =
                 cached != null
                         ? CompletableFuture.completedFuture(cached)
+                        // if we don't have it cached, fetch it asynchronously
                         : plugin.skinManager.getTexturesAsync(name, 3);
 
         // once we have textures, switch back to main thread to perform bukkit operations

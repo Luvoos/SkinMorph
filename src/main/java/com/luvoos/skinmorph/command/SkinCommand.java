@@ -34,11 +34,7 @@ public class SkinCommand implements CommandExecutor {
                 sender.sendMessage("§cYou can only do this as a player!");
                 return true;
             }
-            try {
-                plugin.menu.open(player, 1);
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            }
+            plugin.menu.open(player, 1);
             return true;
         }
 

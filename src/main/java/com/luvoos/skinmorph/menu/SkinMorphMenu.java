@@ -39,12 +39,12 @@ public class SkinMorphMenu implements Listener {
         this.skinManager = skinManager;
     }
 
-    public void open(@NotNull final Player player, int page) throws ExecutionException, InterruptedException
+    public void open(@NotNull final Player player, int page)
     {
         setCurrentPage(player, page);
 
-        List<String> favorites = favoritesManager.getFavorites(player);
-        if (favorites == null) favorites = new ArrayList<>();
+        List<String> favorites = Optional.ofNullable(favoritesManager.getFavorites(player))
+                                         .orElse(Collections.emptyList());
 
         int totalPages = totalPages(player);
 
@@ -55,20 +55,19 @@ public class SkinMorphMenu implements Listener {
         int startIndex = (getCurrentPage(player) - 1) * FAVORITES_PER_PAGE;
         int endIndex = Math.min(startIndex + FAVORITES_PER_PAGE, favorites.size());
 
-        if (favorites.size() > 1) menu.setItem(2, SkinMorphItems.randomSkin(player));
-        menu.setItem(3, SkinMorphItems.resetSkin(player));
+        boolean hasRandomSkinItem = favorites.size() > 1;
+        boolean hasResetSkinItem = !player.getName().equalsIgnoreCase(skinManager.getCurrentSkin(player));
+
+        if (hasRandomSkinItem) menu.setItem(hasResetSkinItem ? 2 : 3, SkinMorphItems.randomSkin(player));
+        if (hasResetSkinItem) menu.setItem(3, SkinMorphItems.resetSkin(player));
         menu.setItem(4, SkinMorphItems.changeSkin(player));
         menu.setItem(5, SkinMorphItems.manageFavorites());
 
         boolean hasNextPage = endIndex < favorites.size();
         boolean hasPreviousPage = getCurrentPage(player) > 1;
 
-        if (hasPreviousPage) {
-            menu.setItem(36, SkinMorphItems.previousPage());
-        }
-        if (hasNextPage) {
-            menu.setItem(44, SkinMorphItems.nextPage());
-        }
+        if (hasPreviousPage) menu.setItem(36, SkinMorphItems.previousPage());
+        if (hasNextPage) menu.setItem(44, SkinMorphItems.nextPage());
 
         menu.setItem(40, SkinMorphItems.close());
 
@@ -89,7 +88,7 @@ public class SkinMorphMenu implements Listener {
     }
 
     @EventHandler
-    public void onInventoryClick(final InventoryClickEvent event) throws ExecutionException, InterruptedException
+    public void onInventoryClick(final InventoryClickEvent event)
     {
         if (!(event.getWhoClicked() instanceof final Player player)) return;
         if (event.getView().getTitle().startsWith("Skin Menu                 Page ") && menuInventories.contains(event.getClickedInventory())) {
