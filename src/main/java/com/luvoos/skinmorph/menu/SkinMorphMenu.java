@@ -5,6 +5,7 @@ import com.luvoos.skinmorph.SkinManager;
 import com.luvoos.skinmorph.SkinMorph;
 import com.luvoos.skinmorph.item.SkinMorphItems;
 import com.luvoos.skinmorph.type.SkinMorphInputType;
+import com.luvoos.skinmorph.type.SkinMorphMenuType;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,6 +28,7 @@ public class SkinMorphMenu implements Listener {
     private final SkinManager skinManager;
     private final int FAVORITES_PER_PAGE = 27;
     private final Set<Inventory> menuInventories = new HashSet<>();
+    private final Map<UUID, SkinMorphMenuType> currentMenuTypes = new HashMap<>();
     private final Map<UUID, Integer> currentPages = new HashMap<>();
     public final Map<UUID, SkinMorphInputType> awaitingInput = new ConcurrentHashMap<>();
     private final Map<UUID, Integer> inputWaitingTimes = new ConcurrentHashMap<>();
@@ -40,6 +42,7 @@ public class SkinMorphMenu implements Listener {
 
     public void open(@NotNull final Player player, int page)
     {
+        setCurrentMenuType(player, SkinMorphMenuType.MAIN);
         setCurrentPage(player, page);
 
         List<String> favorites = Optional.ofNullable(favoritesManager.getFavorites(player))
@@ -61,6 +64,7 @@ public class SkinMorphMenu implements Listener {
         if (hasResetSkinItem) menu.setItem(3, SkinMorphItems.resetSkin(player));
         menu.setItem(4, SkinMorphItems.changeSkin(player));
         menu.setItem(5, SkinMorphItems.manageFavorites());
+        menu.setItem(8, SkinMorphItems.settings());
 
         boolean hasNextPage = endIndex < favorites.size();
         boolean hasPreviousPage = getCurrentPage(player) > 1;
@@ -86,11 +90,33 @@ public class SkinMorphMenu implements Listener {
         player.openInventory(menu);
     }
 
+    public void openSettings(@NotNull final Player player)
+    {
+        setCurrentMenuType(player, SkinMorphMenuType.SETTINGS);
+
+        Inventory menu = Bukkit.createInventory(null, 9 * 2, "SkinMorph Settings");
+
+        menuInventories.add(menu);
+
+        menu.setItem(4, SkinMorphItems.clearCache());
+
+        menu.setItem(9, SkinMorphItems.back());
+        menu.setItem(13, SkinMorphItems.close());
+
+        for (int i = 0; i < menu.getSize(); i++) {
+            if (menu.getItem(i) == null) {
+                menu.setItem(i, SkinMorphItems.background());
+            }
+        }
+
+        player.openInventory(menu);
+    }
+
     @EventHandler
     public void onInventoryClick(final InventoryClickEvent event)
     {
         if (!(event.getWhoClicked() instanceof final Player player)) return;
-        if (event.getView().getTitle().startsWith("Skin Menu                 Page ") && menuInventories.contains(event.getClickedInventory())) {
+        if (menuInventories.contains(event.getClickedInventory())) {
             event.setCancelled(true);
             ItemStack clickedItem = event.getCurrentItem();
             if (clickedItem == null || !clickedItem.hasItemMeta()) return;
@@ -157,19 +183,32 @@ public class SkinMorphMenu implements Listener {
                 }
             }
 
+            if (itemName.contains("Settings")) {
+                openSettings(player);
+            }
+
+            if (itemName.contains("Back")) {
+                open(player, getCurrentPage(player));
+            }
+
+            if (itemName.contains("Clear Cache")) {
+                skinManager.clearCache();
+                player.sendMessage("§aThe cache was cleared!");
+                player.closeInventory();
+            }
+
             if (itemName.contains("Close")) {
                 player.closeInventory();
             }
         }
     }
 
+
+
     @EventHandler
     public void onInventoryClose(final InventoryCloseEvent event)
     {
-        final Player player = (Player) event.getPlayer();
-        if (event.getView().getTitle().startsWith("Skin Menu                 Page ") && menuInventories.contains(event.getInventory())) {
-            menuInventories.remove(event.getInventory());
-        }
+        menuInventories.remove(event.getInventory());
     }
 
     /**
@@ -210,15 +249,25 @@ public class SkinMorphMenu implements Listener {
     @EventHandler
     public void onInventoryDrag(final InventoryDragEvent event)
     {
-        if (event.getView().getTitle().startsWith("Skin Menu                 Page ")) event.setCancelled(true);
+        if (menuInventories.contains(event.getInventory())) event.setCancelled(true);
     }
 
-    private int getCurrentPage(@NotNull Player player)
+    public SkinMorphMenuType getCurrentMenuType(@NotNull Player player)
     {
-        return currentPages.get(player.getUniqueId());
+        return currentMenuTypes.getOrDefault(player.getUniqueId(), SkinMorphMenuType.MAIN);
     }
 
-    private void setCurrentPage(@NotNull Player player, int value)
+    public void setCurrentMenuType(@NotNull Player player, SkinMorphMenuType menuType)
+    {
+        currentMenuTypes.put(player.getUniqueId(), menuType);
+    }
+
+    public int getCurrentPage(@NotNull Player player)
+    {
+        return currentPages.getOrDefault(player.getUniqueId(), 1);
+    }
+
+    public void setCurrentPage(@NotNull Player player, int value)
     {
         currentPages.put(player.getUniqueId(), value);
     }

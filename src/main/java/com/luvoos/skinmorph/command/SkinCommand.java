@@ -34,7 +34,7 @@ public class SkinCommand implements CommandExecutor {
                 sender.sendMessage("§cYou can only do this as a player!");
                 return true;
             }
-            plugin.menu.open(player, 1);
+            plugin.menu.open(player, plugin.menu.getCurrentPage(player));
             return true;
         }
 
@@ -130,6 +130,15 @@ public class SkinCommand implements CommandExecutor {
                     }
                 }
             }
+            case "settings" -> {
+                if (len == 1) {
+                    if (!(sender instanceof final Player player)) {
+                        sender.sendMessage(ChatColor.RED + "You can only do this as a player!");
+                        return true;
+                    }
+                    plugin.menu.openSettings(player);
+                }
+            }
         }
         return true;
     }
@@ -182,6 +191,10 @@ public class SkinCommand implements CommandExecutor {
 
             case "help":
                 // /skin help
+                return len == 1;
+
+            case "settings":
+                // /skin settings
                 return len == 1;
 
             default:

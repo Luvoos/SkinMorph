@@ -341,4 +341,9 @@ public class SkinManager {
         final String noSpacesSkinName = skinName.replace(" ", "");
         return currentSkins.containsKey(uuid) && currentSkins.get(uuid).equalsIgnoreCase(noSpacesSkinName);
     }
+
+    public void clearCache()
+    {
+        cache.clear();
+    }
 }

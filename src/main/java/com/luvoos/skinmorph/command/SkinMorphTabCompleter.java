@@ -32,6 +32,7 @@ public class SkinMorphTabCompleter implements TabCompleter {
             completions.add("help"); // /skin help
             completions.add("favorites"); // /skin favorites
             completions.add("random"); // /skin random
+            completions.add("settings"); // /skin settings
         } else if (args.length == 2 && args[0].equalsIgnoreCase("set")) { // /skin set SELF
             if (sender instanceof final Player player) {
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
