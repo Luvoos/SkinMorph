@@ -51,7 +51,6 @@ public class SkinMorphMenu implements Listener {
         int totalPages = totalPages(player);
 
         Inventory menu = Bukkit.createInventory(null, 9 * 5, "Skin Menu                 Page " + page + "/" + totalPages);
-
         menuInventories.add(menu);
 
         int startIndex = (getCurrentPage(player) - 1) * FAVORITES_PER_PAGE;
@@ -81,11 +80,7 @@ public class SkinMorphMenu implements Listener {
             });
         }
 
-        for (int i = 0; i < menu.getSize(); i++) {
-            if (menu.getItem(i) == null) {
-                menu.setItem(i, SkinMorphItems.background());
-            }
-        }
+        fillBackground(menu);
 
         player.openInventory(menu);
     }
@@ -95,19 +90,13 @@ public class SkinMorphMenu implements Listener {
         setCurrentMenuType(player, SkinMorphMenuType.SETTINGS);
 
         Inventory menu = Bukkit.createInventory(null, 9 * 2, "SkinMorph Settings");
-
         menuInventories.add(menu);
 
         menu.setItem(4, SkinMorphItems.clearCache());
-
         menu.setItem(9, SkinMorphItems.back());
         menu.setItem(13, SkinMorphItems.close());
 
-        for (int i = 0; i < menu.getSize(); i++) {
-            if (menu.getItem(i) == null) {
-                menu.setItem(i, SkinMorphItems.background());
-            }
-        }
+        fillBackground(menu);
 
         player.openInventory(menu);
     }
@@ -243,7 +232,7 @@ public class SkinMorphMenu implements Listener {
                     inputWaitingTimes.remove(player.getUniqueId());
                 }
             }
-        }.runTaskTimerAsynchronously(plugin, 0, 20);
+        }.runTaskTimer(plugin, 0, 20);
     }
 
     @EventHandler
@@ -272,19 +261,30 @@ public class SkinMorphMenu implements Listener {
         currentPages.put(player.getUniqueId(), value);
     }
 
-    private void increaseCurrentPage(@NotNull Player player)
+    public void increaseCurrentPage(@NotNull Player player)
     {
         currentPages.put(player.getUniqueId(), getCurrentPage(player) + 1);
     }
 
-    private void decreaseCurrentPage(@NotNull Player player)
+    public void decreaseCurrentPage(@NotNull Player player)
     {
         currentPages.put(player.getUniqueId(), getCurrentPage(player) - 1);
     }
 
-    private int totalPages(@NotNull final Player player)
+    public int totalPages(@NotNull final Player player)
     {
-        int favoritesSize = favoritesManager.getFavorites(player).size();
+        int favoritesSize = Optional.ofNullable(favoritesManager.getFavorites(player))
+                                    .map(List::size).orElse(0);
+
         return (favoritesSize > 0) ? (int) Math.ceil((double) favoritesSize / FAVORITES_PER_PAGE) : 1;
+    }
+
+    private void fillBackground(@NotNull final Inventory inventory)
+    {
+        for (int i = 0; i < inventory.getSize(); i++) {
+            if (inventory.getItem(i) == null) {
+                inventory.setItem(i, SkinMorphItems.background());
+            }
+        }
     }
 }

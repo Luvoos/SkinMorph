@@ -53,7 +53,7 @@ public class SkinMorphListener implements Listener {
     public void onQuit(final PlayerQuitEvent event)
     {
         final Player player = event.getPlayer();
-        if (plugin.menu.awaitingInput.containsKey(player.getUniqueId())) plugin.menu.awaitingInput.remove(player.getUniqueId());
+        plugin.menu.awaitingInput.remove(player.getUniqueId());
         SkinManager.currentSkins.remove(player.getUniqueId());
     }
 
