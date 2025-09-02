@@ -114,13 +114,7 @@ public class SkinCommand implements CommandExecutor {
                             sender.sendMessage(ChatColor.RED + "You can only do this as a player!");
                             return true;
                         }
-                        try {
-                            plugin.favoritesManager.addFavorite(player, args[2], true);
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                        plugin.favoritesManager.addFavorite(player, args[2], true);
                     } else if (args[1].equalsIgnoreCase("remove")) {
                         if (!(sender instanceof final Player player)) {
                             sender.sendMessage(ChatColor.RED + "You can only do this as a player!");

@@ -82,11 +82,12 @@ public class SkinMorphItems {
     {
         ItemStack item = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) item.getItemMeta();
+        String currentSkin = plugin.skinManager.getCurrentSkin(player);
         PlayerProfile profile = Bukkit.createProfile(player.getUniqueId(), player.getName());
         meta.setPlayerProfile(profile);
         meta.setDisplayName("§eChange Skin");
         List<String> lore = new ArrayList<>();
-        lore.add("§r§7Your current skin: §e" + plugin.skinManager.getCurrentSkin(player) + ((player.getName().equalsIgnoreCase(plugin.skinManager.getCurrentSkin(player))) ? " (default)" : ""));
+        lore.add("§r§7Your current skin: §e" + currentSkin + (currentSkin.equalsIgnoreCase(player.getName()) ? " (default)" : ""));
         lore.add("§r§f§lLEFT CLICK §r§afor yourself§r");
         lore.add("§r§f§lRIGHT CLICK §r§afor another player§r");
         meta.setLore(lore);
