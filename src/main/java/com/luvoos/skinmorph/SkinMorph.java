@@ -1,7 +1,7 @@
 package com.luvoos.skinmorph;
 
 import com.luvoos.skinmorph.command.SkinCommand;
-import com.luvoos.skinmorph.command.SkinMorphTabCompleter;
+import com.luvoos.skinmorph.command.SkinCommandTabCompleter;
 import com.luvoos.skinmorph.event.SkinMorphListener;
 import com.luvoos.skinmorph.menu.SkinMorphMenu;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -49,7 +49,7 @@ public final class SkinMorph extends JavaPlugin {
         DEBUG = getConfig().getBoolean("debug");
         SESSION_AGNOSTIC_SKINS = getConfig().getBoolean("sessionAgnosticSkins");
         getCommand("skin").setExecutor(new SkinCommand());
-        getCommand("skin").setTabCompleter(new SkinMorphTabCompleter(this));
+        getCommand("skin").setTabCompleter(new SkinCommandTabCompleter(this, favoritesManager, skinManager));
         getServer().getPluginManager().registerEvents(menu, this);
         getServer().getPluginManager().registerEvents(new SkinMorphListener(this, favoritesManager, skinManager, selectedSkinsManager), this);
     }
