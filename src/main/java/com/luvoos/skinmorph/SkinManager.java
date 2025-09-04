@@ -232,6 +232,12 @@ public class SkinManager {
         if (plugin.PLAYER_FEEDBACK && playerFeedback) caller.sendMessage("§aRandomly picked and applied skin '§e" + randomSkin.toLowerCase() + "§a'!");
     }
 
+    /**
+     * Get textures by skinName (username) asynchronously
+     * @param skinName (username)
+     * @param tries How many attempts the plugin should make to retrieve the textures
+     * @return Collection of ProfileProperties containing the textures
+     */
     public CompletableFuture<Collection<ProfileProperty>> getTexturesAsync(String skinName, int tries)
     {
         return CompletableFuture.supplyAsync(() -> getTextures(skinName, tries));
@@ -299,6 +305,7 @@ public class SkinManager {
                 cache.put(skinName, List.of(profileProperty));
 
                 if (plugin.DEBUG) plugin.getLogger().info("Successfully loaded textures for '" + skinName + "'!");
+
                 return List.of(profileProperty);
             } catch (JsonSyntaxException | IllegalStateException e) {
                 if (plugin.DEBUG) plugin.getLogger().warning("Failed to get textures for '" + skinName + "'! -> " + e.getMessage());

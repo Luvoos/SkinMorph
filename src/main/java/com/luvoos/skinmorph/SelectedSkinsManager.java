@@ -44,6 +44,7 @@ public class SelectedSkinsManager {
     public void addPlayer(@NotNull Player player)
     {
         final String uuid = player.getUniqueId().toString();
+
         if (!config.contains("players." + uuid)) {
             config.set("players." + uuid, player.getName().toLowerCase());
             saveFile();
@@ -55,6 +56,7 @@ public class SelectedSkinsManager {
     {
         List<String> allSelectedSkins = new ArrayList<>();
         ConfigurationSection playerSection = config.getConfigurationSection("players");
+
         if (playerSection != null) {
             for (String uuid : playerSection.getKeys(false)) {
                 String selectedSkin = config.getString("players." + uuid);
@@ -69,6 +71,7 @@ public class SelectedSkinsManager {
     {
         final String uuid = player.getUniqueId().toString();
         final String selectedSkin = config.getString("players." + uuid);
+
         return (selectedSkin == null || selectedSkin.isEmpty()) ? "" : selectedSkin;
     }
 
@@ -76,6 +79,7 @@ public class SelectedSkinsManager {
     {
         final String uuid = player.getUniqueId().toString();
         String noSpacesSkinName = skinName.replace(" ", "");
+
         config.set("players." + uuid, noSpacesSkinName.toLowerCase());
         saveFile();
         reloadSelectedSkins();
@@ -84,6 +88,7 @@ public class SelectedSkinsManager {
     public void preloadSelectedSkins()
     {
         plugin.getLogger().info("Loading " + getAllSelectedSkins().size() + " selected skins...");
+
         for (String skinName : getAllSelectedSkins()) {
             skinManager.getTexturesAsync(skinName, 3);
         }
