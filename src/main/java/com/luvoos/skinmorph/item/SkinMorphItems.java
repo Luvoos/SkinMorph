@@ -18,14 +18,15 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-public class SkinMorphItems {
+public class SkinMorphItems
+{
 
     private static final SkinMorph plugin = SkinMorph.instance;
     private static final String PAGE_SWITCH_BASE64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDA4OWQwZTBjODhlNTI1MDAzOGU2NTlmNTA4ZWJkYTViNjVhNWJlMGJmYzQxMDNkMGUxMmZhYmE0MDE4ZDVjYiJ9fX0=";
     private static final String RANDOM_SKIN_BASE64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDM0ZTA2M2NhZmI0NjdhNWM4ZGU0M2VjNzg2MTkzOTlmMzY5ZjRhNTI0MzRkYTgwMTdhOTgzY2RkOTI1MTZhMCJ9fX0=";
     private static final String SETTINGS_BASE64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWQyNzM3YThkMTlhYjA3OWNlZjdhODI0ZjE0OTcxNTVkYWE5MjVlOGMxYzZiN2E2Yzc1NjVlOGJlMzAzOWZhMCJ9fX0=";
 
-    public static CompletableFuture<ItemStack> favoriteSkinHead(Player player, String name)
+    public static CompletableFuture<ItemStack> favoriteSkinHead(String name)
     {
         // check cache
         Collection<ProfileProperty> cached = SkinManager.cache.get(name);

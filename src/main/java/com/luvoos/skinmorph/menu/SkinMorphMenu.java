@@ -21,7 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class SkinMorphMenu implements Listener {
+public class SkinMorphMenu implements Listener
+{
 
     private final SkinMorph plugin;
     private final FavoritesManager favoritesManager;
@@ -75,7 +76,7 @@ public class SkinMorphMenu implements Listener {
 
         for (int i = startIndex; i < endIndex; i++) {
             final int slot = (i - startIndex) + 9;
-            SkinMorphItems.favoriteSkinHead(player, favorites.get(i)).thenAccept(item -> {
+            SkinMorphItems.favoriteSkinHead(favorites.get(i)).thenAccept(item -> {
                 Bukkit.getScheduler().runTask(plugin, () -> menu.setItem(slot, item));
             });
         }
