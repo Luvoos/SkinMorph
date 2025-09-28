@@ -16,7 +16,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class FavoritesManager {
+public class FavoritesManager
+{
 
     private final SkinMorph plugin;
     private final SkinManager skinManager;
@@ -134,7 +135,7 @@ public class FavoritesManager {
         String chosenFavorite;
         do {
             chosenFavorite = loadedFavorites.get(ThreadLocalRandom.current().nextInt(loadedFavorites.size()));
-        } while (skinManager.wearsSkin(player, chosenFavorite) && loadedFavorites.size() > 1);
+        } while (skinManager.isWearingSkin(player, chosenFavorite) && loadedFavorites.size() > 1);
 
         return chosenFavorite;
     }

@@ -15,7 +15,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SkinCommandTabCompleter implements TabCompleter {
+public class SkinCommandTabCompleter implements TabCompleter
+{
 
     private final SkinMorph plugin;
     private final FavoritesManager favoritesManager;

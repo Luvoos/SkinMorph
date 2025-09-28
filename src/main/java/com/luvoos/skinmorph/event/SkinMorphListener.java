@@ -16,7 +16,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.concurrent.ExecutionException;
 
-public class SkinMorphListener implements Listener {
+public class SkinMorphListener implements Listener
+{
 
     private final SkinMorph plugin;
     private final FavoritesManager favoritesManager;

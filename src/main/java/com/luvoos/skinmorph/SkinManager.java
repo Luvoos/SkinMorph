@@ -5,7 +5,6 @@ import com.destroystokyo.paper.profile.ProfileProperty;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.stream.JsonReader;
 import com.luvoos.skinmorph.util.FormatUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -13,7 +12,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -26,7 +24,8 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class SkinManager {
+public class SkinManager
+{
 
     private final SkinMorph plugin = SkinMorph.instance;
     public static final String PROFILE_URL = "https://api.mojang.com/users/profiles/minecraft/";
@@ -46,7 +45,7 @@ public class SkinManager {
 
         String normalizedSkinName = FormatUtil.normalize(skinName);
 
-        if (wearsSkin(target, skinName)) {
+        if (isWearingSkin(target, skinName)) {
             if (plugin.PLAYER_FEEDBACK && playerFeedback) target.sendMessage("§aYou're already wearing that skin! ('§e" + normalizedSkinName + "§a')");
             return;
         }
@@ -65,6 +64,9 @@ public class SkinManager {
 
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     target.setPlayerProfile(profile);
+                    //
+                    plugin.cacheManager.updateCache(normalizedSkinName, profile);
+                    //
                     setCurrentSkin(target, normalizedSkinName);
                     plugin.selectedSkinsManager.setSelectedSkin(target, skinName);
                     if (plugin.PLAYER_FEEDBACK && playerFeedback) target.sendMessage("§aYour skin has been changed to §e" + normalizedSkinName + "§a!");
@@ -87,7 +89,7 @@ public class SkinManager {
 
         String normalizedSkinName = FormatUtil.normalize(skinName);
 
-        if (wearsSkin(target, skinName)) {
+        if (isWearingSkin(target, skinName)) {
             if (plugin.PLAYER_FEEDBACK && playerFeedback) caller.sendMessage("§a" + target.getName() + " is already wearing that skin! ('§e" + normalizedSkinName + "§a')");
             return;
         }
@@ -130,7 +132,7 @@ public class SkinManager {
 
         String normalizedSkinName = FormatUtil.normalize(skinName);
 
-        if (wearsSkin(target, skinName)) {
+        if (isWearingSkin(target, skinName)) {
             if (plugin.PLAYER_FEEDBACK && playerFeedback) caller.sendMessage("§a" + target.getName() + " is already wearing that skin! ('§e" + normalizedSkinName + "§a')");
             return;
         }
@@ -165,7 +167,7 @@ public class SkinManager {
     public void resetSkin(@NotNull Player target, boolean playerFeedback)
     {
         target.closeInventory();
-        if (wearsSkin(target, target.getName().toLowerCase())) {
+        if (isWearingSkin(target, target.getName().toLowerCase())) {
             if (plugin.PLAYER_FEEDBACK && playerFeedback) target.sendMessage("§aYou're already wearing your §edefault skin§a!");
             return;
         }
@@ -175,7 +177,7 @@ public class SkinManager {
 
     public void resetSkin(@NotNull CommandSender caller, @NotNull Player target, boolean playerFeedback)
     {
-        if (wearsSkin(target, target.getName().toLowerCase())) {
+        if (isWearingSkin(target, target.getName().toLowerCase())) {
             if (plugin.PLAYER_FEEDBACK && playerFeedback) caller.sendMessage("§a" + target.getName() + " is already wearing their §edefault skin§a!");
             return;
         }
@@ -187,7 +189,7 @@ public class SkinManager {
 
     public void resetSkin(@NotNull Player caller, @NotNull Player target, boolean playerFeedback)
     {
-        if (wearsSkin(target, target.getName().toLowerCase())) {
+        if (isWearingSkin(target, target.getName().toLowerCase())) {
             if (plugin.PLAYER_FEEDBACK && playerFeedback) caller.sendMessage("§a" + target.getName() + " is already wearing their §edefault skin§a!");
             return;
         }
@@ -233,26 +235,25 @@ public class SkinManager {
     }
 
     /**
-     * Get textures by skinName (username) asynchronously
-     * @param skinName (username)
-     * @param tries How many attempts the plugin should make to retrieve the textures
-     * @return Collection of ProfileProperties containing the textures
+     * Get textures by skinName (username) asynchronously.
+     * @param skinName Minecraft username
+     * @param attempts amount of retry attempts
+     * @return CompletableFuture with a collection of ProfileProperties or null
      */
-    public CompletableFuture<Collection<ProfileProperty>> getTexturesAsync(String skinName, int tries)
+    public CompletableFuture<Collection<ProfileProperty>> getTexturesAsync(String skinName, int attempts)
     {
-        return CompletableFuture.supplyAsync(() -> getTextures(skinName, tries));
+        return CompletableFuture.supplyAsync(() -> getTextures(skinName, attempts));
     }
 
     /**
-     * Get textures by skinName (username)
-     * @param skinName (username)
-     * @param tries How many attempts the plugin should make to retrieve the textures
-     * @return Collection of ProfileProperties containing the textures
+     * Get textures by skinName (username).
+     * @param skinName Minecraft username
+     * @param attempts amount of retry attempts
+     * @return Collection of ProfileProperties or null
      */
-    private Collection<ProfileProperty> getTextures(String skinName, int tries)
+    private Collection<ProfileProperty> getTextures(String skinName, int attempts)
     {
-        skinName = skinName.toLowerCase();
-        skinName = skinName.replace(" ", "");
+        skinName = FormatUtil.normalize(skinName);
         if (cache.containsKey(skinName)) return cache.get(skinName);
 
         if (skinName.length() > 16) {
@@ -260,68 +261,75 @@ public class SkinManager {
             return null;
         }
 
-        int retryDelay = 2000;
+        int delay = plugin.RETRY_DELAY;
 
-        for (int attempt = 1; attempt <= tries; attempt++) {
+        for (int attempt = 1; attempt <= attempts; attempt++) {
             try {
                 final String profileResponse = makeRequest(PROFILE_URL + skinName);
                 if (profileResponse == null || profileResponse.startsWith("<!DOCTYPE")) {
-                    if (plugin.DEBUG) plugin.getLogger().warning("Received invalid response (HTML or null) for '" + skinName + "'");
-                    if (attempt < tries) {
-                        Thread.sleep(retryDelay);
-                        continue;
-                    }
-                    return null;
+                    if (plugin.DEBUG) plugin.getLogger().warning("Invalid profile response for '" + skinName + "'");
+                    delay(attempt, attempts, delay);
+                    continue;
                 }
-                JsonReader reader = new JsonReader(new StringReader(profileResponse));
-                reader.setLenient(true);
-                JsonObject profileObject = JsonParser.parseReader(reader).getAsJsonObject();
 
+                JsonObject profileObject = JsonParser.parseString(profileResponse).getAsJsonObject();
                 if (!profileObject.has("id")) {
-                    if (plugin.DEBUG) plugin.getLogger().warning("Profile response does not contain 'id' field for '" + skinName + "'");
-                    if (attempt < tries) {
-                        Thread.sleep(retryDelay);
-                        continue;
-                    }
-                    return null;
+                    if (plugin.DEBUG) plugin.getLogger().warning("Missing 'id' field in profile response for '" + skinName + "'");
+                    delay(attempt, attempts, delay);
+                    continue;
                 }
 
                 final String uuid = profileObject.get("id").getAsString();
+                final String skinResponse = makeRequest(String.format(SKIN_URL, uuid));
 
-                final String skinResponse = makeRequest(SKIN_URL.formatted(uuid));
                 if (skinResponse == null || skinResponse.startsWith("<!DOCTYPE")) {
-                    if (plugin.DEBUG) plugin.getLogger().warning("Received invalid response (HTML or null) for skin data of '" + skinName + "'");
-                    if (attempt < tries) {
-                        Thread.sleep(retryDelay);
-                        continue;
-                    }
-                    return null;
+                    if (plugin.DEBUG) plugin.getLogger().warning("Invalid skin response for '" + skinName + "'");
+                    delay(attempt, attempts, delay);
+                    continue;
                 }
-                final JsonObject skinObject = JsonParser.parseString(skinResponse).getAsJsonObject().get("properties").getAsJsonArray().get(0).getAsJsonObject();
-                final String value = skinObject.get("value").getAsString();
-                final String signature = skinObject.get("signature").getAsString();
-                final ProfileProperty profileProperty = new ProfileProperty("textures", value, signature);
+
+                JsonObject skinObject = JsonParser.parseString(skinResponse)
+                        .getAsJsonObject()
+                        .get("properties")
+                        .getAsJsonArray()
+                        .get(0)
+                        .getAsJsonObject();
+
+                final ProfileProperty profileProperty = new ProfileProperty(
+                        "textures",
+                        skinObject.get("value").getAsString(),
+                        skinObject.get("signature").getAsString()
+                );
 
                 cache.put(skinName, List.of(profileProperty));
-
                 if (plugin.DEBUG) plugin.getLogger().info("Successfully loaded textures for '" + skinName + "'!");
 
                 return List.of(profileProperty);
             } catch (JsonSyntaxException | IllegalStateException e) {
-                if (plugin.DEBUG) plugin.getLogger().warning("Failed to get textures for '" + skinName + "'! -> " + e.getMessage());
+                if (plugin.DEBUG) plugin.getLogger().warning("Failed to parse JSON for '" + skinName + "'");
             } catch (Exception e) {
-                if (plugin.DEBUG) plugin.getLogger().warning("Unexpected error while trying to get textures for '" + skinName + "'! -> " + e.getMessage());
+                if (plugin.DEBUG) plugin.getLogger().warning("Unexpected error while fetching '" + skinName + "' -> " + e.getMessage());
             }
         }
+
         return null;
     }
 
+    /**
+     * Performs an HTTP request and returns its response body.
+     * @param url
+     * @return response body
+     */
     public String makeRequest(String url)
     {
         try {
             final HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
             final HttpResponse<String> response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-            if (plugin.DEBUG) plugin.getLogger().warning("Request for " + url + " -> " + response.statusCode());
+            int status = response.statusCode();
+            if (plugin.DEBUG) {
+                if (status == 200) plugin.getLogger().info("Request " + url + " -> " + response.statusCode());
+                if (status == 404) plugin.getLogger().warning("Request " + url + " -> " + response.statusCode());
+            }
             return response.body();
         } catch (IOException | InterruptedException e) {
             if (plugin.DEBUG) plugin.getLogger().warning("Request failed for " + url + " -> " + e.getMessage());
@@ -342,11 +350,20 @@ public class SkinManager {
         return currentSkins.get(uuid);
     }
 
-    public boolean wearsSkin(@NotNull final Player player, @NotNull String skinName)
+    public boolean isWearingSkin(@NotNull final Player player, @NotNull String skinName)
     {
         final UUID uuid = player.getUniqueId();
         final String noSpacesSkinName = skinName.replace(" ", "");
         return currentSkins.containsKey(uuid) && currentSkins.get(uuid).equalsIgnoreCase(noSpacesSkinName);
+    }
+
+    private void delay(int attempt, int attempts, int retryDelay)
+    {
+        if (attempt < attempts) {
+            try {
+                Thread.sleep(retryDelay);
+            } catch (InterruptedException ignored) {}
+        }
     }
 
     public void clearCache()

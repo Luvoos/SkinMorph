@@ -1,2 +1,16 @@
-playerFeedback: true
-sessionAgnosticSkins: true
+# SkinMorph config file
+
+# Whether the plugin should send command feedback messages
+player-feedback: true
+
+# Whether the plugin should remember what skin a player wore last session
+# to reapply said skin when joining again
+session-agnostic-skins: true
+
+# Whether the skin data should be persistently stored in a JSON file
+# which can reduce redundant API calls
+persistent-cache: true
+
+# Whether the plugin should print out debug messages
+# (not recommended as most people will have no use for this)
+debug: false

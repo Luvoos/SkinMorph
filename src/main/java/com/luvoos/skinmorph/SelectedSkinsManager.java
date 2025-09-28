@@ -11,7 +11,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelectedSkinsManager {
+public class SelectedSkinsManager
+{
 
     private final SkinMorph plugin;
     private final SkinManager skinManager;

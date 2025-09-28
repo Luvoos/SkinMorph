@@ -1,5 +1,7 @@
 package com.luvoos.skinmorph.command;
 
+import com.luvoos.skinmorph.FavoritesManager;
+import com.luvoos.skinmorph.SkinManager;
 import com.luvoos.skinmorph.SkinMorph;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -9,9 +11,20 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class SkinCommand implements CommandExecutor {
+public class SkinCommand implements CommandExecutor
+{
 
-    private final SkinMorph plugin = SkinMorph.instance;
+    private final SkinMorph plugin;
+    private final FavoritesManager favoritesManager;
+    private final SkinManager skinManager;
+
+    public SkinCommand(SkinMorph plugin, FavoritesManager favoritesManager, SkinManager skinManager)
+    {
+        this.plugin = plugin;
+        this.favoritesManager = favoritesManager;
+        this.skinManager = skinManager;
+
+    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args)
@@ -38,15 +51,13 @@ public class SkinCommand implements CommandExecutor {
 
         switch (args[0]) {
             case "set" -> {
-                if (len == 1) {
-                    sender.sendMessage("§cYou need to enter a skin name!");
-                } else if (len == 2) {
+                if (len == 2) {
                     if (!(sender instanceof final Player player)) {
                         sender.sendMessage(ChatColor.RED + "You can only do this as a player!");
                         return true;
                     }
                     String skinNameInput = args[1];
-                    plugin.skinManager.setSkinFromName(player, skinNameInput, true);
+                    skinManager.setSkinFromName(player, skinNameInput, true);
                 } else if (len == 3) {
                     if (Bukkit.getPlayer(args[2]) == null) {
                         sender.sendMessage("§cCouldn't find online player '§e" + args[2] + "§c'!");
@@ -55,7 +66,7 @@ public class SkinCommand implements CommandExecutor {
 
                     Player target = Bukkit.getPlayer(args[2]);
                     String skinName = args[1];
-                    plugin.skinManager.setSkinFromName(sender, target, skinName, true);
+                    skinManager.setSkinFromName(sender, target, skinName, true);
                 }
                 return true;
             }
@@ -65,14 +76,14 @@ public class SkinCommand implements CommandExecutor {
                         sender.sendMessage(ChatColor.RED + "You can only do this as a player!");
                         return true;
                     }
-                    plugin.skinManager.applyRandomSkin(player, true);
+                    skinManager.applyRandomSkin(player, true);
                 } else if (len == 2) {
                     if (Bukkit.getPlayer(args[1]) == null) {
                         sender.sendMessage("§cCouldn't find online player '§e" + args[1] + "§c'!");
                         return true;
                     }
                     Player target = Bukkit.getPlayer(args[1]);
-                    plugin.skinManager.applyRandomSkin(sender, target, true);
+                    skinManager.applyRandomSkin(sender, target, true);
                 }
             }
             case "help" -> {
@@ -94,7 +105,7 @@ public class SkinCommand implements CommandExecutor {
             case "reset" -> {
                 if (len == 1) {
                     if (sender instanceof final Player player) {
-                        plugin.skinManager.resetSkin(player, true);
+                        skinManager.resetSkin(player, true);
                     }
                 } else if (len == 2) {
                     if (Bukkit.getPlayer(args[1]) == null) {
@@ -102,7 +113,7 @@ public class SkinCommand implements CommandExecutor {
                         return true;
                     }
                     Player target = Bukkit.getPlayer(args[1]);
-                    plugin.skinManager.resetSkin(sender, target, true);
+                    skinManager.resetSkin(sender, target, true);
                 }
             }
             case "favorites" -> {
@@ -112,13 +123,13 @@ public class SkinCommand implements CommandExecutor {
                             sender.sendMessage(ChatColor.RED + "You can only do this as a player!");
                             return true;
                         }
-                        plugin.favoritesManager.addFavorite(player, args[2], true);
+                        favoritesManager.addFavorite(player, args[2], true);
                     } else if (args[1].equalsIgnoreCase("remove")) {
                         if (!(sender instanceof final Player player)) {
                             sender.sendMessage(ChatColor.RED + "You can only do this as a player!");
                             return true;
                         }
-                        plugin.favoritesManager.removeFavorite(player, args[2], true);
+                        favoritesManager.removeFavorite(player, args[2], true);
                     }
                 }
             }
@@ -138,7 +149,7 @@ public class SkinCommand implements CommandExecutor {
     /**
      * Check if the /skin command was used correctly
      * @param args
-     * @return Correct usage?
+     * @return Valid usage?
      */
     private boolean isValidUsage(final @NotNull String @NotNull [] args)
     {

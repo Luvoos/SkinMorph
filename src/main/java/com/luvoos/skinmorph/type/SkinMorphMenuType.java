@@ -1,6 +1,7 @@
 package com.luvoos.skinmorph.type;
 
-public enum SkinMorphMenuType {
+public enum SkinMorphMenuType
+{
     MAIN,
     SETTINGS;
 }

@@ -12,7 +12,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -87,12 +86,13 @@ public class SkinMorphItems
         PlayerProfile profile = Bukkit.createProfile(player.getUniqueId(), player.getName());
         meta.setPlayerProfile(profile);
         meta.setDisplayName("§eChange Skin");
-        List<String> lore = new ArrayList<>();
-        lore.add("§r§7Your current skin: §e" + currentSkin + (currentSkin.equalsIgnoreCase(player.getName()) ? " (default)" : ""));
-        lore.add("§r§f§lLEFT CLICK §r§afor yourself§r");
-        lore.add("§r§f§lRIGHT CLICK §r§afor another player§r");
-        meta.setLore(lore);
+        meta.setLore(List.of(
+                "§r§7Your current skin: §e" + currentSkin + (currentSkin.equalsIgnoreCase(player.getName()) ? " (default)" : ""),
+                "§r§f§lLEFT CLICK §r§afor yourself§r",
+                "§r§f§lRIGHT CLICK §r§afor another player§r"
+        ));
         item.setItemMeta(meta);
+
         return item;
     }
 
@@ -104,12 +104,13 @@ public class SkinMorphItems
         profile.setProperty(new ProfileProperty("textures", RANDOM_SKIN_BASE64));
         meta.setPlayerProfile(profile);
         meta.setDisplayName("§eRandom Skin");
-        List<String> lore = new ArrayList<>();
-        lore.add("§r§7Randomly pick from favorites");
-        lore.add("§r§f§lLEFT CLICK §r§afor yourself§r");
-        lore.add("§r§f§lRIGHT CLICK §r§afor another player§r");
-        meta.setLore(lore);
+        meta.setLore(List.of(
+                "§r§7Randomly pick from favorites",
+                "§r§f§lLEFT CLICK §r§afor yourself§r",
+                "§r§f§lRIGHT CLICK §r§afor another player§r"
+        ));
         item.setItemMeta(meta);
+
         return item;
     }
 
@@ -118,11 +119,12 @@ public class SkinMorphItems
         ItemStack item = new ItemStack(Material.BARRIER);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName("§eReset Skin");
-        List<String> lore = new ArrayList<>();
-        lore.add("§r§f§lLEFT CLICK §r§afor yourself§r");
-        lore.add("§r§f§lRIGHT CLICK §r§afor another player§r");
-        meta.setLore(lore);
+        meta.setLore(List.of(
+                "§r§f§lLEFT CLICK §r§afor yourself§r",
+                "§r§f§lRIGHT CLICK §r§afor another player§r"
+        ));
         item.setItemMeta(meta);
+
         return item;
     }
 
@@ -131,11 +133,12 @@ public class SkinMorphItems
         ItemStack item = new ItemStack(Material.BOOK);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName("§eManage Favorites");
-        List<String> lore = new ArrayList<>();
-        lore.add("§r§f§lLEFT CLICK §r§ato add favorite");
-        lore.add("§r§f§lRIGHT CLICK §r§cto remove favorite");
-        meta.setLore(lore);
+        meta.setLore(List.of(
+                "§r§f§lLEFT CLICK §r§ato add favorite",
+                "§r§f§lRIGHT CLICK §r§cto remove favorite"
+        ));
         item.setItemMeta(meta);
+
         return item;
     }
 
@@ -149,7 +152,13 @@ public class SkinMorphItems
         ItemStack item = new ItemStack(Material.BARRIER);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName("§eClear Cache");
+        meta.setLore(List.of(
+                "§r§7This can free memory, but is §cnot recommended",
+                "§r§cas it queries the Mojang API again, which can lead",
+                "§r§cto requests being rejected§7."
+        ));
         item.setItemMeta(meta);
+
         return item;
     }
 
@@ -174,6 +183,7 @@ public class SkinMorphItems
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(" ");
         item.setItemMeta(meta);
+
         return item;
     }
 
@@ -183,6 +193,7 @@ public class SkinMorphItems
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName("§cClose");
         item.setItemMeta(meta);
+
         return item;
     }
 

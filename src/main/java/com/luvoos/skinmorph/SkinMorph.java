@@ -6,16 +6,21 @@ import com.luvoos.skinmorph.event.SkinMorphListener;
 import com.luvoos.skinmorph.menu.SkinMorphMenu;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class SkinMorph extends JavaPlugin {
+import java.nio.file.Paths;
 
+public final class SkinMorph extends JavaPlugin
+{
     public static SkinMorph instance;
     public SkinManager skinManager;
     public FavoritesManager favoritesManager;
     public SelectedSkinsManager selectedSkinsManager;
     public SkinMorphMenu menu;
+    public CacheManager cacheManager;
     public boolean PLAYER_FEEDBACK;
     public boolean DEBUG;
     public boolean SESSION_AGNOSTIC_SKINS;
+    public boolean PERSISTENT_CACHE;
+    public int RETRY_DELAY;
 
     @Override
     public void onEnable()
@@ -45,10 +50,13 @@ public final class SkinMorph extends JavaPlugin {
         selectedSkinsManager.preloadSelectedSkins();
         favoritesManager = new FavoritesManager(this, skinManager);
         menu = new SkinMorphMenu(this, favoritesManager, skinManager);
-        PLAYER_FEEDBACK = getConfig().getBoolean("playerFeedback");
-        DEBUG = getConfig().getBoolean("debug");
-        SESSION_AGNOSTIC_SKINS = getConfig().getBoolean("sessionAgnosticSkins");
-        getCommand("skin").setExecutor(new SkinCommand());
+        cacheManager = new CacheManager(Paths.get(getDataPath().toString() + "/cache.json"));
+        PLAYER_FEEDBACK = getConfig().getBoolean("player-feedback", true);
+        DEBUG = getConfig().getBoolean("debug", false);
+        SESSION_AGNOSTIC_SKINS = getConfig().getBoolean("session-agnostic-skins", true);
+        PERSISTENT_CACHE = getConfig().getBoolean("persistent-cache", true);
+        RETRY_DELAY = getConfig().getInt("retry-delay", 2000);
+        getCommand("skin").setExecutor(new SkinCommand(this, favoritesManager, skinManager));
         getCommand("skin").setTabCompleter(new SkinCommandTabCompleter(this, favoritesManager, skinManager));
         getServer().getPluginManager().registerEvents(menu, this);
         getServer().getPluginManager().registerEvents(new SkinMorphListener(this, favoritesManager, skinManager, selectedSkinsManager), this);

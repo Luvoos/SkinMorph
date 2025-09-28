@@ -1,6 +1,7 @@
 package com.luvoos.skinmorph.type;
 
-public enum SkinMorphInputType {
+public enum SkinMorphInputType
+{
     CHANGE_SKIN_SELF,
     CHANGE_SKIN_OTHER,
     ADD_FAVORITE,
