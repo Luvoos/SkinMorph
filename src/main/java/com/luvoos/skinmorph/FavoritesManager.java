@@ -18,7 +18,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class FavoritesManager
 {
-
     private final SkinMorph plugin;
     private final SkinManager skinManager;
     private File file;

@@ -18,7 +18,6 @@ import java.util.concurrent.ExecutionException;
 
 public class SkinMorphListener implements Listener
 {
-
     private final SkinMorph plugin;
     private final FavoritesManager favoritesManager;
     private final SkinManager skinManager;

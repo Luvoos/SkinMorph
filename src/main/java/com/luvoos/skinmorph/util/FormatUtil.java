@@ -2,7 +2,6 @@ package com.luvoos.skinmorph.util;
 
 public class FormatUtil
 {
-
     /**
      * Normalize a string by putting it in lowercase and removing spaces
      * @param s

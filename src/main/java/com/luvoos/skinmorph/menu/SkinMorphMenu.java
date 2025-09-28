@@ -23,7 +23,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SkinMorphMenu implements Listener
 {
-
     private final SkinMorph plugin;
     private final FavoritesManager favoritesManager;
     private final SkinManager skinManager;
@@ -192,8 +191,6 @@ public class SkinMorphMenu implements Listener
             }
         }
     }
-
-
 
     @EventHandler
     public void onInventoryClose(final InventoryCloseEvent event)

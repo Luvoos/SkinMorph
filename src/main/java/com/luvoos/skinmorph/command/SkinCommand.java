@@ -13,7 +13,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class SkinCommand implements CommandExecutor
 {
-
     private final SkinMorph plugin;
     private final FavoritesManager favoritesManager;
     private final SkinManager skinManager;

@@ -26,7 +26,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SkinManager
 {
-
     private final SkinMorph plugin = SkinMorph.instance;
     public static final String PROFILE_URL = "https://api.mojang.com/users/profiles/minecraft/";
     public static final String SKIN_URL = "https://sessionserver.mojang.com/session/minecraft/profile/%s?unsigned=false";

@@ -13,7 +13,6 @@ import java.util.List;
 
 public class SelectedSkinsManager
 {
-
     private final SkinMorph plugin;
     private final SkinManager skinManager;
     private File file;
