@@ -2,6 +2,7 @@ package com.luvoos.skinmorph.item;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
+import com.luvoos.skinmorph.SkinData;
 import com.luvoos.skinmorph.SkinManager;
 import com.luvoos.skinmorph.SkinMorph;
 import com.luvoos.skinmorph.util.FormatUtil;
@@ -27,18 +28,18 @@ public class SkinMorphItems
     public static CompletableFuture<ItemStack> favoriteSkinHead(String name)
     {
         // check cache
-        Collection<ProfileProperty> cached = SkinManager.cache.get(name);
+        final SkinData cached = SkinManager.cache.get(name);
 
-        CompletableFuture<Collection<ProfileProperty>> future =
+        CompletableFuture<SkinData> future =
                 cached != null
                         ? CompletableFuture.completedFuture(cached)
                         // if we don't have it cached, fetch it asynchronously
                         : plugin.skinManager.getTexturesAsync(name, 3);
 
-        // once we have textures, switch back to main thread to perform bukkit operations
-        return future.thenCompose(profileProperties -> {
+        return future.thenCompose(skinData -> {
             CompletableFuture<ItemStack> itemFuture = new CompletableFuture<>();
 
+            // once we have textures, switch back to main thread to perform bukkit operations
             Bukkit.getScheduler().runTask(plugin, () -> {
                 try {
                     // build item
@@ -46,8 +47,8 @@ public class SkinMorphItems
                     SkullMeta meta = (SkullMeta) item.getItemMeta();
 
                     PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID(), name);
-                    if (profileProperties != null) {
-                        profile.setProperties(profileProperties);
+                    if (skinData != null) {
+                        profile.setProperties(skinData.getTextureProperties());
                     }
 
                     meta.setPlayerProfile(profile);

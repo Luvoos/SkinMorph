@@ -30,7 +30,7 @@ public class SkinManager
     public static final String PROFILE_URL = "https://api.mojang.com/users/profiles/minecraft/";
     public static final String SKIN_URL = "https://sessionserver.mojang.com/session/minecraft/profile/%s?unsigned=false";
     public static final HttpClient HTTP_CLIENT = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).connectTimeout(Duration.ofSeconds(10)).build();
-    public static final Map<String, Collection<ProfileProperty>> cache = new ConcurrentHashMap<>();
+    public static final Map<String, SkinData> cache = new ConcurrentHashMap<>();
     public static final Map<UUID, String> currentSkins = new ConcurrentHashMap<>();
 
     public void setSkinFromName(@NotNull Player target, @NotNull String skinName, boolean playerFeedback)
@@ -52,7 +52,8 @@ public class SkinManager
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
                 final PlayerProfile profile = target.getPlayerProfile();
-                Collection<ProfileProperty> textures = getTextures(normalizedSkinName, tries);
+                final SkinData skinData = getTextures(skinName, 3);
+                final Collection<ProfileProperty> textures = skinData.getTextureProperties();
 
                 if (textures == null) {
                     if (plugin.PLAYER_FEEDBACK && playerFeedback) target.sendMessage("§cInvalid profile! ('§e" + normalizedSkinName + "§c')");
@@ -96,7 +97,8 @@ public class SkinManager
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
                 final PlayerProfile profile = target.getPlayerProfile();
-                Collection<ProfileProperty> textures = getTextures(normalizedSkinName, tries);
+                final SkinData skinData = getTextures(skinName, 3);
+                final Collection<ProfileProperty> textures = skinData.getTextureProperties();
 
                 if (textures == null) {
                     if (plugin.PLAYER_FEEDBACK && playerFeedback) caller.sendMessage("§cInvalid profile! ('§e" + normalizedSkinName + "§c')");
@@ -139,7 +141,8 @@ public class SkinManager
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
                 final PlayerProfile profile = target.getPlayerProfile();
-                Collection<ProfileProperty> textures = getTextures(normalizedSkinName, tries);
+                final SkinData skinData = getTextures(skinName, 3);
+                final Collection<ProfileProperty> textures = skinData.getTextureProperties();
 
                 if (textures == null) {
                     if (plugin.PLAYER_FEEDBACK && playerFeedback) caller.sendMessage("§cInvalid profile! ('§e" + normalizedSkinName + "§c')");
@@ -234,23 +237,23 @@ public class SkinManager
     }
 
     /**
-     * Get textures by skinName (username) asynchronously.
+     * Get textures by username asynchronously.
      * @param skinName Minecraft username
-     * @param attempts amount of retry attempts
-     * @return CompletableFuture with a collection of ProfileProperties or null
+     * @param attempts amount of attempts
+     * @return SkinData containing the textures
      */
-    public CompletableFuture<Collection<ProfileProperty>> getTexturesAsync(String skinName, int attempts)
+    public CompletableFuture<SkinData> getTexturesAsync(String skinName, int attempts)
     {
         return CompletableFuture.supplyAsync(() -> getTextures(skinName, attempts));
     }
 
     /**
-     * Get textures by skinName (username).
+     * Get textures by username.
      * @param skinName Minecraft username
-     * @param attempts amount of retry attempts
-     * @return Collection of ProfileProperties or null
+     * @param attempts amount of attempts
+     * @return SkinData containing the textures
      */
-    private Collection<ProfileProperty> getTextures(String skinName, int attempts)
+    private SkinData getTextures(String skinName, int attempts)
     {
         skinName = FormatUtil.normalize(skinName);
         if (cache.containsKey(skinName)) return cache.get(skinName);
@@ -300,10 +303,12 @@ public class SkinManager
                         skinObject.get("signature").getAsString()
                 );
 
-                cache.put(skinName, List.of(profileProperty));
+                final SkinData skinData = new SkinData(skinName, List.of(profileProperty), System.currentTimeMillis());
+
+                cache.put(skinName, skinData);
                 if (plugin.DEBUG) plugin.getLogger().info("Successfully loaded textures for '" + skinName + "'!");
 
-                return List.of(profileProperty);
+                return skinData;
             } catch (JsonSyntaxException | IllegalStateException e) {
                 if (plugin.DEBUG) plugin.getLogger().warning("Failed to parse JSON for '" + skinName + "'");
             } catch (Exception e) {

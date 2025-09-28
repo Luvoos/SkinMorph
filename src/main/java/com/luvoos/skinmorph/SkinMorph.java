@@ -15,7 +15,7 @@ public final class SkinMorph extends JavaPlugin
     public FavoritesManager favoritesManager;
     public SelectedSkinsManager selectedSkinsManager;
     public SkinMorphMenu menu;
-    public CacheManager cacheManager;
+    public PersistentCacheManager cacheManager;
     public boolean PLAYER_FEEDBACK;
     public boolean DEBUG;
     public boolean SESSION_AGNOSTIC_SKINS;
@@ -50,7 +50,7 @@ public final class SkinMorph extends JavaPlugin
         selectedSkinsManager.preloadSelectedSkins();
         favoritesManager = new FavoritesManager(this, skinManager);
         menu = new SkinMorphMenu(this, favoritesManager, skinManager);
-        cacheManager = new CacheManager(Paths.get(getDataPath().toString() + "/cache.json"));
+        cacheManager = new PersistentCacheManager(Paths.get(getDataPath().toString() + "/cache.json"));
         PLAYER_FEEDBACK = getConfig().getBoolean("player-feedback", true);
         DEBUG = getConfig().getBoolean("debug", false);
         SESSION_AGNOSTIC_SKINS = getConfig().getBoolean("session-agnostic-skins", true);

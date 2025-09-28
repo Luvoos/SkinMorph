@@ -1,6 +1,7 @@
 package com.luvoos.skinmorph;
 
 import com.destroystokyo.paper.profile.ProfileProperty;
+import com.luvoos.skinmorph.item.SkinMorphItems;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -76,7 +77,7 @@ public class FavoritesManager
             try {
                 List<String> favorites = getFavorites(player);
                 String noSpacesSkinName = skinName.replace(" ", "");
-                CompletableFuture<Collection<ProfileProperty>> textures = skinManager.getTexturesAsync(skinName, 3);
+                CompletableFuture<SkinData> textures = skinManager.getTexturesAsync(skinName, 3);
                 if (textures.get() == null) {
                     if (plugin.PLAYER_FEEDBACK && playerFeedback) player.sendMessage("§cInvalid profile! ('§e" + noSpacesSkinName.toLowerCase() + "§c')");
                     return;

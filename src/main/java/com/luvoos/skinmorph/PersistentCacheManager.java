@@ -13,18 +13,19 @@ import java.io.Writer;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class CacheManager
+public class PersistentCacheManager
 {
     private final Path cacheFile;
     public final Map<String, SkinData> cache = new ConcurrentHashMap<>();
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final long expiryMillis = 7 * 24 * 60 * 60 * 1000L; // 1 week expiry time
 
-    public CacheManager(Path cacheFile)
+    public PersistentCacheManager(Path cacheFile)
     {
         this.cacheFile = cacheFile;
         loadCache();
@@ -64,7 +65,7 @@ public class CacheManager
         if (System.currentTimeMillis() - skinData.getLastUpdated() > expiryMillis) return null;
 
         PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID(), skinData.getUsername());
-        profile.setProperty(new ProfileProperty("textures", skinData.getTextureValue(), skinData.getTextureSignature()));
+        profile.setProperties(skinData.getTextureProperties());
 
         return profile;
     }
@@ -81,8 +82,7 @@ public class CacheManager
 
         SkinData skinData = new SkinData(
                 username.toLowerCase(),
-                property.getValue(),
-                property.getSignature(),
+                List.of(property),
                 System.currentTimeMillis()
         );
 

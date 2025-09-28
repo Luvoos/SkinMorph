@@ -58,7 +58,7 @@ public class SkinMorphListener implements Listener
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onChat(final AsyncPlayerChatEvent event) throws ExecutionException, InterruptedException
+    public void onChat(final AsyncPlayerChatEvent event)
     {
         final Player player = event.getPlayer();
         final String text = event.getMessage();
