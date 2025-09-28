@@ -42,13 +42,15 @@ public class SkinMorphMenu implements Listener
 
     public void open(@NotNull final Player player, int page)
     {
+        int totalPages = totalPages(player);
+
+        page = Math.clamp(page, 1, totalPages);
+
         setCurrentMenuType(player, SkinMorphMenuType.MAIN);
         setCurrentPage(player, page);
 
         List<String> favorites = Optional.ofNullable(favoritesManager.getFavorites(player))
                                          .orElse(Collections.emptyList());
-
-        int totalPages = totalPages(player);
 
         Inventory menu = Bukkit.createInventory(null, 9 * 5, "Skin Menu                 Page " + page + "/" + totalPages);
         menuInventories.add(menu);
@@ -274,7 +276,7 @@ public class SkinMorphMenu implements Listener
         int favoritesSize = Optional.ofNullable(favoritesManager.getFavorites(player))
                                     .map(List::size).orElse(0);
 
-        return (favoritesSize > 0) ? (int) Math.ceil((double) favoritesSize / FAVORITES_PER_PAGE) : 1;
+        return Math.max(1, (favoritesSize + FAVORITES_PER_PAGE - 1) / FAVORITES_PER_PAGE);
     }
 
     private void fillBackground(@NotNull final Inventory inventory)
