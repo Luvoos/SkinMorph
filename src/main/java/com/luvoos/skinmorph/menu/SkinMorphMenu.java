@@ -61,10 +61,10 @@ public class SkinMorphMenu implements Listener
         boolean hasRandomSkinItem = favorites.size() > 1;
         boolean hasResetSkinItem = !player.getName().equalsIgnoreCase(skinManager.getCurrentSkin(player));
 
-        if (hasRandomSkinItem) menu.setItem(hasResetSkinItem ? 2 : 3, SkinMorphItems.randomSkin(player));
-        if (hasResetSkinItem) menu.setItem(3, SkinMorphItems.resetSkin(player));
+        if (hasRandomSkinItem) menu.setItem(0, SkinMorphItems.randomSkin(player));
+        if (hasResetSkinItem) menu.setItem(2, SkinMorphItems.resetSkin(player));
         menu.setItem(4, SkinMorphItems.changeSkin(player));
-        menu.setItem(5, SkinMorphItems.manageFavorites());
+        menu.setItem(6, SkinMorphItems.manageFavorites());
         menu.setItem(8, SkinMorphItems.settings());
 
         boolean hasNextPage = endIndex < favorites.size();
@@ -281,9 +281,12 @@ public class SkinMorphMenu implements Listener
 
     private void fillBackground(@NotNull final Inventory inventory)
     {
-        for (int i = 0; i < inventory.getSize(); i++) {
+        final int size = inventory.getSize();
+        for (int i = 0; i < size; i++) {
             if (inventory.getItem(i) == null) {
-                inventory.setItem(i, SkinMorphItems.background());
+                if (i < 9 || i > size - 10) {
+                    inventory.setItem(i, SkinMorphItems.background());
+                }
             }
         }
     }
