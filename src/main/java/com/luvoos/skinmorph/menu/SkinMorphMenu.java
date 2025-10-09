@@ -82,7 +82,7 @@ public class SkinMorphMenu implements Listener
             });
         }
 
-        fillBackground(menu);
+        fillBackground(player, menu);
 
         player.openInventory(menu);
     }
@@ -98,7 +98,7 @@ public class SkinMorphMenu implements Listener
         menu.setItem(9, SkinMorphItems.back());
         menu.setItem(13, SkinMorphItems.close());
 
-        fillBackground(menu);
+        fillBackground(player, menu);
 
         player.openInventory(menu);
     }
@@ -279,13 +279,22 @@ public class SkinMorphMenu implements Listener
         return Math.max(1, (favoritesSize + FAVORITES_PER_PAGE - 1) / FAVORITES_PER_PAGE);
     }
 
-    private void fillBackground(@NotNull final Inventory inventory)
+    private void fillBackground(final Player player, @NotNull final Inventory inventory)
     {
         final int size = inventory.getSize();
         for (int i = 0; i < size; i++) {
-            if (inventory.getItem(i) == null) {
-                if (i < 9 || i > size - 10) {
-                    inventory.setItem(i, SkinMorphItems.background());
+            if (inventory.getItem(i) != null) continue;
+            if (i < 9 || i > size - 10) {
+                switch (i) {
+                    case 0, 2, 4, 6, 8, 36, 40, 44 -> {
+                        if (getCurrentMenuType(player) == SkinMorphMenuType.MAIN) {
+                            inventory.setItem(i, SkinMorphItems.backgroundBlack());
+                        } else {
+                            inventory.setItem(i, SkinMorphItems.backgroundGray());
+                        }
+                    }
+                    default ->
+                            inventory.setItem(i, SkinMorphItems.backgroundGray());
                 }
             }
         }

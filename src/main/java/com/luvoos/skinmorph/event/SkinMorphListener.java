@@ -5,6 +5,7 @@ import com.luvoos.skinmorph.SelectedSkinsManager;
 import com.luvoos.skinmorph.SkinManager;
 import com.luvoos.skinmorph.SkinMorph;
 import com.luvoos.skinmorph.type.SkinMorphInputType;
+import com.luvoos.skinmorph.type.SkinMorphMenuType;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,8 +14,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-
-import java.util.concurrent.ExecutionException;
 
 public class SkinMorphListener implements Listener
 {
@@ -38,7 +37,7 @@ public class SkinMorphListener implements Listener
 
         selectedSkinsManager.addPlayer(player);
 
-        skinManager.getTexturesAsync(player.getName(), 3); // Add the player's textures to cache
+        skinManager.getSkinAsync(player.getName(), 3); // Add the player's textures to cache
 
         favoritesManager.preloadFavorites(player);
 
@@ -54,6 +53,8 @@ public class SkinMorphListener implements Listener
     {
         final Player player = event.getPlayer();
         plugin.menu.awaitingInput.remove(player.getUniqueId());
+        plugin.menu.setCurrentMenuType(player, SkinMorphMenuType.MAIN);
+        plugin.menu.setCurrentPage(player, 1);
         SkinManager.currentSkins.remove(player.getUniqueId());
     }
 

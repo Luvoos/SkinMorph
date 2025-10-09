@@ -2,6 +2,7 @@ package com.luvoos.skinmorph.item;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
+import com.luvoos.skinmorph.CacheManager;
 import com.luvoos.skinmorph.SkinData;
 import com.luvoos.skinmorph.SkinManager;
 import com.luvoos.skinmorph.SkinMorph;
@@ -13,7 +14,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -28,13 +28,13 @@ public class SkinMorphItems
     public static CompletableFuture<ItemStack> favoriteSkinHead(String name)
     {
         // check cache
-        final SkinData cached = SkinManager.cache.get(name);
+        final SkinData cached = plugin.cacheManager.getSkin(name);
 
         CompletableFuture<SkinData> future =
                 cached != null
                         ? CompletableFuture.completedFuture(cached)
                         // if we don't have it cached, fetch it asynchronously
-                        : plugin.skinManager.getTexturesAsync(name, 3);
+                        : plugin.skinManager.getSkinAsync(name, 3);
 
         return future.thenCompose(skinData -> {
             CompletableFuture<ItemStack> itemFuture = new CompletableFuture<>();
@@ -154,8 +154,7 @@ public class SkinMorphItems
         meta.setDisplayName("§eClear Cache");
         meta.setLore(List.of(
                 "§r§7This can free memory, but is §cnot recommended",
-                "§r§cas it queries the Mojang API again, which can lead",
-                "§r§cto requests being rejected§7."
+                "§r§cas it'll unnecessarily query the Mojang API."
         ));
         item.setItemMeta(meta);
 
@@ -177,9 +176,19 @@ public class SkinMorphItems
         return headFromBase64("§eBack", PAGE_SWITCH_BASE64);
     }
 
-    public static ItemStack background()
+    public static ItemStack backgroundGray()
     {
         ItemStack item = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(" ");
+        item.setItemMeta(meta);
+
+        return item;
+    }
+
+    public static ItemStack backgroundBlack()
+    {
+        ItemStack item = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(" ");
         item.setItemMeta(meta);

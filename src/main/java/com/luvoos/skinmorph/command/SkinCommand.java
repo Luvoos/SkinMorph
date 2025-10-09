@@ -28,7 +28,7 @@ public class SkinCommand implements CommandExecutor
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args)
     {
-        int len = args.length;
+        final int len = args.length;
         if (!sender.hasPermission("skinmorph.command.skin")) {
             sender.sendMessage("§cYou don't have permission to do that!");
             return true;

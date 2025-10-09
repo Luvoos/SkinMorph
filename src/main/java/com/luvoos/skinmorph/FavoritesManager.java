@@ -1,7 +1,5 @@
 package com.luvoos.skinmorph;
 
-import com.destroystokyo.paper.profile.ProfileProperty;
-import com.luvoos.skinmorph.item.SkinMorphItems;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -12,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
@@ -21,13 +18,15 @@ public class FavoritesManager
 {
     private final SkinMorph plugin;
     private final SkinManager skinManager;
+    private final CacheManager cacheManager;
     private File file;
     private FileConfiguration config;
 
-    public FavoritesManager(SkinMorph plugin, SkinManager skinManager)
+    public FavoritesManager(SkinMorph plugin, SkinManager skinManager, CacheManager cacheManager)
     {
         this.plugin = plugin;
         this.skinManager = skinManager;
+        this.cacheManager = cacheManager;
         loadFile();
     }
 
@@ -77,8 +76,8 @@ public class FavoritesManager
             try {
                 List<String> favorites = getFavorites(player);
                 String noSpacesSkinName = skinName.replace(" ", "");
-                CompletableFuture<SkinData> textures = skinManager.getTexturesAsync(skinName, 3);
-                if (textures.get() == null) {
+                CompletableFuture<SkinData> skin = skinManager.getSkinAsync(skinName, 3);
+                if (skin.get() == null) {
                     if (plugin.PLAYER_FEEDBACK && playerFeedback) player.sendMessage("§cInvalid profile! ('§e" + noSpacesSkinName.toLowerCase() + "§c')");
                     return;
                 }
@@ -129,7 +128,7 @@ public class FavoritesManager
         List<String> loadedFavorites = new ArrayList<>();
 
         for (String favorite : favorites) {
-            if (SkinManager.cache.containsKey(favorite.toLowerCase())) loadedFavorites.add(favorite);
+            if (cacheManager.hasSkin(favorite)) loadedFavorites.add(favorite);
         }
 
         String chosenFavorite;
@@ -144,7 +143,7 @@ public class FavoritesManager
     {
         plugin.getLogger().info("Loading " + getAllFavorites().size() + " favorite(s)...");
         for (String skinName : getAllFavorites()) {
-            skinManager.getTexturesAsync(skinName, 5);
+            skinManager.getSkinAsync(skinName, 5);
         }
     }
 
@@ -152,7 +151,7 @@ public class FavoritesManager
     {
         plugin.getLogger().info("Loading " + getAllFavorites().size() + " favorite(s) for " + player.getName());
         for (String skinName : getFavorites(player)) {
-            skinManager.getTexturesAsync(skinName, 5);
+            skinManager.getSkinAsync(skinName, 5);
         }
     }
 

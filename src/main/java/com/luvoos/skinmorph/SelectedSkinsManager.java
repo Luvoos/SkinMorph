@@ -90,7 +90,7 @@ public class SelectedSkinsManager
         plugin.getLogger().info("Loading " + getAllSelectedSkins().size() + " selected skins...");
 
         for (String skinName : getAllSelectedSkins()) {
-            skinManager.getTexturesAsync(skinName, 3);
+            skinManager.getSkinAsync(skinName, 3);
         }
     }
 
