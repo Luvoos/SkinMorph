@@ -2,9 +2,7 @@ package com.luvoos.skinmorph.item;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
-import com.luvoos.skinmorph.CacheManager;
 import com.luvoos.skinmorph.SkinData;
-import com.luvoos.skinmorph.SkinManager;
 import com.luvoos.skinmorph.SkinMorph;
 import com.luvoos.skinmorph.util.FormatUtil;
 import org.bukkit.Bukkit;
