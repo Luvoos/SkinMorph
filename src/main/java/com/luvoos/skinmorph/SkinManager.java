@@ -37,7 +37,6 @@ public class SkinManager
 
     public static final Map<UUID, String> currentSkins = new ConcurrentHashMap<>();
 
-    //private static final ExecutorService requestExecutor = Executors.newFixedThreadPool(3);
     private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(10);
 
     /*
