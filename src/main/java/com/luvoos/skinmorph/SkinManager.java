@@ -161,8 +161,6 @@ public class SkinManager
                     ProfileProperty textureProp = skin.getTextureProperty();
                     profile.setProperty(textureProp);
 
-
-
                     target.setPlayerProfile(profile);
                     setCurrentSkin(target, normalizedSkinName);
                     plugin.selectedSkinsManager.setSelectedSkin(target, normalizedSkinName);
