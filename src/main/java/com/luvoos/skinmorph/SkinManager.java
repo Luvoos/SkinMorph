@@ -18,8 +18,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -33,12 +31,13 @@ public class SkinManager
     public static final String PROFILE_URL = "https://api.mojang.com/users/profiles/minecraft/";
     public static final String SKIN_URL = "https://sessionserver.mojang.com/session/minecraft/profile/%s?unsigned=false";
     public static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
-            .version(HttpClient.Version.HTTP_2)
+            .version(HttpClient.Version.HTTP_1_1)
             .connectTimeout(Duration.ofSeconds(10))
             .build();
 
     public static final Map<UUID, String> currentSkins = new ConcurrentHashMap<>();
 
+    //private static final ExecutorService requestExecutor = Executors.newFixedThreadPool(3);
     private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(10);
 
     /*
@@ -159,8 +158,10 @@ public class SkinManager
             Bukkit.getScheduler().runTask(plugin, () -> {
                 try {
                     PlayerProfile profile = target.getPlayerProfile();
-                    Collection<ProfileProperty> textures = skin.getTextureProperties();
-                    profile.setProperties(textures);
+                    ProfileProperty textureProp = skin.getTextureProperty();
+                    profile.setProperty(textureProp);
+
+
 
                     target.setPlayerProfile(profile);
                     setCurrentSkin(target, normalizedSkinName);
@@ -246,7 +247,8 @@ public class SkinManager
             return CompletableFuture.completedFuture(null);
         }
 
-        return fetchSkinAttempt(normalizedSkinName, attempts);
+        return CompletableFuture.supplyAsync(() -> null)
+                                .thenCompose(ignored -> fetchSkinAttempt(normalizedSkinName, attempts));
     }
 
     private CompletableFuture<SkinData> fetchSkinAttempt(final String skinName, int attemptsLeft)
@@ -263,12 +265,15 @@ public class SkinManager
 
         return HTTP_CLIENT.sendAsync(profileReq, HttpResponse.BodyHandlers.ofString())
                 .thenCompose(profileRes -> {
+                    if (plugin.DEBUG) plugin.getLogger().info("New profile request being sent out: " + profileReq.uri());
+
                     String profileBody = profileRes.body();
                     int profileStatus = profileRes.statusCode();
 
                     if (profileStatus != 200 || profileBody == null || profileBody.startsWith("<!DOCTYPE")) {
                         if (plugin.DEBUG) plugin.getLogger().warning("Invalid profile response for '" + normalizedSkinName + "' -> " + profileStatus);
-                        return scheduleRetry(normalizedSkinName, attemptsLeft);
+                        return (attemptsLeft > 1) ? scheduleRetry(normalizedSkinName, attemptsLeft)
+                                                  : CompletableFuture.completedFuture(null);
                     }
 
                     JsonObject profileObj;
@@ -276,12 +281,14 @@ public class SkinManager
                         profileObj = JsonParser.parseString(profileBody).getAsJsonObject();
                     } catch (JsonSyntaxException | IllegalStateException e) {
                         if (plugin.DEBUG) plugin.getLogger().warning("Failed to parse profile JSON for '" + normalizedSkinName + "'");
-                        return scheduleRetry(normalizedSkinName, attemptsLeft);
+                        return (attemptsLeft > 1) ? scheduleRetry(normalizedSkinName, attemptsLeft)
+                                                  : CompletableFuture.completedFuture(null);
                     }
 
                     if (!profileObj.has("id")) {
                         if (plugin.DEBUG) plugin.getLogger().warning("Missing 'id' field in profile response for '" + normalizedSkinName + "'");
-                        return scheduleRetry(normalizedSkinName, attemptsLeft);
+                        return (attemptsLeft > 1) ? scheduleRetry(normalizedSkinName, attemptsLeft)
+                                                  : CompletableFuture.completedFuture(null);
                     }
 
                     String uuid = profileObj.get("id").getAsString();
@@ -293,12 +300,14 @@ public class SkinManager
 
                     return HTTP_CLIENT.sendAsync(skinReq, HttpResponse.BodyHandlers.ofString())
                             .thenCompose(skinRes -> {
+                                if (plugin.DEBUG) plugin.getLogger().info("New skin request being sent out: " + skinReq.uri());
                                 String skinBody = skinRes.body();
                                 int skinStatus = skinRes.statusCode();
 
                                 if (skinStatus != 200 || skinBody == null || skinBody.startsWith("<!DOCTYPE")) {
                                     if (plugin.DEBUG) plugin.getLogger().warning("Invalid skin response for '" + normalizedSkinName + "' -> " + skinStatus);
-                                    return scheduleRetry(normalizedSkinName, attemptsLeft);
+                                    return (attemptsLeft > 1) ? scheduleRetry(normalizedSkinName, attemptsLeft)
+                                                              : CompletableFuture.completedFuture(null);
                                 }
 
                                 try {
@@ -306,7 +315,8 @@ public class SkinManager
                                     JsonArray props = skinObj.getAsJsonArray("properties");
                                     if (props == null || props.isEmpty()) {
                                         if (plugin.DEBUG) plugin.getLogger().warning("Missing 'properties' in skin response for '" + normalizedSkinName + "'");
-                                        return scheduleRetry(normalizedSkinName, attemptsLeft);
+                                        return (attemptsLeft > 1) ? scheduleRetry(normalizedSkinName, attemptsLeft)
+                                                                  : CompletableFuture.completedFuture(null);
                                     }
 
                                     JsonObject prop = props.get(0).getAsJsonObject();
@@ -315,33 +325,32 @@ public class SkinManager
 
                                     if (value == null || signature == null) {
                                         if (plugin.DEBUG) plugin.getLogger().warning("Missing value or signature in skin property for '" + normalizedSkinName + "'");
-                                        return scheduleRetry(normalizedSkinName, attemptsLeft);
+                                        return (attemptsLeft > 1) ? scheduleRetry(normalizedSkinName, attemptsLeft)
+                                                                  : CompletableFuture.completedFuture(null);
                                     }
 
-                                    final ProfileProperty texturesProp = new ProfileProperty("textures", value, signature);
-                                    final SkinData skinData = new SkinData(normalizedSkinName, List.of(texturesProp), System.currentTimeMillis());
+                                    ProfileProperty textureProp = new ProfileProperty(
+                                            "textures",
+                                            value,
+                                            signature
+                                    );
 
+                                    final SkinData skinData = new SkinData(normalizedSkinName, textureProp, System.currentTimeMillis());
                                     plugin.cacheManager.updateCache(skinData);
+
                                     if (plugin.DEBUG) plugin.getLogger().info("Successfully fetched textures for '" + normalizedSkinName + "'");
 
                                     return CompletableFuture.completedFuture(skinData);
                                 } catch (JsonSyntaxException | IllegalStateException e) {
                                     if (plugin.DEBUG) plugin.getLogger().warning("Failed to parse skin JSON for '" + normalizedSkinName + "'");
-                                    return scheduleRetry(normalizedSkinName, attemptsLeft);
+                                    return (attemptsLeft > 1) ? scheduleRetry(normalizedSkinName, attemptsLeft)
+                                                              : CompletableFuture.completedFuture(null);
                                 }
                             });
                 })
                 .exceptionally(e -> {
                     if (plugin.DEBUG) plugin.getLogger().warning("Unexpected error occurred while fetching '" + normalizedSkinName + "' -> " + e.getMessage());
                     return null;
-                })
-                .thenCompose(res -> {
-                    if (res instanceof SkinData) {
-                        return CompletableFuture.completedFuture((SkinData) res);
-                    } else {
-                        if (attemptsLeft > 1) return scheduleRetry(normalizedSkinName, attemptsLeft);
-                        return CompletableFuture.completedFuture(null);
-                    }
                 });
     }
 

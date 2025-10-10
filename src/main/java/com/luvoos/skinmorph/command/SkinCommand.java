@@ -22,7 +22,6 @@ public class SkinCommand implements CommandExecutor
         this.plugin = plugin;
         this.favoritesManager = favoritesManager;
         this.skinManager = skinManager;
-
     }
 
     @Override

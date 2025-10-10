@@ -60,9 +60,8 @@ public class CacheManager
         if (skinData == null) return null;
 
         // Expiry check
-        long diff = System.currentTimeMillis() - skinData.getLastUpdated();
-        if (diff > expiryMillis) {
-            plugin.getLogger().info("SkinData expired for '" + skinName.toLowerCase() + "' since " + diff + "ms, returning null");
+        if (skinData.isDirty()) {
+            plugin.getLogger().info("SkinData expired for '" + skinName.toLowerCase() + "', returning null");
             return null;
         }
 

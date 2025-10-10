@@ -46,7 +46,7 @@ public class SkinMorphItems
 
                     PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID(), name);
                     if (skinData != null) {
-                        profile.setProperties(skinData.getTextureProperties());
+                        profile.setProperty(skinData.getTextureProperty());
                     }
 
                     meta.setPlayerProfile(profile);

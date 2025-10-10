@@ -5,14 +5,18 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Collection;
-
 @AllArgsConstructor
 @Getter
 @Setter
 public class SkinData
 {
     private String username;
-    private Collection<ProfileProperty> textureProperties;
+    private ProfileProperty textureProperty;
     private Long lastUpdated;
+
+    public boolean isDirty()
+    {
+        long diff = System.currentTimeMillis() - getLastUpdated();
+        return diff > 24 * 60 * 60 * 1000L;
+    }
 }
