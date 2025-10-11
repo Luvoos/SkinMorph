@@ -244,8 +244,7 @@ public class SkinManager
             return CompletableFuture.completedFuture(null);
         }
 
-        return CompletableFuture.supplyAsync(() -> null)
-                                .thenCompose(ignored -> fetchSkinAttempt(normalizedSkinName, attempts));
+        return fetchSkinAttempt(normalizedSkinName, attempts);
     }
 
     private CompletableFuture<SkinData> fetchSkinAttempt(final String skinName, int attemptsLeft)
@@ -254,8 +253,16 @@ public class SkinManager
 
         final String normalizedSkinName = FormatUtil.normalize(skinName);
 
+        final URI profileURI;
+        try {
+            profileURI = URI.create(PROFILE_URL + normalizedSkinName);
+        } catch (IllegalArgumentException e) {
+            if (plugin.DEBUG) plugin.getLogger().warning("Invalid skin name input -> " + e.getMessage());
+            return CompletableFuture.completedFuture(null);
+        }
+
         final HttpRequest profileReq = HttpRequest.newBuilder()
-                .uri(URI.create(PROFILE_URL + normalizedSkinName))
+                .uri(profileURI)
                 .timeout(REQUEST_TIMEOUT)
                 .GET()
                 .build();
@@ -268,6 +275,10 @@ public class SkinManager
                     int profileStatus = profileRes.statusCode();
 
                     if (profileStatus != 200 || profileBody == null || profileBody.startsWith("<!DOCTYPE")) {
+                        if (profileStatus == 404 || profileStatus == 400) {
+                            if (plugin.DEBUG) plugin.getLogger().warning("Received " + profileStatus + " code for '" + normalizedSkinName + "', returning null without retry-attempts");
+                            return CompletableFuture.completedFuture(null);
+                        }
                         if (plugin.DEBUG) plugin.getLogger().warning("Invalid profile response for '" + normalizedSkinName + "' -> " + profileStatus);
                         return (attemptsLeft > 1) ? scheduleRetry(normalizedSkinName, attemptsLeft)
                                                   : CompletableFuture.completedFuture(null);
@@ -302,6 +313,10 @@ public class SkinManager
                                 int skinStatus = skinRes.statusCode();
 
                                 if (skinStatus != 200 || skinBody == null || skinBody.startsWith("<!DOCTYPE")) {
+                                    if (skinStatus == 404 || skinStatus == 400) {
+                                        if (plugin.DEBUG) plugin.getLogger().warning("Received " + skinStatus + " code for '" + normalizedSkinName + "', returning null without retry-attempts");
+                                        return CompletableFuture.completedFuture(null);
+                                    }
                                     if (plugin.DEBUG) plugin.getLogger().warning("Invalid skin response for '" + normalizedSkinName + "' -> " + skinStatus);
                                     return (attemptsLeft > 1) ? scheduleRetry(normalizedSkinName, attemptsLeft)
                                                               : CompletableFuture.completedFuture(null);
