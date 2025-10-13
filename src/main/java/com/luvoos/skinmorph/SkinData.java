@@ -17,6 +17,6 @@ public class SkinData
     public boolean isDirty(final long expiryMs)
     {
         long diff = System.currentTimeMillis() - getLastUpdated();
-        return diff > 24 * 60 * 60 * 1000L;
+        return diff > expiryMs;
     }
 }
