@@ -33,7 +33,8 @@ public class FavoritesManager
     private void loadFile()
     {
         file = new File(plugin.getDataFolder(), "favorites.yml");
-        if (!file.exists()) plugin.saveResource("favorites.yml", false);
+        if (!file.exists())
+            plugin.saveResource("favorites.yml", false);
         config = YamlConfiguration.loadConfiguration(file);
     }
 
@@ -78,7 +79,8 @@ public class FavoritesManager
                 String noSpacesSkinName = skinName.replace(" ", "");
                 CompletableFuture<SkinData> skin = skinManager.getSkinAsync(skinName, 3);
                 if (skin.get() == null) {
-                    if (plugin.PLAYER_FEEDBACK && playerFeedback) player.sendMessage("§cInvalid profile! ('§e" + noSpacesSkinName.toLowerCase() + "§c')");
+                    if (plugin.PLAYER_FEEDBACK && playerFeedback)
+                        player.sendMessage("§cInvalid profile! ('§e" + noSpacesSkinName.toLowerCase() + "§c')");
                     return;
                 }
 
@@ -87,11 +89,13 @@ public class FavoritesManager
                     config.set("players." + uuid, favorites);
                     saveFile();
                 } else {
-                    if (plugin.PLAYER_FEEDBACK && playerFeedback && player.isOnline()) player.sendMessage("§e" + noSpacesSkinName.toLowerCase() + " §ais already in your favorites!");
+                    if (plugin.PLAYER_FEEDBACK && playerFeedback && player.isOnline())
+                        player.sendMessage("§e" + noSpacesSkinName.toLowerCase() + " §ais already in your favorites!");
                     return;
                 }
                 reloadFavorites();
-                if (plugin.PLAYER_FEEDBACK && playerFeedback && player.isOnline()) player.sendMessage("§aAdded §e" + noSpacesSkinName.toLowerCase() + " §ato your favorites!");
+                if (plugin.PLAYER_FEEDBACK && playerFeedback && player.isOnline())
+                    player.sendMessage("§aAdded §e" + noSpacesSkinName.toLowerCase() + " §ato your favorites!");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -109,13 +113,15 @@ public class FavoritesManager
             config.set("players." + uuid, favorites);
             saveFile();
         } else {
-            if (plugin.PLAYER_FEEDBACK && playerFeedback && player.isOnline()) player.sendMessage("§e" + noSpacesSkinName.toLowerCase() + " §cis not in your favorites!");
+            if (plugin.PLAYER_FEEDBACK && playerFeedback && player.isOnline())
+                player.sendMessage("§e" + noSpacesSkinName.toLowerCase() + " §cis not in your favorites!");
             return;
         }
 
         reloadFavorites();
 
-        if (plugin.PLAYER_FEEDBACK && playerFeedback && player.isOnline()) player.sendMessage("§cRemoved §e" + noSpacesSkinName.toLowerCase() + " §cfrom your favorites!");
+        if (plugin.PLAYER_FEEDBACK && playerFeedback && player.isOnline())
+            player.sendMessage("§cRemoved §e" + noSpacesSkinName.toLowerCase() + " §cfrom your favorites!");
     }
 
     public String getRandomFavorite(@NotNull Player player)
@@ -128,13 +134,13 @@ public class FavoritesManager
         List<String> loadedFavorites = new ArrayList<>();
 
         for (String favorite : favorites) {
-            if (cacheManager.hasSkin(favorite)) loadedFavorites.add(favorite);
+            if (cacheManager.hasSkin(favorite))
+                loadedFavorites.add(favorite);
         }
 
         String chosenFavorite;
-        do {
-            chosenFavorite = loadedFavorites.get(ThreadLocalRandom.current().nextInt(loadedFavorites.size()));
-        } while (skinManager.isWearingSkin(player, chosenFavorite) && loadedFavorites.size() > 1);
+        do      chosenFavorite = loadedFavorites.get(ThreadLocalRandom.current().nextInt(loadedFavorites.size()));
+        while   (skinManager.isWearingSkin(player, chosenFavorite) && loadedFavorites.size() > 1);
 
         return chosenFavorite;
     }

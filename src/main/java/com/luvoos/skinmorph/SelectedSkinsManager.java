@@ -28,7 +28,8 @@ public class SelectedSkinsManager
     private void loadFile()
     {
         file = new File(plugin.getDataFolder(), "skins.yml");
-        if (!file.exists()) plugin.saveResource("skins.yml", false);
+        if (!file.exists())
+            plugin.saveResource("skins.yml", false);
         config = YamlConfiguration.loadConfiguration(file);
     }
 

@@ -11,6 +11,11 @@ session-agnostic-skins: true
 # which can reduce redundant API calls
 persistent-cache: true
 
+# After how much time a cache entry should expire,
+# meaning it will be refetched
+# Specified in milliseconds as a long value
+cache-expiry-ms: 24 * 60 * 60 * 1000L # (one day by default)
+
 # Whether the plugin should print out debug messages
 # (not recommended as most people will have no use for this)
 debug: false

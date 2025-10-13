@@ -61,8 +61,10 @@ public class SkinMorphMenu implements Listener
         boolean hasRandomSkinItem = favorites.size() > 1;
         boolean hasResetSkinItem = !player.getName().equalsIgnoreCase(skinManager.getCurrentSkin(player));
 
-        if (hasRandomSkinItem) menu.setItem(0, SkinMorphItems.randomSkin(player));
-        if (hasResetSkinItem) menu.setItem(2, SkinMorphItems.resetSkin(player));
+        if (hasRandomSkinItem)
+            menu.setItem(0, SkinMorphItems.randomSkin(player));
+        if (hasResetSkinItem)
+            menu.setItem(2, SkinMorphItems.resetSkin(player));
         menu.setItem(4, SkinMorphItems.changeSkin(player));
         menu.setItem(6, SkinMorphItems.manageFavorites());
         menu.setItem(8, SkinMorphItems.settings());
@@ -70,8 +72,10 @@ public class SkinMorphMenu implements Listener
         boolean hasNextPage = endIndex < favorites.size();
         boolean hasPreviousPage = getCurrentPage(player) > 1;
 
-        if (hasPreviousPage) menu.setItem(36, SkinMorphItems.previousPage());
-        if (hasNextPage) menu.setItem(44, SkinMorphItems.nextPage());
+        if (hasPreviousPage)
+            menu.setItem(36, SkinMorphItems.previousPage());
+        if (hasNextPage)
+            menu.setItem(44, SkinMorphItems.nextPage());
 
         menu.setItem(40, SkinMorphItems.close());
 
@@ -210,9 +214,12 @@ public class SkinMorphMenu implements Listener
         awaitingInput.remove(player.getUniqueId());
         inputWaitingTimes.remove(player.getUniqueId());
         player.closeInventory();
-        if (inputType == SkinMorphInputType.ADD_FAVORITE || inputType == SkinMorphInputType.CHANGE_SKIN_SELF || inputType == SkinMorphInputType.REMOVE_FAVORITE) player.sendMessage("§aPlease enter a skin name in chat within the next 20 seconds!");
-        if (inputType == SkinMorphInputType.CHANGE_SKIN_OTHER) player.sendMessage("§aPlease enter a skin name and a target username in chat separated by a semicolon (;) within the next 20 seconds!");
-        if (inputType == SkinMorphInputType.RESET_SKIN_OTHER || inputType == SkinMorphInputType.RANDOM_SKIN_OTHER) player.sendMessage("§aPlease enter a target username in chat within the next 20 seconds!");
+        if (inputType == SkinMorphInputType.ADD_FAVORITE || inputType == SkinMorphInputType.CHANGE_SKIN_SELF || inputType == SkinMorphInputType.REMOVE_FAVORITE)
+            player.sendMessage("§aPlease enter a skin name in chat within the next 20 seconds!");
+        if (inputType == SkinMorphInputType.CHANGE_SKIN_OTHER)
+            player.sendMessage("§aPlease enter a skin name and a target username in chat separated by a semicolon (;) within the next 20 seconds!");
+        if (inputType == SkinMorphInputType.RESET_SKIN_OTHER || inputType == SkinMorphInputType.RANDOM_SKIN_OTHER)
+            player.sendMessage("§aPlease enter a target username in chat within the next 20 seconds!");
         inputWaitingTimes.put(player.getUniqueId(), 20);
         awaitingInput.put(player.getUniqueId(), inputType);
         new BukkitRunnable() {
@@ -225,7 +232,8 @@ public class SkinMorphMenu implements Listener
                         this.cancel();
                         awaitingInput.remove(player.getUniqueId());
                         inputWaitingTimes.remove(player.getUniqueId());
-                        if (player.isOnline()) player.sendMessage("§cChat input expired!");
+                        if (player.isOnline())
+                            player.sendMessage("§cChat input expired!");
                     }
                 } else {
                     this.cancel();

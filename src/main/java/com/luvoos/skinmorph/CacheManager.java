@@ -20,11 +20,17 @@ public class CacheManager
     private final Path cacheFile;
     public static final Map<String, SkinData> cache = new ConcurrentHashMap<>();
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private final long expiryMillis = 24 * 60 * 60 * 1000L; // one day expiry
+    private long expiryMs;
 
     public CacheManager(Path cacheFile)
     {
         this.cacheFile = cacheFile;
+        init();
+    }
+
+    private void init()
+    {
+        expiryMs = plugin.CACHE_EXPIRY;
         loadCache();
     }
 
@@ -36,7 +42,8 @@ public class CacheManager
         try (Reader reader = Files.newBufferedReader(cacheFile)) {
             Type type = new TypeToken<Map<String, SkinData>>(){}.getType();
             Map<String, SkinData> loaded = gson.fromJson(reader, type);
-            if (loaded != null) cache.putAll(loaded);
+            if (loaded != null)
+                cache.putAll(loaded);
         } catch (IOException e) {
             plugin.getLogger().warning("Failed to load cache into memory: " + e.getMessage());
         }
@@ -60,7 +67,7 @@ public class CacheManager
         if (skinData == null) return null;
 
         // Expiry check
-        if (skinData.isDirty()) {
+        if (skinData.isDirty(expiryMs)) {
             plugin.getLogger().info("SkinData expired for '" + skinName.toLowerCase() + "', returning null");
             return null;
         }

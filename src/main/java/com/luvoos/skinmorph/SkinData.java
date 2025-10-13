@@ -14,7 +14,7 @@ public class SkinData
     private ProfileProperty textureProperty;
     private Long lastUpdated;
 
-    public boolean isDirty()
+    public boolean isDirty(final long expiryMs)
     {
         long diff = System.currentTimeMillis() - getLastUpdated();
         return diff > 24 * 60 * 60 * 1000L;

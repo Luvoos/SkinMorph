@@ -21,6 +21,7 @@ public final class SkinMorph extends JavaPlugin
     public boolean SESSION_AGNOSTIC_SKINS;
     public boolean PERSISTENT_CACHE;
     public int RETRY_DELAY;
+    public long CACHE_EXPIRY;
 
     @Override
     public void onEnable()
@@ -45,19 +46,24 @@ public final class SkinMorph extends JavaPlugin
     {
         instance = this;
         saveDefaultConfig();
+
+        PLAYER_FEEDBACK = getConfig().getBoolean("player-feedback", true);
+        DEBUG = getConfig().getBoolean("debug", false);
+        SESSION_AGNOSTIC_SKINS = getConfig().getBoolean("session-agnostic-skins", true);
+        PERSISTENT_CACHE = getConfig().getBoolean("persistent-cache", true);
+        RETRY_DELAY = getConfig().getInt("retry-delay", 2000);
+        CACHE_EXPIRY = getConfig().getLong("cache-expiry-ms", 24 * 60 * 60 * 1000L);
+
         cacheManager = new CacheManager(Paths.get(getDataPath() + "/cache.json"));
         skinManager = new SkinManager();
         selectedSkinsManager = new SelectedSkinsManager(this, skinManager);
         selectedSkinsManager.preloadSelectedSkins();
         favoritesManager = new FavoritesManager(this, skinManager, cacheManager);
         menu = new SkinMorphMenu(this, favoritesManager, skinManager);
-        PLAYER_FEEDBACK = getConfig().getBoolean("player-feedback", true);
-        DEBUG = getConfig().getBoolean("debug", false);
-        SESSION_AGNOSTIC_SKINS = getConfig().getBoolean("session-agnostic-skins", true);
-        PERSISTENT_CACHE = getConfig().getBoolean("persistent-cache", true);
-        RETRY_DELAY = getConfig().getInt("retry-delay", 2000);
+
         getCommand("skin").setExecutor(new SkinCommand(this, favoritesManager, skinManager));
         getCommand("skin").setTabCompleter(new SkinCommandTabCompleter(this, favoritesManager, skinManager));
+
         getServer().getPluginManager().registerEvents(menu, this);
         getServer().getPluginManager().registerEvents(new SkinMorphListener(this, favoritesManager, skinManager, selectedSkinsManager), this);
     }
