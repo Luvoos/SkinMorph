@@ -1,9 +1,9 @@
 package com.luvoos.skinmorph.event;
 
+import com.luvoos.skinmorph.SkinMorph;
 import com.luvoos.skinmorph.manager.FavoritesManager;
 import com.luvoos.skinmorph.manager.SelectedSkinsManager;
 import com.luvoos.skinmorph.manager.SkinManager;
-import com.luvoos.skinmorph.SkinMorph;
 import com.luvoos.skinmorph.type.SkinMorphInputType;
 import com.luvoos.skinmorph.type.SkinMorphMenuType;
 import org.bukkit.Bukkit;
