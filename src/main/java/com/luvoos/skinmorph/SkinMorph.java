@@ -3,6 +3,10 @@ package com.luvoos.skinmorph;
 import com.luvoos.skinmorph.command.SkinCommand;
 import com.luvoos.skinmorph.command.SkinCommandTabCompleter;
 import com.luvoos.skinmorph.event.SkinMorphListener;
+import com.luvoos.skinmorph.manager.CacheManager;
+import com.luvoos.skinmorph.manager.FavoritesManager;
+import com.luvoos.skinmorph.manager.SelectedSkinsManager;
+import com.luvoos.skinmorph.manager.SkinManager;
 import com.luvoos.skinmorph.menu.SkinMorphMenu;
 import org.bukkit.plugin.java.JavaPlugin;
 

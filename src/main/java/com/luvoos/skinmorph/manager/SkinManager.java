@@ -1,4 +1,4 @@
-package com.luvoos.skinmorph;
+package com.luvoos.skinmorph.manager;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
@@ -6,6 +6,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import com.luvoos.skinmorph.SkinData;
+import com.luvoos.skinmorph.SkinMorph;
 import com.luvoos.skinmorph.util.FormatUtil;
 import com.luvoos.skinmorph.util.StatusCodeUtil;
 import org.bukkit.Bukkit;

@@ -1,7 +1,7 @@
 package com.luvoos.skinmorph.command;
 
-import com.luvoos.skinmorph.FavoritesManager;
-import com.luvoos.skinmorph.SkinManager;
+import com.luvoos.skinmorph.manager.FavoritesManager;
+import com.luvoos.skinmorph.manager.SkinManager;
 import com.luvoos.skinmorph.SkinMorph;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;

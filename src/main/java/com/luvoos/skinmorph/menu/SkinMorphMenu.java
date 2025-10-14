@@ -1,7 +1,7 @@
 package com.luvoos.skinmorph.menu;
 
-import com.luvoos.skinmorph.FavoritesManager;
-import com.luvoos.skinmorph.SkinManager;
+import com.luvoos.skinmorph.manager.FavoritesManager;
+import com.luvoos.skinmorph.manager.SkinManager;
 import com.luvoos.skinmorph.SkinMorph;
 import com.luvoos.skinmorph.item.SkinMorphItems;
 import com.luvoos.skinmorph.type.SkinMorphInputType;

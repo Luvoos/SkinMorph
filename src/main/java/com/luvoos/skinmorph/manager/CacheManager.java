@@ -1,8 +1,10 @@
-package com.luvoos.skinmorph;
+package com.luvoos.skinmorph.manager;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.luvoos.skinmorph.SkinData;
+import com.luvoos.skinmorph.SkinMorph;
 import org.bukkit.Bukkit;
 
 import java.io.IOException;

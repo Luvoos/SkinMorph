@@ -1,5 +1,6 @@
-package com.luvoos.skinmorph;
+package com.luvoos.skinmorph.manager;
 
+import com.luvoos.skinmorph.SkinMorph;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
