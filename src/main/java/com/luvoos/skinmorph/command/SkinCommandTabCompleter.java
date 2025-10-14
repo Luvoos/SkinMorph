@@ -35,7 +35,7 @@ public class SkinCommandTabCompleter implements TabCompleter
         final int len = args.length;
 
         if (len == 1) {
-            completions.addAll(List.of("set", "reset", "help", "favorites", "random", "settings"));
+            completions.addAll(List.of("set", "default", "help", "favorites", "random", "settings"));
         } else if (len == 2) {
             switch (args[0].toLowerCase()) {
                 case "set" -> {
@@ -44,7 +44,7 @@ public class SkinCommandTabCompleter implements TabCompleter
                         completions.addAll(favoritesManager.getFavorites(player));
                     }
                 }
-                case "random", "reset" -> completions.addAll(getOnlinePlayerNames());
+                case "random", "default" -> completions.addAll(getOnlinePlayerNames());
                 case "favorites" -> completions.addAll(List.of("add", "remove"));
             }
         } else if (len == 3 && args[0].equalsIgnoreCase("set")) {

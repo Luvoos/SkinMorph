@@ -116,7 +116,7 @@ public class SkinMorphItems
     {
         ItemStack item = new ItemStack(Material.BARRIER);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("§eReset Skin");
+        meta.setDisplayName("§eReset Skin to Default");
         meta.setLore(List.of(
                 "§r§f§lLEFT CLICK §r§afor yourself§r",
                 "§r§f§lRIGHT CLICK §r§afor another player§r"

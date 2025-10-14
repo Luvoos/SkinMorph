@@ -95,8 +95,8 @@ public class SkinCommand implements CommandExecutor
                             "/skin - Open the Skin Menu",
                             "/skin set <skinName> - Set your own skin",
                             "/skin set <skinName> <targetName> - Set another player's skin",
-                            "/skin reset - Reset your skin",
-                            "/skin reset <targetName> - Reset another player's skin",
+                            "/skin default - Reset your skin to default",
+                            "/skin default <targetName> - Reset another player's skin to default",
                             "/skin favorites add <skinName> - Add a favorite",
                             "/skin favorites remove <skinName> - Remove a favorite",
                             "/skin random - Apply a random skin from your favorites",
@@ -104,7 +104,7 @@ public class SkinCommand implements CommandExecutor
                     );
                 }
             }
-            case "reset" -> {
+            case "default" -> {
                 if (len == 1) {
                     if (sender instanceof final Player player) {
                         skinManager.resetSkin(player, true);
@@ -171,9 +171,9 @@ public class SkinCommand implements CommandExecutor
                 // /skin set <skinName> <targetName>
                 return len == 2 || len == 3;
 
-            case "reset":
-                // /skin reset
-                // /skin reset <targetName>
+            case "default":
+                // /skin default
+                // /skin default <targetName>
                 return len == 1 || len == 2;
 
             case "favorites":

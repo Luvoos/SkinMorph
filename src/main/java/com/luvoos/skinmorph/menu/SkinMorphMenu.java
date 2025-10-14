@@ -136,7 +136,7 @@ public class SkinMorphMenu implements Listener
                 }
             }
 
-            if (itemName.contains("Reset Skin")) {
+            if (itemName.contains("Reset Skin to Default")) {
                 if (event.isLeftClick()) {
                     skinManager.resetSkin(player, true);
                 } else if (event.isRightClick()) {
