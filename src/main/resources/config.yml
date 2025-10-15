@@ -1,5 +1,10 @@
 # SkinMorph config file
 
+# The language text will be in
+# Available:
+# [en, de, fr, es, it, pt, ru, ja, ko, zh, pl, nl, tr]
+language: en
+
 # Whether the plugin should send command feedback messages
 player-feedback: true
 

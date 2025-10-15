@@ -2,6 +2,7 @@ package com.luvoos.skinmorph.event;
 
 import com.luvoos.skinmorph.SkinMorph;
 import com.luvoos.skinmorph.manager.FavoritesManager;
+import com.luvoos.skinmorph.manager.LanguageManager;
 import com.luvoos.skinmorph.manager.SelectedSkinsManager;
 import com.luvoos.skinmorph.manager.SkinManager;
 import com.luvoos.skinmorph.type.SkinMorphInputType;
@@ -15,19 +16,23 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.Map;
+
 public class SkinMorphListener implements Listener
 {
     private final SkinMorph plugin;
     private final FavoritesManager favoritesManager;
     private final SkinManager skinManager;
     private final SelectedSkinsManager selectedSkinsManager;
+    private final LanguageManager langManager;
 
-    public SkinMorphListener(SkinMorph plugin, FavoritesManager favoritesManager, SkinManager skinManager, SelectedSkinsManager selectedSkinsManager)
+    public SkinMorphListener(SkinMorph plugin, FavoritesManager favoritesManager, SkinManager skinManager, SelectedSkinsManager selectedSkinsManager, LanguageManager languageManager)
     {
         this.plugin = plugin;
         this.favoritesManager = favoritesManager;
         this.skinManager = skinManager;
         this.selectedSkinsManager = selectedSkinsManager;
+        this.langManager = languageManager;
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -76,7 +81,9 @@ public class SkinMorphListener implements Listener
             String first = parts[0];
             String second = parts.length > 1 ? parts[1] : "";
             if (Bukkit.getPlayer(second.replace(" ", "").toLowerCase()) == null) {
-                player.sendMessage("§cCouldn't find online player '§e" + second.replace(" ", "").toLowerCase() + "§c'!");
+                player.sendMessage(langManager.translate("messages.player-not-found", Map.of(
+                        "ph1", second.replace(" ", "").toLowerCase()
+                )));
                 plugin.menu.awaitingInput.remove(player.getUniqueId());
                 return;
             }
@@ -100,7 +107,9 @@ public class SkinMorphListener implements Listener
             event.setCancelled(true);
             String normalizedText = text.replace(" ", "").toLowerCase();
             if (Bukkit.getPlayer(normalizedText) == null) {
-                player.sendMessage("§cCouldn't find online player '§e" + normalizedText + "§c'!");
+                player.sendMessage(langManager.translate("messages.player-not-found", Map.of(
+                        "ph1", normalizedText
+                )));
                 plugin.menu.awaitingInput.remove(player.getUniqueId());
                 return;
             }
@@ -112,7 +121,9 @@ public class SkinMorphListener implements Listener
             event.setCancelled(true);
             String normalizedText = text.replace(" ", "").toLowerCase();
             if (Bukkit.getPlayer(normalizedText) == null) {
-                player.sendMessage("§cCouldn't find online player '§e" + normalizedText + "§c'!");
+                player.sendMessage(langManager.translate("messages.player-not-found", Map.of(
+                        "ph1", normalizedText
+                )));
                 plugin.menu.awaitingInput.remove(player.getUniqueId());
                 return;
             }

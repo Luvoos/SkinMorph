@@ -5,6 +5,7 @@ import com.destroystokyo.paper.profile.ProfileProperty;
 import com.luvoos.skinmorph.SkinData;
 import com.luvoos.skinmorph.SkinMorph;
 import com.luvoos.skinmorph.util.FormatUtil;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -13,14 +14,18 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class SkinMorphItems
 {
+    private SkinMorphItems() {}
+
     private static final SkinMorph plugin = SkinMorph.instance;
     private static final String PAGE_SWITCH_BASE64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDA4OWQwZTBjODhlNTI1MDAzOGU2NTlmNTA4ZWJkYTViNjVhNWJlMGJmYzQxMDNkMGUxMmZhYmE0MDE4ZDVjYiJ9fX0=";
     private static final String RANDOM_SKIN_BASE64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDM0ZTA2M2NhZmI0NjdhNWM4ZGU0M2VjNzg2MTkzOTlmMzY5ZjRhNTI0MzRkYTgwMTdhOTgzY2RkOTI1MTZhMCJ9fX0=";
+    private static final String RESET_SKIN_BASE64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2U1YWQxMzU2N2EzY2E5NjgyYzUxMzliNzJlZjhiNTY0NTUxZjRmNGNjYzE4NGE5NDYwZDVkNTVkNzIwZmU2NiJ9fX0=";
     private static final String SETTINGS_BASE64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWQyNzM3YThkMTlhYjA3OWNlZjdhODI0ZjE0OTcxNTVkYWE5MjVlOGMxYzZiN2E2Yzc1NjVlOGJlMzAzOWZhMCJ9fX0=";
 
     public static CompletableFuture<ItemStack> favoriteSkinHead(String name)
@@ -50,11 +55,14 @@ public class SkinMorphItems
                     }
 
                     meta.setPlayerProfile(profile);
-                    meta.setDisplayName("§a" + FormatUtil.normalize(name));
-                    meta.setLore(List.of(
-                            "§r§f§lLEFT CLICK §r§ato apply skin§r",
-                            "§r§f§lRIGHT CLICK §r§cto remove skin§r"
-                    ));
+                    meta.displayName(plugin.langManager.translate("menu.favorite-name", Map.of(
+                            "ph1", FormatUtil.normalize(name)
+                    )));
+
+                    List<Component> lore = List.of(
+                            plugin.langManager.translate("menu.apply-skin"),
+                            plugin.langManager.translate("menu.remove-skin"));
+                    meta.lore(lore);
 
                     item.setItemMeta(meta);
 
@@ -65,7 +73,7 @@ public class SkinMorphItems
                     // if something goes wrong we return default steve head
                     ItemStack fallbackItem = new ItemStack(Material.PLAYER_HEAD);
                     ItemMeta meta = fallbackItem.getItemMeta();
-                    meta.setDisplayName("§cFailed to load.");
+                    meta.displayName(plugin.langManager.translate("menu.failed-to-load"));
                     fallbackItem.setItemMeta(meta);
 
                     itemFuture.complete(fallbackItem);
@@ -83,44 +91,62 @@ public class SkinMorphItems
         String currentSkin = plugin.skinManager.getCurrentSkin(player);
         PlayerProfile profile = Bukkit.createProfile(player.getUniqueId(), player.getName());
         meta.setPlayerProfile(profile);
-        meta.setDisplayName("§eChange Skin");
-        meta.setLore(List.of(
-                "§r§7Your current skin: §e" + currentSkin + (currentSkin.equalsIgnoreCase(player.getName()) ? " (default)" : ""),
-                "§r§f§lLEFT CLICK §r§afor yourself§r",
-                "§r§f§lRIGHT CLICK §r§afor another player§r"
-        ));
+        meta.displayName(plugin.langManager.translate("menu.change-skin"));
+
+        List<Component> lore = List.of(
+                currentSkin.equalsIgnoreCase(player.getName()) ?
+                        plugin.langManager.translate("menu.current-skin-default", Map.of(
+                                "ph1", currentSkin.toLowerCase()
+                        )) :
+                        plugin.langManager.translate("menu.current-skin", Map.of(
+                                "ph1", currentSkin.toLowerCase()
+                        )),
+                plugin.langManager.translate("menu.for-yourself"),
+                plugin.langManager.translate("menu.for-another-player")
+        );
+        meta.lore(lore);
+
         item.setItemMeta(meta);
 
         return item;
     }
 
-    public static ItemStack randomSkin(Player player)
+    public static ItemStack randomSkin()
     {
         ItemStack item = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID());
         profile.setProperty(new ProfileProperty("textures", RANDOM_SKIN_BASE64));
         meta.setPlayerProfile(profile);
-        meta.setDisplayName("§eRandom Skin");
-        meta.setLore(List.of(
-                "§r§7Randomly pick from favorites",
-                "§r§f§lLEFT CLICK §r§afor yourself§r",
-                "§r§f§lRIGHT CLICK §r§afor another player§r"
-        ));
+        meta.displayName(plugin.langManager.translate("menu.random-skin"));
+
+        List<Component> lore = List.of(
+                plugin.langManager.translate("menu.random-skin-description"),
+                plugin.langManager.translate("menu.for-yourself"),
+                plugin.langManager.translate("menu.for-another-player")
+        );
+        meta.lore(lore);
+
         item.setItemMeta(meta);
 
         return item;
     }
 
-    public static ItemStack resetSkin(Player player)
+    public static ItemStack resetSkin()
     {
-        ItemStack item = new ItemStack(Material.BARRIER);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("§eReset Skin to Default");
-        meta.setLore(List.of(
-                "§r§f§lLEFT CLICK §r§afor yourself§r",
-                "§r§f§lRIGHT CLICK §r§afor another player§r"
-        ));
+        ItemStack item = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta meta = (SkullMeta) item.getItemMeta();
+        PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID());
+        profile.setProperty(new ProfileProperty("textures", RESET_SKIN_BASE64));
+        meta.setPlayerProfile(profile);
+        meta.displayName(plugin.langManager.translate("menu.reset-skin"));
+
+        List<Component> lore = List.of(
+                plugin.langManager.translate("menu.for-yourself"),
+                plugin.langManager.translate("menu.for-another-player")
+        );
+        meta.lore(lore);
+
         item.setItemMeta(meta);
 
         return item;
@@ -130,11 +156,14 @@ public class SkinMorphItems
     {
         ItemStack item = new ItemStack(Material.BOOK);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("§eManage Favorites");
-        meta.setLore(List.of(
-                "§r§f§lLEFT CLICK §r§ato add favorite",
-                "§r§f§lRIGHT CLICK §r§cto remove favorite"
-        ));
+        meta.displayName(plugin.langManager.translate("menu.manage-favorites"));
+
+        List<Component> lore = List.of(
+                plugin.langManager.translate("menu.add-favorite"),
+                plugin.langManager.translate("menu.remove-favorite")
+        );
+        meta.lore(lore);
+
         item.setItemMeta(meta);
 
         return item;
@@ -142,18 +171,20 @@ public class SkinMorphItems
 
     public static ItemStack settings()
     {
-        return headFromBase64("§eSettings", SETTINGS_BASE64);
+        return headFromBase64(plugin.langManager.translate("menu.settings"), SETTINGS_BASE64);
     }
 
     public static ItemStack clearCache()
     {
         ItemStack item = new ItemStack(Material.BARRIER);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("§eClear Cache");
-        meta.setLore(List.of(
-                "§r§7This can free memory, but is §cnot recommended",
-                "§r§cas it'll unnecessarily query the Mojang API."
-        ));
+        meta.displayName(plugin.langManager.translate("menu.clear-cache"));
+
+        List<Component> lore = List.of(
+                plugin.langManager.translate("menu.clear-cache-description")
+        );
+        meta.lore(lore);
+
         item.setItemMeta(meta);
 
         return item;
@@ -161,24 +192,24 @@ public class SkinMorphItems
 
     public static ItemStack previousPage()
     {
-        return headFromBase64("§ePrevious Page", PAGE_SWITCH_BASE64);
+        return headFromBase64(plugin.langManager.translate("menu.previous-page"), PAGE_SWITCH_BASE64);
     }
 
     public static ItemStack nextPage()
     {
-        return headFromBase64("§eNext Page", PAGE_SWITCH_BASE64);
+        return headFromBase64(plugin.langManager.translate("menu.next-page"), PAGE_SWITCH_BASE64);
     }
 
     public static ItemStack back()
     {
-        return headFromBase64("§eBack", PAGE_SWITCH_BASE64);
+        return headFromBase64(plugin.langManager.translate("menu.back"), PAGE_SWITCH_BASE64);
     }
 
     public static ItemStack backgroundGray()
     {
         ItemStack item = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(" ");
+        meta.displayName(Component.text(" "));
         item.setItemMeta(meta);
 
         return item;
@@ -188,7 +219,7 @@ public class SkinMorphItems
     {
         ItemStack item = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(" ");
+        meta.displayName(Component.text(" "));
         item.setItemMeta(meta);
 
         return item;
@@ -198,7 +229,7 @@ public class SkinMorphItems
     {
         ItemStack item = new ItemStack(Material.BARRIER);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("§cClose");
+        meta.displayName(plugin.langManager.translate("menu.close"));
         item.setItemMeta(meta);
 
         return item;
@@ -206,12 +237,17 @@ public class SkinMorphItems
 
     public static ItemStack headFromBase64(String displayName, String base64)
     {
+        return headFromBase64(Component.text(displayName), base64);
+    }
+
+    public static ItemStack headFromBase64(Component displayName, String base64)
+    {
         ItemStack item = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID());
         profile.setProperty(new ProfileProperty("textures", base64));
         meta.setPlayerProfile(profile);
-        meta.setDisplayName(displayName);
+        meta.displayName(displayName);
         item.setItemMeta(meta);
 
         return item;

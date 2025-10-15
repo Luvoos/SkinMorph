@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -21,14 +22,16 @@ public class FavoritesManager
     private final SkinMorph plugin;
     private final SkinManager skinManager;
     private final CacheManager cacheManager;
+    private final LanguageManager langManager;
     private File file;
     private FileConfiguration config;
 
-    public FavoritesManager(SkinMorph plugin, SkinManager skinManager, CacheManager cacheManager)
+    public FavoritesManager(SkinMorph plugin, SkinManager skinManager, CacheManager cacheManager, LanguageManager languageManager)
     {
         this.plugin = plugin;
         this.skinManager = skinManager;
         this.cacheManager = cacheManager;
+        this.langManager = languageManager;
         loadFile();
     }
 
@@ -82,7 +85,9 @@ public class FavoritesManager
                 CompletableFuture<SkinData> skin = skinManager.getSkinAsync(skinName, 3);
                 if (skin.get() == null) {
                     if (plugin.PLAYER_FEEDBACK && playerFeedback)
-                        player.sendMessage("§cInvalid profile! ('§e" + noSpacesSkinName.toLowerCase() + "§c')");
+                        player.sendMessage(langManager.translate("messages.invalid-profile", Map.of(
+                                "ph1", noSpacesSkinName.toLowerCase()
+                        )));
                     return;
                 }
 
@@ -92,12 +97,16 @@ public class FavoritesManager
                     saveFile();
                 } else {
                     if (plugin.PLAYER_FEEDBACK && playerFeedback && player.isOnline())
-                        player.sendMessage("§e" + noSpacesSkinName.toLowerCase() + " §ais already in your favorites!");
+                        player.sendMessage(langManager.translate("messages.already-in-favorites", Map.of(
+                                "ph1", noSpacesSkinName.toLowerCase()
+                        )));
                     return;
                 }
                 reloadFavorites();
                 if (plugin.PLAYER_FEEDBACK && playerFeedback && player.isOnline())
-                    player.sendMessage("§aAdded §e" + noSpacesSkinName.toLowerCase() + " §ato your favorites!");
+                    player.sendMessage(langManager.translate("messages.added-to-favorites", Map.of(
+                            "ph1", noSpacesSkinName.toLowerCase()
+                    )));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -116,14 +125,18 @@ public class FavoritesManager
             saveFile();
         } else {
             if (plugin.PLAYER_FEEDBACK && playerFeedback && player.isOnline())
-                player.sendMessage("§e" + noSpacesSkinName.toLowerCase() + " §cis not in your favorites!");
+                player.sendMessage(langManager.translate("messages.not-in-favorites", Map.of(
+                        "ph1", noSpacesSkinName.toLowerCase()
+                )));
             return;
         }
 
         reloadFavorites();
 
         if (plugin.PLAYER_FEEDBACK && playerFeedback && player.isOnline())
-            player.sendMessage("§cRemoved §e" + noSpacesSkinName.toLowerCase() + " §cfrom your favorites!");
+            player.sendMessage(langManager.translate("messages.removed-from-favorites", Map.of(
+                    "ph1", noSpacesSkinName.toLowerCase()
+            )));
     }
 
     public String getRandomFavorite(@NotNull Player player)

@@ -10,6 +10,7 @@ import com.luvoos.skinmorph.SkinData;
 import com.luvoos.skinmorph.SkinMorph;
 import com.luvoos.skinmorph.util.FormatUtil;
 import com.luvoos.skinmorph.util.StatusCodeUtil;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -30,6 +31,7 @@ import java.util.concurrent.TimeUnit;
 public class SkinManager
 {
     private final SkinMorph plugin = SkinMorph.instance;
+    private final LanguageManager langManager;
 
     public static final String PROFILE_URL = "https://api.mojang.com/users/profiles/minecraft/";
     public static final String SKIN_URL = "https://sessionserver.mojang.com/session/minecraft/profile/%s?unsigned=false";
@@ -41,6 +43,11 @@ public class SkinManager
     public static final Map<UUID, String> currentSkins = new ConcurrentHashMap<>();
 
     private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(10);
+
+    public SkinManager(LanguageManager languageManager)
+    {
+        this.langManager = languageManager;
+    }
 
     /*
     ----------
@@ -130,9 +137,14 @@ public class SkinManager
         if (isWearingSkin(target, skinName)) {
             if (plugin.PLAYER_FEEDBACK && playerFeedback) {
                 if (caller == null) {
-                    target.sendMessage("§aYou're already wearing that skin! ('§e" + normalizedSkinName + "§a')");
+                    target.sendMessage(langManager.translate("messages.already-wearing-skin-self", Map.of(
+                            "ph1", normalizedSkinName
+                    )));
                 } else {
-                    caller.sendMessage("§a" + target.getName() + " is already wearing that skin! ('§e" + normalizedSkinName + "§a')");
+                    caller.sendMessage(langManager.translate("messages.already-wearing-skin-other", Map.of(
+                            "ph1", target.getName(),
+                            "ph2", normalizedSkinName
+                    )));
                 }
             }
             return;
@@ -143,7 +155,9 @@ public class SkinManager
                 if (plugin.DEBUG)
                     plugin.getLogger().warning("Error fetching skin '" + normalizedSkinName + "' -> " + t.getMessage());
                 if (plugin.PLAYER_FEEDBACK && playerFeedback) {
-                    final String msg = "§cError changing skin: " + t.getMessage();
+                    final Component msg = langManager.translate("messages.error-changing-skin", Map.of(
+                            "ph1", t.getMessage()
+                    ));
                     if (caller == null)
                         target.sendMessage(msg); else caller.sendMessage(msg);
                 }
@@ -152,7 +166,9 @@ public class SkinManager
 
             if (skin == null) {
                 if (plugin.PLAYER_FEEDBACK && playerFeedback) {
-                    final String msg = "§cInvalid profile! ('§e" + normalizedSkinName + "§c')";
+                    final Component msg = langManager.translate("messages.invalid-profile", Map.of(
+                            "ph1", normalizedSkinName
+                    ));
                     if (caller == null)
                         target.sendMessage(msg); else caller.sendMessage(msg);
                 }
@@ -171,17 +187,23 @@ public class SkinManager
                     plugin.selectedSkinsManager.setSelectedSkin(target, normalizedSkinName);
 
                     if (plugin.PLAYER_FEEDBACK && playerFeedback) {
-                        target.sendMessage("§aYour skin has been changed to §e" + normalizedSkinName + "§a!");
+                        target.sendMessage(langManager.translate("messages.skin-changed-self", Map.of(
+                                "ph1", normalizedSkinName
+                        )));
                         if (caller != null) {
                             boolean endsWithS = target.getName().endsWith("s") || target.getName().endsWith("S");
-                            caller.sendMessage("§a" + target.getName() + (endsWithS ? "'" : "'s") + " skin has been changed to §e" + normalizedSkinName + "§a!");
+                            caller.sendMessage(langManager.translate(endsWithS ? "messages.skin-changed-other-s" : "messages.skin-changed-other", Map.of(
+                                    "ph1", normalizedSkinName
+                            )));
                         }
                     }
                 } catch (Exception e) {
                     if (plugin.DEBUG)
                         plugin.getLogger().warning("Failed to apply skin '" + normalizedSkinName + "' to player '" + target.getName() + "' -> " + e.getMessage());
                     if (plugin.PLAYER_FEEDBACK && playerFeedback) {
-                        final String msg = "§cError changing skin: " + e.getMessage();
+                        final Component msg = langManager.translate("messages.error-changing-skin", Map.of(
+                                "ph1", e.getMessage()
+                        ));
                         if (caller == null)
                             target.sendMessage(msg); else caller.sendMessage(msg);
                     }
@@ -196,9 +218,11 @@ public class SkinManager
         if (isWearingSkin(target, defaultSkinName)) {
             if (plugin.PLAYER_FEEDBACK && playerFeedback) {
                 if (caller == null) {
-                    target.sendMessage("§aYou're already wearing your §edefault skin§a!");
+                    target.sendMessage(langManager.translate("messages.already-wearing-default-self"));
                 } else {
-                    caller.sendMessage("§a" + target.getName() + " is already wearing their §edefault skin§a!");
+                    caller.sendMessage(langManager.translate("messages.already-wearing-default-other", Map.of(
+                            "ph1", target.getName()
+                    )));
                 }
             }
             return;
@@ -206,12 +230,14 @@ public class SkinManager
 
         setSkinFromNameInternal(caller, target, defaultSkinName, false, 3);
         if (plugin.PLAYER_FEEDBACK && playerFeedback) {
-            boolean endsWithS = target.getName().endsWith("s") || target.getName().endsWith("S");
             if (caller == null) {
-                target.sendMessage("§aYour skin has been reset to your §edefault skin§a!");
+                target.sendMessage(langManager.translate("messages.skin-reset-self"));
             } else {
-                target.sendMessage("§aYour skin has been reset to your §edefault skin§a!");
-                caller.sendMessage("§a" + target.getName() + (endsWithS ? "'" : "'s") + " skin has been reset to their §edefault skin§a!");
+                target.sendMessage(langManager.translate("messages.skin-reset-self"));
+                boolean endsWithS = target.getName().endsWith("s") || target.getName().endsWith("S");
+                caller.sendMessage(langManager.translate(endsWithS ? "messages.skin-reset-other-s" : "messages.skin-reset-other", Map.of(
+                        "ph1", target.getName()
+                )));
             }
         }
     }
@@ -221,7 +247,7 @@ public class SkinManager
         String randomSkin = plugin.favoritesManager.getRandomFavorite(target);
         if (randomSkin.isEmpty()) {
             if (plugin.PLAYER_FEEDBACK && playerFeedback) {
-                final String msg = "§cYou must have at least §e2 §cfavorites to do that!";
+                final Component msg = langManager.translate("messages.need-two-favorites");
                 if (caller == null)
                     target.sendMessage(msg); else caller.sendMessage(msg);
             }
@@ -231,7 +257,9 @@ public class SkinManager
         setSkinFromNameInternal(caller, target, randomSkin, false, 3);
 
         if (plugin.PLAYER_FEEDBACK && playerFeedback) {
-            String msg = "§aRandomly picked and applied skin §e" + randomSkin.toLowerCase() + "§a!";
+            final Component msg = plugin.langManager.translate("messages.skin-random", Map.of(
+                    "ph1", randomSkin.toLowerCase()
+            ));
             if (caller == null) {
                 target.sendMessage(msg);
             } else {

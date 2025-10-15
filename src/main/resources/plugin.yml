@@ -8,5 +8,5 @@ api-version: 1.16
 commands:
   skin:
     description: Access SkinMorph's functionality
-    usage: Run /skin help for usage information
+    usage: See /skin help for usage information
     permission: skinmorph.command.skin
