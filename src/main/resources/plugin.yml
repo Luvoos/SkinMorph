@@ -2,8 +2,8 @@ main: com.luvoos.skinmorph.SkinMorph
 name: SkinMorph
 description: Lightweight skin changing plugin
 author: Luvoos
-version: 0.3
-api-version: 1.16
+version: 0.9
+api-version: 1.20
 
 commands:
   skin:
