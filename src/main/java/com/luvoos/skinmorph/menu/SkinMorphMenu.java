@@ -19,11 +19,9 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class SkinMorphMenu implements Listener
 {
@@ -35,8 +33,6 @@ public class SkinMorphMenu implements Listener
     private final Set<Inventory> menuInventories = new HashSet<>();
     private final Map<UUID, SkinMorphMenuType> currentMenuTypes = new HashMap<>();
     private final Map<UUID, Integer> currentPages = new HashMap<>();
-    public final Map<UUID, SkinMorphInputType> awaitingInput = new ConcurrentHashMap<>();
-    private final Map<UUID, Integer> inputWaitingTimes = new ConcurrentHashMap<>();
 
     public SkinMorphMenu(SkinMorph plugin, FavoritesManager favoritesManager, SkinManager skinManager, LanguageManager languageManager)
     {
@@ -137,17 +133,17 @@ public class SkinMorphMenu implements Listener
 
             if (itemName.contains(PlainTextComponentSerializer.plainText().serialize(langManager.translate("menu.change-skin")))) {
                 if (event.isLeftClick()) {
-                    awaitInput(player, SkinMorphInputType.CHANGE_SKIN_SELF);
+                    plugin.inputManager.awaitInput(player, SkinMorphInputType.CHANGE_SKIN_SELF);
                 } else if (event.isRightClick()) {
-                    awaitInput(player, SkinMorphInputType.CHANGE_SKIN_OTHER);
+                    plugin.inputManager.awaitInput(player, SkinMorphInputType.CHANGE_SKIN_OTHER);
                 }
             }
 
             if (itemName.contains(PlainTextComponentSerializer.plainText().serialize(langManager.translate("menu.manage-favorites")))) {
                 if (event.isLeftClick()) {
-                    awaitInput(player, SkinMorphInputType.ADD_FAVORITE);
+                    plugin.inputManager.awaitInput(player, SkinMorphInputType.ADD_FAVORITE);
                 } else if (event.isRightClick()) {
-                    awaitInput(player, SkinMorphInputType.REMOVE_FAVORITE);
+                    plugin.inputManager.awaitInput(player, SkinMorphInputType.REMOVE_FAVORITE);
                 }
             }
 
@@ -155,7 +151,7 @@ public class SkinMorphMenu implements Listener
                 if (event.isLeftClick()) {
                     skinManager.resetSkin(player, true);
                 } else if (event.isRightClick()) {
-                    awaitInput(player, SkinMorphInputType.RESET_SKIN_OTHER);
+                    plugin.inputManager.awaitInput(player, SkinMorphInputType.RESET_SKIN_OTHER);
                 }
             }
 
@@ -164,7 +160,7 @@ public class SkinMorphMenu implements Listener
                     skinManager.applyRandomSkin(player, true);
                     player.closeInventory();
                 } else if (event.isRightClick()) {
-                    awaitInput(player, SkinMorphInputType.RANDOM_SKIN_OTHER);
+                    plugin.inputManager.awaitInput(player, SkinMorphInputType.RANDOM_SKIN_OTHER);
                 }
             }
 
@@ -218,45 +214,6 @@ public class SkinMorphMenu implements Listener
     public void onInventoryClose(final InventoryCloseEvent event)
     {
         menuInventories.remove(event.getInventory());
-    }
-
-    /**
-     * Await chat input from a player
-     * @param player
-     * @param inputType
-     */
-    private void awaitInput(@NotNull final Player player, @NotNull SkinMorphInputType inputType)
-    {
-        awaitingInput.remove(player.getUniqueId());
-        inputWaitingTimes.remove(player.getUniqueId());
-        player.closeInventory();
-        if (inputType == SkinMorphInputType.ADD_FAVORITE || inputType == SkinMorphInputType.CHANGE_SKIN_SELF || inputType == SkinMorphInputType.REMOVE_FAVORITE)
-            player.sendMessage("§aPlease enter a skin name in chat within the next 20 seconds!");
-        if (inputType == SkinMorphInputType.CHANGE_SKIN_OTHER)
-            player.sendMessage("§aPlease enter a skin name and a target username in chat separated by a semicolon (;) within the next 20 seconds!");
-        if (inputType == SkinMorphInputType.RESET_SKIN_OTHER || inputType == SkinMorphInputType.RANDOM_SKIN_OTHER)
-            player.sendMessage("§aPlease enter a target username in chat within the next 20 seconds!");
-        inputWaitingTimes.put(player.getUniqueId(), 20);
-        awaitingInput.put(player.getUniqueId(), inputType);
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (inputWaitingTimes.containsKey(player.getUniqueId()) && awaitingInput.containsKey(player.getUniqueId())) {
-                    if (inputWaitingTimes.get(player.getUniqueId()) > 0) {
-                        inputWaitingTimes.compute(player.getUniqueId(), (k, oldTime) -> oldTime - 1);
-                    } else {
-                        this.cancel();
-                        awaitingInput.remove(player.getUniqueId());
-                        inputWaitingTimes.remove(player.getUniqueId());
-                        if (player.isOnline())
-                            player.sendMessage(plugin.langManager.translate("feedback.chat-input-expired"));
-                    }
-                } else {
-                    this.cancel();
-                    inputWaitingTimes.remove(player.getUniqueId());
-                }
-            }
-        }.runTaskTimer(plugin, 0, 20);
     }
 
     @EventHandler

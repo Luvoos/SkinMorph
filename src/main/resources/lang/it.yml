@@ -24,6 +24,8 @@ messages:
   skin-random: "<green>Scelta casuale... <yellow>{ph1}</yellow>!"
   need-two-favorites: "<red>Devi avere almeno <yellow>2</yellow> preferiti per farlo!"
   cache-cleared: "<green>La cache è stata cancellata!"
+  enter-skin-name: "<green>Inserisci il nome dello skin nella chat!"
+  enter-target-name: "<green>Inserisci il nome del bersaglio nella chat!"
   chat-input-expired: "<red>Input della chat scaduto."
 
 menu:

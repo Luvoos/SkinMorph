@@ -24,6 +24,8 @@ messages:
   skin-random: "<green>랜덤 선택됨... <yellow>{ph1}</yellow>!"
   need-two-favorites: "<red>이 작업을 수행하려면 최소 <yellow>2</yellow> 개의 즐겨찾기가 필요합니다!"
   cache-cleared: "<green>캐시가 삭제되었습니다!"
+  enter-skin-name: "<green>채팅에 스킨 이름을 입력하세요!"
+  enter-target-name: "<green>채팅에 대상 이름을 입력하세요!"
   chat-input-expired: "<red>채팅 입력 시간이 만료되었습니다."
 
 menu:

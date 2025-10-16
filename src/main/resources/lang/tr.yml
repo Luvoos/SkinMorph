@@ -24,6 +24,8 @@ messages:
   skin-random: "<green>Rastgele seçildi... <yellow>{ph1}</yellow>!"
   need-two-favorites: "<red>Bunu yapmak için en az <yellow>2</yellow> favoriye sahip olmalısınız!"
   cache-cleared: "<green>Önbellek temizlendi!"
+  enter-skin-name: "<green>Sohbette skin adını girin!"
+  enter-target-name: "<green>Sohbette hedef adını girin!"
   chat-input-expired: "<red>Chat girdisi süresi doldu."
 
 menu:

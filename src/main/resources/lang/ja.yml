@@ -24,6 +24,8 @@ messages:
   skin-random: "<green>ランダムに選択されました... <yellow>{ph1}</yellow>!"
   need-two-favorites: "<red>この操作を行うには最低 <yellow>2</yellow> 個のお気に入りが必要です!"
   cache-cleared: "<green>キャッシュがクリアされました!"
+  enter-skin-name: "<green>チャットにスキン名を入力してください！"
+  enter-target-name: "<green>チャットに対象の名前を入力してください！"
   chat-input-expired: "<red>チャット入力の有効期限が切れました."
 
 menu:

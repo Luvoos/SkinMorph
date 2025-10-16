@@ -2,6 +2,7 @@ package com.luvoos.skinmorph.manager;
 
 import com.luvoos.skinmorph.SkinData;
 import com.luvoos.skinmorph.SkinMorph;
+import com.luvoos.skinmorph.util.FormatUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -77,38 +78,39 @@ public class FavoritesManager
     public void addFavorite(@NotNull Player player, @NotNull String skinName, boolean playerFeedback)
     {
         final String uuid = player.getUniqueId().toString();
+        final String normalizedSkinName = FormatUtil.normalize(skinName);
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
                 List<String> favorites = getFavorites(player);
-                String noSpacesSkinName = skinName.replace(" ", "");
-                CompletableFuture<SkinData> skin = skinManager.getSkinAsync(skinName, 3);
+                CompletableFuture<SkinData> skin = skinManager.getSkinAsync(normalizedSkinName, 3);
                 if (skin.get() == null) {
                     if (plugin.PLAYER_FEEDBACK && playerFeedback)
                         player.sendMessage(langManager.translate("messages.invalid-profile", Map.of(
-                                "ph1", noSpacesSkinName.toLowerCase()
+                                "ph1", normalizedSkinName
                         )));
                     return;
                 }
 
-                if (!favorites.contains(noSpacesSkinName.toLowerCase())) {
-                    favorites.add(noSpacesSkinName.toLowerCase());
+                if (!favorites.contains(normalizedSkinName)) {
+                    favorites.add(normalizedSkinName);
                     config.set("players." + uuid, favorites);
                     saveFile();
                 } else {
                     if (plugin.PLAYER_FEEDBACK && playerFeedback && player.isOnline())
                         player.sendMessage(langManager.translate("messages.already-in-favorites", Map.of(
-                                "ph1", noSpacesSkinName.toLowerCase()
+                                "ph1", normalizedSkinName
                         )));
                     return;
                 }
                 reloadFavorites();
                 if (plugin.PLAYER_FEEDBACK && playerFeedback && player.isOnline())
                     player.sendMessage(langManager.translate("messages.added-to-favorites", Map.of(
-                            "ph1", noSpacesSkinName.toLowerCase()
+                            "ph1", normalizedSkinName
                     )));
             } catch (Exception e) {
-                e.printStackTrace();
+                if (plugin.DEBUG)
+                    plugin.getLogger().warning("Failed to save favorite '" + normalizedSkinName + "' -> " + e.getMessage());
             }
         });
     }
@@ -117,16 +119,16 @@ public class FavoritesManager
     {
         final String uuid = player.getUniqueId().toString();
         List<String> favorites = getFavorites(player);
-        String noSpacesSkinName = skinName.replace(" ", "");
+        final String normalizedSkinName = FormatUtil.normalize(skinName);
 
-        if (favorites.contains(noSpacesSkinName.toLowerCase())) {
-            favorites.remove(noSpacesSkinName.toLowerCase());
+        if (favorites.contains(normalizedSkinName)) {
+            favorites.remove(normalizedSkinName);
             config.set("players." + uuid, favorites);
             saveFile();
         } else {
             if (plugin.PLAYER_FEEDBACK && playerFeedback && player.isOnline())
                 player.sendMessage(langManager.translate("messages.not-in-favorites", Map.of(
-                        "ph1", noSpacesSkinName.toLowerCase()
+                        "ph1", normalizedSkinName
                 )));
             return;
         }
@@ -135,7 +137,7 @@ public class FavoritesManager
 
         if (plugin.PLAYER_FEEDBACK && playerFeedback && player.isOnline())
             player.sendMessage(langManager.translate("messages.removed-from-favorites", Map.of(
-                    "ph1", noSpacesSkinName.toLowerCase()
+                    "ph1", normalizedSkinName
             )));
     }
 
@@ -154,8 +156,10 @@ public class FavoritesManager
         }
 
         String chosenFavorite;
-        do      chosenFavorite = loadedFavorites.get(ThreadLocalRandom.current().nextInt(loadedFavorites.size()));
-        while   (skinManager.isWearingSkin(player, chosenFavorite) && loadedFavorites.size() > 1);
+        do
+            chosenFavorite = loadedFavorites.get(ThreadLocalRandom.current().nextInt(loadedFavorites.size()));
+        while
+            (skinManager.isWearingSkin(player, chosenFavorite) && loadedFavorites.size() > 1);
 
         return chosenFavorite;
     }

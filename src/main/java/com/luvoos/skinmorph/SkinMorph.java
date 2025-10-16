@@ -17,6 +17,7 @@ public final class SkinMorph extends JavaPlugin
     public SelectedSkinsManager selectedSkinsManager;
     public SkinMorphMenu menu;
     public CacheManager cacheManager;
+    public InputManager inputManager;
     public LanguageManager langManager;
     public boolean PLAYER_FEEDBACK;
     public boolean DEBUG;
@@ -64,12 +65,14 @@ public final class SkinMorph extends JavaPlugin
         selectedSkinsManager = new SelectedSkinsManager(this, skinManager);
         selectedSkinsManager.preloadSelectedSkins();
         favoritesManager = new FavoritesManager(this, skinManager, cacheManager, langManager);
+        inputManager = new InputManager(this);
         menu = new SkinMorphMenu(this, favoritesManager, skinManager, langManager);
 
         getCommand("skin").setExecutor(new SkinCommand(this, favoritesManager, skinManager, langManager));
         getCommand("skin").setTabCompleter(new SkinCommandTabCompleter(this, favoritesManager, skinManager));
 
-        getServer().getPluginManager().registerEvents(menu, this);
         getServer().getPluginManager().registerEvents(new SkinMorphListener(this, favoritesManager, skinManager, selectedSkinsManager, langManager), this);
+        getServer().getPluginManager().registerEvents(menu, this);
+        getServer().getPluginManager().registerEvents(inputManager, this);
     }
 }

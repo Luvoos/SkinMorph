@@ -24,6 +24,8 @@ messages:
   skin-random: "<green>Выбрано случайным образом... <yellow>{ph1}</yellow>!"
   need-two-favorites: "<red>У вас должно быть как минимум <yellow>2</yellow> избранных, чтобы сделать это!"
   cache-cleared: "<green>Кэш очищен!"
+  enter-skin-name: "<green>Введите имя скина в чат!"
+  enter-target-name: "<green>Введите имя цели в чат!"
   chat-input-expired: "<red>Ввод чата истёк."
 
 menu:

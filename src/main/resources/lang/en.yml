@@ -24,6 +24,8 @@ messages:
   skin-random: "<green>Randomly picked... <yellow>{ph1}</yellow>!"
   need-two-favorites: "<red>You must have at least <yellow>2</yellow> favorites to do that!"
   cache-cleared: "<green>The cache was cleared!"
+  enter-skin-name: "<green>Enter skin name in chat!"
+  enter-target-name: "<green>Enter target name in chat!"
   chat-input-expired: "<red>Chat input expired."
 
 menu:

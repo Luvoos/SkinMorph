@@ -7,5 +7,5 @@ public enum SkinMorphInputType
     ADD_FAVORITE,
     REMOVE_FAVORITE,
     RESET_SKIN_OTHER,
-    RANDOM_SKIN_OTHER;
+    RANDOM_SKIN_OTHER
 }

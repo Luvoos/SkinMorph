@@ -5,18 +5,13 @@ import com.luvoos.skinmorph.manager.FavoritesManager;
 import com.luvoos.skinmorph.manager.LanguageManager;
 import com.luvoos.skinmorph.manager.SelectedSkinsManager;
 import com.luvoos.skinmorph.manager.SkinManager;
-import com.luvoos.skinmorph.type.SkinMorphInputType;
 import com.luvoos.skinmorph.type.SkinMorphMenuType;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-
-import java.util.Map;
 
 public class SkinMorphListener implements Listener
 {
@@ -57,78 +52,8 @@ public class SkinMorphListener implements Listener
     public void onQuit(final PlayerQuitEvent event)
     {
         final Player player = event.getPlayer();
-        plugin.menu.awaitingInput.remove(player.getUniqueId());
         plugin.menu.setCurrentMenuType(player, SkinMorphMenuType.MAIN);
         plugin.menu.setCurrentPage(player, 1);
         SkinManager.currentSkins.remove(player.getUniqueId());
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onChat(final AsyncPlayerChatEvent event)
-    {
-        final Player player = event.getPlayer();
-        final String text = event.getMessage();
-
-        if (plugin.menu.awaitingInput.containsKey(player.getUniqueId()) && plugin.menu.awaitingInput.get(player.getUniqueId()) == SkinMorphInputType.CHANGE_SKIN_SELF) {
-            event.setCancelled(true);
-            skinManager.setSkinFromName(player, text, true);
-            plugin.menu.awaitingInput.remove(player.getUniqueId());
-        }
-
-        if (plugin.menu.awaitingInput.containsKey(player.getUniqueId()) && plugin.menu.awaitingInput.get(player.getUniqueId()) == SkinMorphInputType.CHANGE_SKIN_OTHER) {
-            event.setCancelled(true);
-            String[] parts = text.split(";", 2);
-            String first = parts[0];
-            String second = parts.length > 1 ? parts[1] : "";
-            if (Bukkit.getPlayer(second.replace(" ", "").toLowerCase()) == null) {
-                player.sendMessage(langManager.translate("messages.player-not-found", Map.of(
-                        "ph1", second.replace(" ", "").toLowerCase()
-                )));
-                plugin.menu.awaitingInput.remove(player.getUniqueId());
-                return;
-            }
-            skinManager.setSkinFromName(player, Bukkit.getPlayer(second.replace(" ", "").toLowerCase()), first, true);
-            plugin.menu.awaitingInput.remove(player.getUniqueId());
-        }
-
-        if (plugin.menu.awaitingInput.containsKey(player.getUniqueId()) && plugin.menu.awaitingInput.get(player.getUniqueId()) == SkinMorphInputType.ADD_FAVORITE) {
-            event.setCancelled(true);
-            favoritesManager.addFavorite(player, text, true);
-            plugin.menu.awaitingInput.remove(player.getUniqueId());
-        }
-
-        if (plugin.menu.awaitingInput.containsKey(player.getUniqueId()) && plugin.menu.awaitingInput.get(player.getUniqueId()) == SkinMorphInputType.REMOVE_FAVORITE) {
-            event.setCancelled(true);
-            favoritesManager.removeFavorite(player, text, true);
-            plugin.menu.awaitingInput.remove(player.getUniqueId());
-        }
-
-        if (plugin.menu.awaitingInput.containsKey(player.getUniqueId()) && plugin.menu.awaitingInput.get(player.getUniqueId()) == SkinMorphInputType.RESET_SKIN_OTHER) {
-            event.setCancelled(true);
-            String normalizedText = text.replace(" ", "").toLowerCase();
-            if (Bukkit.getPlayer(normalizedText) == null) {
-                player.sendMessage(langManager.translate("messages.player-not-found", Map.of(
-                        "ph1", normalizedText
-                )));
-                plugin.menu.awaitingInput.remove(player.getUniqueId());
-                return;
-            }
-            skinManager.resetSkin(player, Bukkit.getPlayer(normalizedText), true);
-            plugin.menu.awaitingInput.remove(player.getUniqueId());
-        }
-
-        if (plugin.menu.awaitingInput.containsKey(player.getUniqueId()) && plugin.menu.awaitingInput.get(player.getUniqueId()) == SkinMorphInputType.RANDOM_SKIN_OTHER) {
-            event.setCancelled(true);
-            String normalizedText = text.replace(" ", "").toLowerCase();
-            if (Bukkit.getPlayer(normalizedText) == null) {
-                player.sendMessage(langManager.translate("messages.player-not-found", Map.of(
-                        "ph1", normalizedText
-                )));
-                plugin.menu.awaitingInput.remove(player.getUniqueId());
-                return;
-            }
-            skinManager.applyRandomSkin(player, Bukkit.getPlayer(normalizedText), true);
-            plugin.menu.awaitingInput.remove(player.getUniqueId());
-        }
     }
 }

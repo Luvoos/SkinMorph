@@ -24,6 +24,8 @@ messages:
   skin-random: "<green>Losowo wybrano... <yellow>{ph1}</yellow>!"
   need-two-favorites: "<red>Musisz mieć przynajmniej <yellow>2</yellow> ulubione skiny, aby to zrobić!"
   cache-cleared: "<green>Pamięć podręczna została wyczyszczona!"
+  enter-skin-name: "<green>Wpisz nazwę skina w czacie!"
+  enter-target-name: "<green>Wpisz nazwę celu w czacie!"
   chat-input-expired: "<red>Czas na wpis w czacie minął."
 
 menu:

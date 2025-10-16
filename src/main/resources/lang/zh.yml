@@ -24,6 +24,8 @@ messages:
   skin-random: "<green>随机选择... <yellow>{ph1}</yellow>!"
   need-two-favorites: "<red>你至少需要 <yellow>2</yellow> 个收藏才能执行此操作!"
   cache-cleared: "<green>缓存已清除!"
+  enter-skin-name: "<green>在聊天中输入皮肤名称！"
+  enter-target-name: "<green>在聊天中输入目标名称！"
   chat-input-expired: "<red>聊天输入已过期."
 
 menu:

@@ -24,6 +24,8 @@ messages:
   skin-random: "<green>Willekeurig gekozen... <yellow>{ph1}</yellow>!"
   need-two-favorites: "<red>Je moet minstens <yellow>2</yellow> favorieten hebben om dit te doen!"
   cache-cleared: "<green>De cache is geleegd!"
+  enter-skin-name: "<green>Voer de skinnaam in de chat in!"
+  enter-target-name: "<green>Voer de doelnaam in de chat in!"
   chat-input-expired: "<red>Chatinvoer is verlopen."
 
 menu:
