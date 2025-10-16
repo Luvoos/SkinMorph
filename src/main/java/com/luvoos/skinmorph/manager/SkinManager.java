@@ -193,7 +193,8 @@ public class SkinManager
                         if (caller != null) {
                             boolean endsWithS = target.getName().endsWith("s") || target.getName().endsWith("S");
                             caller.sendMessage(langManager.translate(endsWithS ? "messages.skin-changed-other-s" : "messages.skin-changed-other", Map.of(
-                                    "ph1", normalizedSkinName
+                                    "ph1", target.getName(),
+                                    "ph2", normalizedSkinName
                             )));
                         }
                     }
