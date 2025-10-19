@@ -43,6 +43,8 @@ public final class SkinMorph extends JavaPlugin
     @Override
     public void onDisable()
     {
+        cacheManager.cleanupCache();
+        cacheManager.saveCache();
         getLogger().info("SkinMorph was disabled! Goodbye!");
     }
 

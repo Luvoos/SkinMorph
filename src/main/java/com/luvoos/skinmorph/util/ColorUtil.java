@@ -3,7 +3,7 @@ package com.luvoos.skinmorph.util;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
-public class ColorUtil
+public final class ColorUtil
 {
     private ColorUtil() {}
 

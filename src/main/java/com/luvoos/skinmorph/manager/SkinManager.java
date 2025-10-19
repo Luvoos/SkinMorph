@@ -411,7 +411,7 @@ public class SkinManager
                                     );
 
                                     final SkinData skinData = new SkinData(normalizedSkinName, textureProp, System.currentTimeMillis());
-                                    plugin.cacheManager.updateCache(skinData);
+                                    plugin.cacheManager.addSkin(skinData);
 
                                     if (plugin.DEBUG)
                                         plugin.getLogger().info("Successfully fetched textures for '" + normalizedSkinName + "'");
@@ -474,6 +474,6 @@ public class SkinManager
 
     public void clearCache()
     {
-        CacheManager.cache.clear();
+        plugin.cacheManager.clearCache();
     }
 }

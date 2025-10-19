@@ -103,7 +103,8 @@ public class SkinMorphMenu implements Listener
         Inventory menu = Bukkit.createInventory(null, 9 * 2, langManager.translate("menu.title-settings"));
         menuInventories.add(menu);
 
-        menu.setItem(4, SkinMorphItems.clearCache());
+        menu.setItem(3, SkinMorphItems.clearCache());
+        menu.setItem(5, SkinMorphItems.removeSkinFromCache());
         menu.setItem(9, SkinMorphItems.back());
         menu.setItem(13, SkinMorphItems.close());
 
@@ -202,6 +203,10 @@ public class SkinMorphMenu implements Listener
                 skinManager.clearCache();
                 player.sendMessage(plugin.langManager.translate("messages.cache-cleared"));
                 player.closeInventory();
+            }
+
+            if (itemName.contains(PlainTextComponentSerializer.plainText().serialize(langManager.translate("menu.remove-skin-from-cache")))) {
+                plugin.inputManager.awaitInput(player, SkinMorphInputType.REMOVE_SKIN_FROM_CACHE);
             }
 
             if (itemName.contains(PlainTextComponentSerializer.plainText().serialize(langManager.translate("menu.close")))) {

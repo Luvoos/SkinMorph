@@ -190,6 +190,22 @@ public class SkinMorphItems
         return item;
     }
 
+    public static ItemStack removeSkinFromCache()
+    {
+        ItemStack item = new ItemStack(Material.BARRIER);
+        ItemMeta meta = item.getItemMeta();
+        meta.displayName(plugin.langManager.translate("menu.remove-skin-from-cache"));
+
+        List<Component> lore = List.of(
+                plugin.langManager.translate("menu.remove-skin-from-cache-description")
+        );
+        meta.lore(lore);
+
+        item.setItemMeta(meta);
+
+        return item;
+    }
+
     public static ItemStack previousPage()
     {
         return headFromBase64(plugin.langManager.translate("menu.previous-page"), PAGE_SWITCH_BASE64);

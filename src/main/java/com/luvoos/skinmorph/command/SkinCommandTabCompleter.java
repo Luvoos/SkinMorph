@@ -35,7 +35,7 @@ public class SkinCommandTabCompleter implements TabCompleter
         final int len = args.length;
 
         if (len == 1) {
-            completions.addAll(List.of("set", "default", "help", "favorites", "random", "settings"));
+            completions.addAll(List.of("set", "default", "help", "favorites", "random", "settings", "cache"));
         } else if (len == 2) {
             switch (args[0].toLowerCase()) {
                 case "set" -> {
@@ -46,6 +46,8 @@ public class SkinCommandTabCompleter implements TabCompleter
                 }
                 case "random", "default" -> completions.addAll(getOnlinePlayerNames());
                 case "favorites" -> completions.addAll(List.of("add", "remove"));
+                case "help" -> completions.addAll(List.of(String.valueOf(1), String.valueOf(2), String.valueOf(3)));
+                case "cache" -> completions.addAll(List.of("clear", "remove", "info"));
             }
         } else if (len == 3 && args[0].equalsIgnoreCase("set")) {
             completions.addAll(getOnlinePlayerNames());
@@ -59,6 +61,10 @@ public class SkinCommandTabCompleter implements TabCompleter
                     }
                 }
             } else if (args[1].equalsIgnoreCase("remove") && sender instanceof final Player player) {
+                completions.addAll(favoritesManager.getFavorites(player));
+            }
+        } else if (len == 3 && args[0].equalsIgnoreCase("cache") && args[1].equalsIgnoreCase("remove")) {
+            if (sender instanceof final Player player) {
                 completions.addAll(favoritesManager.getFavorites(player));
             }
         }

@@ -1,6 +1,6 @@
 package com.luvoos.skinmorph.util;
 
-public class StatusCodeUtil
+public final class StatusCodeUtil
 {
     private StatusCodeUtil() {}
 

@@ -146,13 +146,30 @@ public class InputManager implements Listener
 
                 remove(player);
             }
+
+            case REMOVE_SKIN_FROM_CACHE -> {
+                final String skinName = input.trim();
+
+                boolean wasCached = plugin.cacheManager.removeSkin(skinName);
+
+                if (wasCached)
+                    player.sendMessage(langManager().translate("messages.skin-removed-from-cache", Map.of(
+                            "ph1", skinName.toLowerCase()
+                    )));
+                else
+                    player.sendMessage(langManager().translate("messages.not-cached", Map.of(
+                            "ph1", skinName.toLowerCase()
+                    )));
+
+                remove(player);
+            }
         }
     }
 
     private void sendInstruction(@NotNull final Player player, @NotNull final SkinMorphInputType inputType, final int step)
     {
         switch (inputType) {
-            case CHANGE_SKIN_SELF, ADD_FAVORITE, REMOVE_FAVORITE ->
+            case CHANGE_SKIN_SELF, ADD_FAVORITE, REMOVE_FAVORITE, REMOVE_SKIN_FROM_CACHE ->
                 player.sendMessage(langManager().translate("messages.enter-skin-name"));
 
             case CHANGE_SKIN_OTHER -> {

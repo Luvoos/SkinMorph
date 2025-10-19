@@ -20,12 +20,15 @@ public class SkinCommand implements CommandExecutor
     private final SkinManager skinManager;
     private final LanguageManager langManager;
 
+    private final HelpMessage helpMsg;
+
     public SkinCommand(SkinMorph plugin, FavoritesManager favoritesManager, SkinManager skinManager, LanguageManager languageManager)
     {
         this.plugin = plugin;
         this.favoritesManager = favoritesManager;
         this.skinManager = skinManager;
         this.langManager = languageManager;
+        helpMsg = new HelpMessage(languageManager);
     }
 
     @Override
@@ -42,7 +45,7 @@ public class SkinCommand implements CommandExecutor
             return true;
         }
 
-        if (args.length == 0) {
+        if (len == 0) {
             if (!(sender instanceof final Player player)) {
                 sender.sendMessage(langManager.translate("messages.player-only"));
                 return true;
@@ -70,6 +73,7 @@ public class SkinCommand implements CommandExecutor
 
                     Player target = Bukkit.getPlayer(args[2]);
                     String skinName = args[1];
+
                     skinManager.setSkinFromName(sender, target, skinName, true);
                 }
                 return true;
@@ -88,25 +92,25 @@ public class SkinCommand implements CommandExecutor
                         )));
                         return true;
                     }
+
                     Player target = Bukkit.getPlayer(args[1]);
+
                     skinManager.applyRandomSkin(sender, target, true);
                 }
             }
             case "help" -> {
-                if (len == 1) {
-                    sender.sendMessage(
-                            "§b§lSkin Morph Help",
-                            "/skin - Open the Skin Menu",
-                            "/skin set <skinName> - Set your own skin",
-                            "/skin set <skinName> <targetName> - Set another player's skin",
-                            "/skin default - Reset your skin to default",
-                            "/skin default <targetName> - Reset another player's skin to default",
-                            "/skin favorites add <skinName> - Add a favorite",
-                            "/skin favorites remove <skinName> - Remove a favorite",
-                            "/skin random - Apply a random skin from your favorites",
-                            "/skin help - Displays this help message"
-                    );
+                int page = 1;
+
+                if (len == 2) {
+                    try {
+                        page = Integer.parseInt(args[1]);
+                    } catch (NumberFormatException e) {
+                        sender.sendMessage(langManager.translate("messages.invalid-help-page"));
+                        return true;
+                    }
                 }
+
+                helpMsg.sendHelp(sender, page);
             }
             case "default" -> {
                 if (len == 1) {
@@ -120,7 +124,9 @@ public class SkinCommand implements CommandExecutor
                         )));
                         return true;
                     }
+
                     Player target = Bukkit.getPlayer(args[1]);
+
                     skinManager.resetSkin(sender, target, true);
                 }
             }
@@ -147,7 +153,39 @@ public class SkinCommand implements CommandExecutor
                         sender.sendMessage(langManager.translate("messages.player-only"));
                         return true;
                     }
+
                     plugin.menu.openSettings(player);
+                }
+            }
+            case "cache" -> {
+                if (len == 2) {
+                    if (args[1].equalsIgnoreCase("clear")) {
+                        plugin.cacheManager.clearCache();
+                        sender.sendMessage(langManager.translate("messages.cache-cleared"));
+                    } else if (args[1].equalsIgnoreCase("info")) {
+                        sender.sendMessage(langManager.translate("messages.cache-info-header"));
+                        sender.sendMessage(langManager.translate("messages.total-skins-cached", Map.of(
+                                "ph1", String.valueOf(plugin.cacheManager.getTotalSkinsCachedAmount())
+                        )));
+                        sender.sendMessage(langManager.translate("messages.cache-size", Map.of(
+                                "ph1", plugin.cacheManager.getCacheSize()
+                        )));
+                    }
+                } else if (len == 3) {
+                    if (args[1].equalsIgnoreCase("remove")) {
+                        String skinNameInput = args[2];
+
+                        boolean wasCached = plugin.cacheManager.removeSkin(skinNameInput);
+
+                        if (wasCached)
+                            sender.sendMessage(langManager.translate("messages.skin-removed-from-cache", Map.of(
+                                    "ph1", skinNameInput.toLowerCase()
+                            )));
+                        else
+                            sender.sendMessage(langManager.translate("messages.not-cached", Map.of(
+                                    "ph1", skinNameInput.toLowerCase()
+                            )));
+                    }
                 }
             }
         }
@@ -171,6 +209,10 @@ public class SkinCommand implements CommandExecutor
 
         String sub = args[0].toLowerCase();
 
+        String action = "";
+        if (len > 1)
+            action = args[1].toLowerCase();
+
         switch (sub) {
             case "set":
                 // /skin set <skinName>
@@ -184,16 +226,12 @@ public class SkinCommand implements CommandExecutor
 
             case "favorites":
                 if (len < 3) return false;
-                String action = args[1].toLowerCase();
-                switch (action) {
-                    case "add":
-                    case "remove":
-                        // /skin favorites add <skinName>
-                        // /skin favorites remove <skinName>
-                        return len == 3;
-                    default:
-                        return false;
-                }
+                return switch (action) {
+                    // /skin favorites add <skinName>
+                    // /skin favorites remove <skinName>
+                    case "add", "remove" -> len == 3;
+                    default -> false;
+                };
 
             case "random":
                 // /skin random
@@ -202,11 +240,20 @@ public class SkinCommand implements CommandExecutor
 
             case "help":
                 // /skin help
-                return len == 1;
+                // /skin help <page>
+                return len == 1 || len == 2;
 
             case "settings":
                 // /skin settings
                 return len == 1;
+
+            case "cache":
+                if (len < 2) return false;
+                return switch (action) {
+                    case "clear", "info" -> len == 2;
+                    case "remove" -> len == 3;
+                    default -> false;
+                };
 
             default:
                 return false;

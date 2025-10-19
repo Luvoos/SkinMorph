@@ -1,6 +1,6 @@
 package com.luvoos.skinmorph.util;
 
-public class FormatUtil
+public final class FormatUtil
 {
     private FormatUtil() {}
 

@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.luvoos.skinmorph.SkinData;
 import com.luvoos.skinmorph.SkinMorph;
+import com.luvoos.skinmorph.util.FileUtil;
 import org.bukkit.Bukkit;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class CacheManager
 {
     private final SkinMorph plugin = SkinMorph.instance;
     private final Path cacheFile;
-    public static final Map<String, SkinData> cache = new ConcurrentHashMap<>();
+    private final Map<String, SkinData> cache = new ConcurrentHashMap<>();
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private long expiryMs;
 
@@ -34,6 +35,9 @@ public class CacheManager
     {
         expiryMs = plugin.CACHE_EXPIRY;
         loadCache();
+
+        // schedule automatic cache cleanups
+        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this::cleanupCache, 20 * 60 * 10L, 20 * 60 * 10L);
     }
 
     // Load persistent cache from JSON file
@@ -78,10 +82,52 @@ public class CacheManager
     }
 
     // Update persistent cache with new skin data
-    public void updateCache(SkinData skinData)
+    public void addSkin(SkinData skinData)
     {
         cache.put(skinData.getUsername().toLowerCase(), skinData);
         Bukkit.getScheduler().runTaskAsynchronously(plugin, this::saveCache);
+    }
+
+    public boolean removeSkin(String skinName)
+    {
+        boolean cached = cache.containsKey(skinName.toLowerCase());
+        cache.remove(skinName.toLowerCase());
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::saveCache);
+        return cached;
+    }
+
+    public void cleanupCache()
+    {
+        if (plugin.DEBUG)
+            plugin.getLogger().info("Performing automatic cache cleanup!");
+        cache.entrySet().removeIf(entry -> entry.getValue().isDirty(expiryMs));
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::saveCache);
+    }
+
+    public void clearCache()
+    {
+        cache.clear();
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::saveCache);
+    }
+
+    public int getTotalSkinsCachedAmount()
+    {
+        return cache.size();
+    }
+
+    public String getCacheSize()
+    {
+        if (!Files.exists(cacheFile))
+            return "0 B";
+
+        try {
+            long bytes = Files.size(cacheFile);
+            return FileUtil.humanReadableByteCount(bytes);
+        } catch (IOException e) {
+            if (plugin.DEBUG)
+                plugin.getLogger().warning("Failed to get cache size -> " + e.getMessage());
+            return "Unknown";
+        }
     }
 
     public boolean hasSkin(String skinName)
