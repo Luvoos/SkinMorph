@@ -36,7 +36,7 @@ messages:
   invalid-help-page: "<red>Ungültige Hilfeseite!"
   go-to-page: "<yellow>Gehe zu Seite {ph1}"
   help-page: "<dark_gray>Seite <gray>{ph1}<dark_gray>/{ph2}"
-  hover-commands: "<gray>Gehe mit der Maus über die Befehle, um ihre Beschreibung zu sehen."
+  hover-commands: "<gray>Fahre über Befehle, um ihre Beschreibung zu sehen."
   /skin-description: "<green>Öffne das Skin-Menü"
   /skin-set-description: "<green>Ändere deinen eigenen Skin"
   /skin-set-target-description: "<green>Ändere den Skin eines anderen Spielers"
