@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 public final class SkinMorph extends JavaPlugin
 {
     public static SkinMorph instance;
+
     public SkinManager skinManager;
     public FavoritesManager favoritesManager;
     public SelectedSkinsManager selectedSkinsManager;
@@ -19,6 +20,7 @@ public final class SkinMorph extends JavaPlugin
     public CacheManager cacheManager;
     public InputManager inputManager;
     public LanguageManager langManager;
+
     public boolean PLAYER_FEEDBACK;
     public boolean DEBUG;
     public boolean SESSION_AGNOSTIC_SKINS;

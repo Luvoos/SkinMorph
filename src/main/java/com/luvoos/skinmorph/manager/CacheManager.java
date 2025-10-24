@@ -41,7 +41,7 @@ public class CacheManager
                 20 * 60 * 10L, 20 * 60 * 10L);
     }
 
-    // Load persistent cache from JSON file
+    // Load cache from JSON file
     private void loadCache()
     {
         if (!Files.exists(cacheFile)) return;
@@ -56,7 +56,7 @@ public class CacheManager
         }
     }
 
-    // Save persistent cache to JSON file
+    // Save cache to JSON file
     public void saveCache()
     {
         try (Writer writer = Files.newBufferedWriter(cacheFile)) {
@@ -66,7 +66,7 @@ public class CacheManager
         }
     }
 
-    // Get a skin from persistent cache
+    // Get a skin from cache
     public SkinData getSkin(String skinName)
     {
         SkinData skinData = cache.get(skinName.toLowerCase());
@@ -83,7 +83,7 @@ public class CacheManager
        return skinData;
     }
 
-    // Update persistent cache with new skin data
+    // Update cache with new skin data
     public void addSkin(SkinData skinData)
     {
         cache.put(skinData.getUsername().toLowerCase(), skinData);
@@ -101,7 +101,7 @@ public class CacheManager
     public void cleanupCache(boolean async)
     {
         if (plugin.DEBUG)
-            plugin.getLogger().info("Performing automatic cache cleanup" + (async ? "(async)" : "(sync)") + "!");
+            plugin.getLogger().info("Performing automatic cache cleanup " + (async ? "(async)" : "(sync)") + "!");
 
         cache.entrySet().removeIf(entry -> entry.getValue().isDirty(expiryMs));
 
