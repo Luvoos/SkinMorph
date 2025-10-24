@@ -37,7 +37,8 @@ public class CacheManager
         loadCache();
 
         // schedule automatic cache cleanups
-        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this::cleanupCache, 20 * 60 * 10L, 20 * 60 * 10L);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> cleanupCache(true),
+                20 * 60 * 10L, 20 * 60 * 10L);
     }
 
     // Load persistent cache from JSON file
@@ -74,7 +75,8 @@ public class CacheManager
 
         // Expiry check
         if (skinData.isDirty(expiryMs)) {
-            plugin.getLogger().info("SkinData expired for '" + skinName.toLowerCase() + "', returning null");
+            if (plugin.DEBUG)
+                plugin.getLogger().info("SkinData expired for '" + skinName.toLowerCase() + "', returning null");
             return null;
         }
 
@@ -96,12 +98,20 @@ public class CacheManager
         return cached;
     }
 
-    public void cleanupCache()
+    public void cleanupCache(boolean async)
     {
         if (plugin.DEBUG)
-            plugin.getLogger().info("Performing automatic cache cleanup!");
+            plugin.getLogger().info("Performing automatic cache cleanup" + (async ? "(async)" : "(sync)") + "!");
+
         cache.entrySet().removeIf(entry -> entry.getValue().isDirty(expiryMs));
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::saveCache);
+
+        if (async && plugin.isEnabled()) {
+            // standard asynchronous cleanup during runtime
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, this::saveCache);
+        } else {
+            // synchronous save during shutdown
+            saveCache();
+        }
     }
 
     public void clearCache()
