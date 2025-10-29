@@ -84,10 +84,12 @@ public class CacheManager
     }
 
     // Update cache with new skin data
-    public void addSkin(SkinData skinData)
+    public boolean addSkin(SkinData skinData)
     {
+        boolean cached = cache.containsKey(skinData.getUsername().toLowerCase());
         cache.put(skinData.getUsername().toLowerCase(), skinData);
         Bukkit.getScheduler().runTaskAsynchronously(plugin, this::saveCache);
+        return !cached;
     }
 
     public boolean removeSkin(String skinName)
