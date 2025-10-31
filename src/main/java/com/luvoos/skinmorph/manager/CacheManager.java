@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.luvoos.skinmorph.SkinData;
 import com.luvoos.skinmorph.SkinMorph;
-import com.luvoos.skinmorph.util.FileUtil;
+import com.luvoos.skinmorph.util.FormatUtil;
 import org.bukkit.Bukkit;
 
 import java.io.IOException;
@@ -134,7 +134,7 @@ public class CacheManager
 
         try {
             long bytes = Files.size(cacheFile);
-            return FileUtil.humanReadableByteCount(bytes);
+            return FormatUtil.humanReadableByteCount(bytes);
         } catch (IOException e) {
             if (plugin.DEBUG)
                 plugin.getLogger().warning("Failed to get cache size -> " + e.getMessage());
