@@ -143,23 +143,28 @@ public class FavoritesManager
 
     public String getRandomFavorite(@NotNull Player player)
     {
-        final String uuid = player.getUniqueId().toString();
         List<String> favorites = getFavorites(player);
 
-        if (favorites == null || favorites.isEmpty() || favorites.size() < 2) return "";
+        if (favorites == null || favorites.size() < 2) return "";
 
         List<String> loadedFavorites = new ArrayList<>();
-
         for (String favorite : favorites) {
-            if (cacheManager.hasSkin(favorite))
+            if (cacheManager.hasSkin(favorite)) {
                 loadedFavorites.add(favorite);
+            }
+            else {
+                skinManager.getSkinAsync(favorite, 3);
+                loadedFavorites.add(favorite);
+            }
         }
+
+        if (loadedFavorites.size() < 2) return "";
 
         String chosenFavorite;
         do
             chosenFavorite = loadedFavorites.get(ThreadLocalRandom.current().nextInt(loadedFavorites.size()));
         while
-            (skinManager.isWearingSkin(player, chosenFavorite) && loadedFavorites.size() > 1);
+            (skinManager.isWearingSkin(player, chosenFavorite));
 
         return chosenFavorite;
     }
