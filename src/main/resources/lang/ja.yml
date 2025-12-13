@@ -69,7 +69,7 @@ menu:
   clear-cache: "<yellow>キャッシュをクリア"
   clear-cache-description: "<red>推奨されません <gray>APIの過負荷を避けるため."
   remove-skin-from-cache: "<yellow>スキンをキャッシュから削除"
-  remove-skin-from-cache-description: "<gray>適用時に再取得されるようにキャッシュのエントリを削除します。"
+  remove-skin-from-cache-description: "<gray>キャッシュエントリを削除します。"
   favorite-name: "<yellow>{ph1}"
   failed-to-load: "<red>読み込みに失敗しました."
   apply-skin: "<white><bold>左クリック</bold> <green>スキンを適用"

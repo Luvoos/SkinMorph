@@ -69,7 +69,7 @@ menu:
   clear-cache: "<yellow>Очистить кэш"
   clear-cache-description: "<red>Не рекомендуется <gray>чтобы не перегружать API."
   remove-skin-from-cache: "<yellow>Удалить скин из кэша"
-  remove-skin-from-cache-description: "<gray>Удалите запись кэша, чтобы при применении произошла повторная загрузка."
+  remove-skin-from-cache-description: "<gray>Удалить запись из кэша."
   favorite-name: "<yellow>{ph1}"
   failed-to-load: "<red>Не удалось загрузить."
   apply-skin: "<white><bold>ЛЕВЫЙ КЛИК</bold> <green>чтобы применить скин"

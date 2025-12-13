@@ -69,7 +69,7 @@ menu:
   clear-cache: "<yellow>Vider le cache"
   clear-cache-description: "<red>Non recommandé <gray>pour éviter de surcharger l'API."
   remove-skin-from-cache: "<yellow>Supprimer le Skin du Cache"
-  remove-skin-from-cache-description: "<gray>Supprime une entrée du cache pour forcer un rechargement lors de l'application."
+  remove-skin-from-cache-description: "<gray>Supprime une entrée du cache."
   favorite-name: "<yellow>{ph1}"
   failed-to-load: "<red>Échec du chargement."
   apply-skin: "<white><bold>CLIC GAUCHE</bold> <green>pour appliquer le skin"

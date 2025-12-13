@@ -69,7 +69,7 @@ menu:
   clear-cache: "<yellow>Wis Cache"
   clear-cache-description: "<red>Niet aanbevolen <gray>om te voorkomen dat de API overbelast raakt."
   remove-skin-from-cache: "<yellow>Verwijder skin uit cache"
-  remove-skin-from-cache-description: "<gray>Verwijder een cache-item om opnieuw ophalen bij toepassing af te dwingen."
+  remove-skin-from-cache-description: "<gray>Een cache-item verwijderen."
   favorite-name: "<yellow>{ph1}"
   failed-to-load: "<red>Laden mislukt."
   apply-skin: "<white><bold>LINKER MUISKLIK</bold> <green>om skin toe te passen"

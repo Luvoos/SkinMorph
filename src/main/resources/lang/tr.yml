@@ -69,7 +69,7 @@ menu:
   clear-cache: "<yellow>Önbelleği Temizle"
   clear-cache-description: "<red>Önerilmez <gray>API’nin aşırı yüklenmesini önlemek için."
   remove-skin-from-cache: "<yellow>Önbellekten Skini Kaldır"
-  remove-skin-from-cache-description: "<gray>Uygulama sırasında yeniden alınmasını sağlamak için önbellek girişini kaldırın."
+  remove-skin-from-cache-description: "<gray>Önbellekten girdiyi kaldır."
   favorite-name: "<yellow>{ph1}"
   failed-to-load: "<red>Yükleme başarısız oldu."
   apply-skin: "<white><bold>SOL TIK</bold> <green>skini uygula"

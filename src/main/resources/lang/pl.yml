@@ -69,7 +69,7 @@ menu:
   clear-cache: "<yellow>Wyczyść pamięć podręczną"
   clear-cache-description: "<red>Niewskazane <gray>aby uniknąć przeciążenia API."
   remove-skin-from-cache: "<yellow>Usuń skórkę z pamięci podręcznej"
-  remove-skin-from-cache-description: "<gray>Usuń wpis z pamięci podręcznej, aby wymusić ponowne pobranie przy zastosowaniu."
+  remove-skin-from-cache-description: "<gray>Usuń wpis z pamięci podręcznej."
   favorite-name: "<yellow>{ph1}"
   failed-to-load: "<red>Nie udało się załadować."
   apply-skin: "<white><bold>LEWY KLIK</bold> <green>aby zastosować skin"

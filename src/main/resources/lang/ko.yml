@@ -69,7 +69,7 @@ menu:
   clear-cache: "<yellow>캐시 삭제"
   clear-cache-description: "<red>권장되지 않음 <gray>API 과부하를 방지하기 위해."
   remove-skin-from-cache: "<yellow>스킨을 캐시에서 제거"
-  remove-skin-from-cache-description: "<gray>적용 시 다시 불러오도록 캐시 항목을 제거합니다."
+  remove-skin-from-cache-description: "<gray>캐시 항목을 삭제합니다."
   favorite-name: "<yellow>{ph1}"
   failed-to-load: "<red>불러오기에 실패했습니다."
   apply-skin: "<white><bold>왼쪽 클릭</bold> <green>스킨 적용"

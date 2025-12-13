@@ -176,8 +176,11 @@ public class SkinMorphItems
 
     public static ItemStack clearCache()
     {
-        ItemStack item = new ItemStack(Material.BARRIER);
-        ItemMeta meta = item.getItemMeta();
+        ItemStack item = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta meta = (SkullMeta) item.getItemMeta();
+        PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID());
+        profile.setProperty(new ProfileProperty("textures", SETTINGS_BASE64));
+        meta.setPlayerProfile(profile);
         meta.displayName(plugin.langManager.translate("menu.clear-cache"));
 
         List<Component> lore = List.of(
@@ -192,8 +195,11 @@ public class SkinMorphItems
 
     public static ItemStack removeSkinFromCache()
     {
-        ItemStack item = new ItemStack(Material.BARRIER);
-        ItemMeta meta = item.getItemMeta();
+        ItemStack item = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta meta = (SkullMeta) item.getItemMeta();
+        PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID());
+        profile.setProperty(new ProfileProperty("textures", SETTINGS_BASE64));
+        meta.setPlayerProfile(profile);
         meta.displayName(plugin.langManager.translate("menu.remove-skin-from-cache"));
 
         List<Component> lore = List.of(
