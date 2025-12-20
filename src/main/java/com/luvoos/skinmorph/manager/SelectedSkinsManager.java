@@ -89,7 +89,7 @@ public class SelectedSkinsManager
 
     public void preloadSelectedSkins()
     {
-        plugin.getLogger().info("Loading " + getAllSelectedSkins().size() + " selected skins...");
+        plugin.getLogger().info("Loading " + getAllSelectedSkins().size() + " selected skin(s)...");
 
         for (String skinName : getAllSelectedSkins()) {
             skinManager.getSkinAsync(skinName, 3);

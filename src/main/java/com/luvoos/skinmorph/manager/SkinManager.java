@@ -230,6 +230,7 @@ public class SkinManager
         }
 
         setSkinFromNameInternal(caller, target, defaultSkinName, false, 3);
+
         if (plugin.PLAYER_FEEDBACK && playerFeedback) {
             if (caller == null) {
                 target.sendMessage(langManager.translate("messages.skin-reset-self"));
