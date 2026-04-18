@@ -40,6 +40,8 @@ public class SkinManager
             .connectTimeout(Duration.ofSeconds(10))
             .build();
 
+    private final String usernameRegex = "^[A-Za-z0-9_]{1,16}$";
+
     public static final Map<UUID, String> currentSkins = new ConcurrentHashMap<>();
 
     private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(10);
@@ -289,7 +291,7 @@ public class SkinManager
 
         final String normalizedSkinName = FormatUtil.normalize(skinName);
 
-        if (!normalizedSkinName.matches("^[A-Za-z0-9_]{1,16}$")) {
+        if (!normalizedSkinName.matches(usernameRegex)) {
             if (plugin.DEBUG)
                 plugin.getLogger().warning("Invalid skin name format: '" + normalizedSkinName + "'" + " -> string is too long or contains illegal characters");
 
