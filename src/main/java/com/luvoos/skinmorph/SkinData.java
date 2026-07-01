@@ -1,22 +1,33 @@
 package com.luvoos.skinmorph;
 
 import com.destroystokyo.paper.profile.ProfileProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 
-@AllArgsConstructor
-@Getter
-@Setter
-public class SkinData
-{
-    private String username;
-    private ProfileProperty textureProperty;
-    private Long lastUpdated;
+public class SkinData {
 
-    public boolean isDirty(final long expiryMs)
-    {
-        long diff = System.currentTimeMillis() - getLastUpdated();
+    private final String username;
+    private final ProfileProperty textureProperty;
+    private final long lastUpdated;
+
+    public SkinData(String username, ProfileProperty textureProperty, long lastUpdated) {
+        this.username = username;
+        this.textureProperty = textureProperty;
+        this.lastUpdated = lastUpdated;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public ProfileProperty getTextureProperty() {
+        return textureProperty;
+    }
+
+    public long getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public boolean isDirty(long expiryMs) {
+        long diff = System.currentTimeMillis() - lastUpdated;
         return diff > expiryMs;
     }
 }
