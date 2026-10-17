@@ -95,15 +95,9 @@ Displays a paginated help menu.
 | 3rd arg | `favorites remove ...` | Your favorited skins |
 | 3rd arg | `cache remove ...` | Your favorited skins* |
 
-\* Tab completion for `cache remove` currently suggests the player's own favorites rather than all cached skin names — worth double-checking if that's intended, since cache entries aren't necessarily tied to any one player's favorites list.
-
-All suggestions are filtered against the partial text already typed for the current argument.
-
 ---
 
 ## Argument Limits
-
-Validated by `isValidUsage()` before any subcommand logic runs:
 
 | Subcommand | Valid argument counts |
 |---|---|
@@ -116,7 +110,7 @@ Validated by `isValidUsage()` before any subcommand logic runs:
 | `settings` | 1 |
 | `cache` | 2 (`clear`/`info`) or 3 (`remove`) |
 
-Any other combination (including unknown first arguments, or more than 3 total arguments) returns an "invalid-usage" error.
+Any other combination (including unknown first arguments, or more than 3 total arguments) returns a usage error.
 
 ## Permission
 
