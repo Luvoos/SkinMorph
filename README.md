@@ -24,7 +24,7 @@ The `/skin` command lets players change, reset, favorite, and manage skins. All 
 | `/skin cache info` | Displays cache statistics (total skins cached, cache size). |
 | `/skin help [page]` | Displays the help menu. Defaults to page 1 if no page is given. |
 
-> **Player only** commands will respond with a "player-only" message if run from console or another non-player sender.
+> **Player only** commands will respond with an error message if run from console or another non-player sender.
 
 ---
 
