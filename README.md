@@ -24,7 +24,7 @@ The `/skin` command lets players change, reset, favorite, and manage skins. All 
 | `/skin cache info` | Displays cache statistics (total skins cached, cache size). |
 | `/skin help [page]` | Displays the help menu. Defaults to page 1 if no page is given. |
 
-> **Player only** commands will respond with a "player-only" message if run from console or another non-player sender.
+> **Player only** commands will respond with an error message if run from console or another non-player sender.
 
 ---
 
@@ -95,15 +95,9 @@ Displays a paginated help menu.
 | 3rd arg | `favorites remove ...` | Your favorited skins |
 | 3rd arg | `cache remove ...` | Your favorited skins* |
 
-\* Tab completion for `cache remove` currently suggests the player's own favorites rather than all cached skin names — worth double-checking if that's intended, since cache entries aren't necessarily tied to any one player's favorites list.
-
-All suggestions are filtered against the partial text already typed for the current argument.
-
 ---
 
 ## Argument Limits
-
-Validated by `isValidUsage()` before any subcommand logic runs:
 
 | Subcommand | Valid argument counts |
 |---|---|
@@ -116,7 +110,7 @@ Validated by `isValidUsage()` before any subcommand logic runs:
 | `settings` | 1 |
 | `cache` | 2 (`clear`/`info`) or 3 (`remove`) |
 
-Any other combination (including unknown first arguments, or more than 3 total arguments) returns an "invalid-usage" error.
+Any other combination (including unknown first arguments, or more than 3 total arguments) returns a usage error.
 
 ## Permission
 
