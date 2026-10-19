@@ -22,8 +22,8 @@ The `/skin` command lets players change, reset, favorite, and manage skins. All 
 | `/skin cache clear` | Clears the entire skin cache. |
 | `/skin cache remove <skinName>` | Removes a specific skin from the cache. |
 | `/skin cache info` | Displays cache statistics (total skins cached, cache size). |
-| `/skin update` | Update your active skin |
-| `/skin update <targetName>` | Update another player's active skin |
+| `/skin update` | Updates your active skin |
+| `/skin update <targetName>` | Updates another player's active skin |
 | `/skin help [page]` | Displays the help menu. Defaults to page 1 if no page is given. |
 
 > **Player only** commands will respond with an error message if run from console or another non-player sender.
