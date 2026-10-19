@@ -22,6 +22,8 @@ The `/skin` command lets players change, reset, favorite, and manage skins. All 
 | `/skin cache clear` | Clears the entire skin cache. |
 | `/skin cache remove <skinName>` | Removes a specific skin from the cache. |
 | `/skin cache info` | Displays cache statistics (total skins cached, cache size). |
+| `/skin update` | Updates your active skin |
+| `/skin update <targetName>` | Updates another player's active skin |
 | `/skin help [page]` | Displays the help menu. Defaults to page 1 if no page is given. |
 
 > **Player only** commands will respond with an error message if run from console or another non-player sender.
@@ -59,6 +61,10 @@ Opens the plugin's settings menu for the executing player.
 - `remove <skinName>` — Removes one skin from the cache. Responds with whether it was actually cached.
 - `info` — Shows the number of skins cached and total cache size.
 
+### `/skin update`
+- `/skin update` — Updates your own active skin, re-fetching it from Mojang's servers.
+- `/skin update <targetName>` — Updates another player's active skin, re-fetching it from Mojang's servers. Fails if `<targetName>` isn't online.
+
 ### `/skin help [page]`
 Displays a paginated help menu.
 
@@ -76,7 +82,7 @@ Displays a paginated help menu.
 |---|---|
 | 1 | `/skin`, `/skin set <skinName>`, `/skin set <skinName> <targetName>`, `/skin default`, `/skin default <targetName>` |
 | 2 | `/skin random`, `/skin random <targetName>`, `/skin favorites add <skinName>`, `/skin favorites remove <skinName>`, `/skin settings` |
-| 3 | `/skin cache clear`, `/skin cache remove <skinName>`, `/skin cache info` |
+| 3 | `/skin cache clear`, `/skin cache remove <skinName>`, `/skin cache info`, `/skin update`, `/skin update <targetName>` |
 
 ---
 
@@ -84,9 +90,9 @@ Displays a paginated help menu.
 
 | Argument position | Context | Suggestions |
 |---|---|---|
-| 1st arg | always | `set`, `default`, `help`, `favorites`, `random`, `settings`, `cache` |
+| 1st arg | always | `set`, `default`, `help`, `favorites`, `random`, `settings`, `cache`, `update` |
 | 2nd arg | `set` | Online player names + your favorited skins |
-| 2nd arg | `random`, `default` | Online player names |
+| 2nd arg | `random`, `default`, `update` | Online player names |
 | 2nd arg | `favorites` | `add`, `remove` |
 | 2nd arg | `help` | `1`, `2`, `3` |
 | 2nd arg | `cache` | `clear`, `remove`, `info` |
@@ -109,6 +115,7 @@ Displays a paginated help menu.
 | `help` | 1 or 2 |
 | `settings` | 1 |
 | `cache` | 2 (`clear`/`info`) or 3 (`remove`) |
+| `update` | 1 or 2 |
 
 Any other combination (including unknown first arguments, or more than 3 total arguments) returns a usage error.
 
