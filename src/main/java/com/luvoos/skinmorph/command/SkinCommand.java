@@ -188,6 +188,34 @@ public class SkinCommand implements CommandExecutor
                     }
                 }
             }
+            case "update" -> {
+                final Player target;
+                if (len == 1) {
+                    if (!(sender instanceof final Player player)) {
+                        sender.sendMessage(langManager.translate("messages.player-only"));
+                        return true;
+                    }
+                    target = player;
+                } else {
+                    target = Bukkit.getPlayer(args[1]);
+                    if (target == null) {
+                        sender.sendMessage(langManager.translate("messages.player-not-found", Map.of(
+                                "ph1", args[1]
+                        )));
+                        return true;
+                    }
+                }
+
+                // Fall back to the player's own name if no skin was ever set
+                String currentSkin = skinManager.getCurrentSkin(target);
+                if (currentSkin == null) currentSkin = target.getName().toLowerCase();
+
+                if (sender == target) {
+                    skinManager.setSkinFromName(target, currentSkin, true, 3, true);
+                } else {
+                    skinManager.setSkinFromName(sender, target, currentSkin, true, 3, true);
+                }
+            }
         }
         return true;
     }
@@ -254,6 +282,11 @@ public class SkinCommand implements CommandExecutor
                     case "remove" -> len == 3;
                     default -> false;
                 };
+
+            case "update":
+                // /skin update
+                // /skin update <targetName>
+                return len == 1 || len == 2;
 
             default:
                 return false;

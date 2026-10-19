@@ -50,6 +50,8 @@ messages:
   /skin-cache-clear-description: "<green>Wis de gehele cache"
   /skin-cache-remove-description: "<green>Verwijder een specifiek item uit de cache"
   /skin-cache-info-description: "<green>Bekijk informatie over de cache"
+  /skin-update-description: "<green>Update je actieve skin"
+  /skin-update-target-description: "<green>Update de actieve skin van een andere speler"
 
 menu:
   title-main: "Skin Menu               Pagina {ph1}/{ph2}"

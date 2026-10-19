@@ -43,6 +43,8 @@ public class HelpMessage
         page3.put("/skin cache clear", langManager.translate("messages./skin-cache-clear-description"));
         page3.put("/skin cache remove <skinName>", langManager.translate("messages./skin-cache-remove-description"));
         page3.put("/skin cache info", langManager.translate("messages./skin-cache-info-description"));
+        page3.put("/skin update", langManager.translate("messages./skin-update-description"));
+        page3.put("/skin update <targetName>", langManager.translate("messages./skin-update-target-description"));
         pages.put(3, page3);
     }
 

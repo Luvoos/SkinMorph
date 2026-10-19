@@ -50,6 +50,8 @@ messages:
   /skin-cache-clear-description: "<green>Wyczyść cały cache"
   /skin-cache-remove-description: "<green>Usuń konkretny wpis z cache"
   /skin-cache-info-description: "<green>Wyświetl informacje o cache"
+  /skin-update-description: "<green>Zaktualizuj swój aktywny skin"
+  /skin-update-target-description: "<green>Zaktualizuj aktywny skin innego gracza"
 
 menu:
   title-main: "Menu Skina             Strona {ph1}/{ph2}"

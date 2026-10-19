@@ -50,6 +50,8 @@ messages:
   /skin-cache-clear-description: "<green>清除整个缓存"
   /skin-cache-remove-description: "<green>从缓存中移除特定条目"
   /skin-cache-info-description: "<green>查看缓存信息"
+  /skin-update-description: "<green>更新你当前的皮肤"
+  /skin-update-target-description: "<green>更新其他玩家当前的皮肤"
 
 menu:
   title-main: "皮肤菜单                     页码 {ph1}/{ph2}"

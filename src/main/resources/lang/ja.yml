@@ -50,6 +50,8 @@ messages:
   /skin-cache-clear-description: "<green>キャッシュ全体をクリアする"
   /skin-cache-remove-description: "<green>特定のキャッシュ項目を削除する"
   /skin-cache-info-description: "<green>キャッシュの情報を表示する"
+  /skin-update-description: "<green>現在のスキンを更新します"
+  /skin-update-target-description: "<green>他のプレイヤーの現在のスキンを更新します"
 
 menu:
   title-main: "スキンメニュー            ページ {ph1}/{ph2}"

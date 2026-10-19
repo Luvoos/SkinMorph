@@ -50,7 +50,8 @@ messages:
   /skin-cache-clear-description: "<green>Clear the entire cache"
   /skin-cache-remove-description: "<green>Remove a specific entry from the cache"
   /skin-cache-info-description: "<green>View information about the cache"
-
+  /skin-update-description: "<green>Update your active skin"
+  /skin-update-target-description: "<green>Update another player's active skin"
 
 menu:
   title-main: "Skin Menu                 Page {ph1}/{ph2}"

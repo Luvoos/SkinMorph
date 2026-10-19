@@ -65,7 +65,12 @@ public class SkinManager
 
     public void setSkinFromName(@NotNull final Player target, @NotNull String skinName, boolean playerFeedback, int attempts)
     {
-        setSkinFromNameInternal(null, target, skinName, playerFeedback, attempts);
+        setSkinFromNameInternal(null, target, skinName, playerFeedback, attempts, false);
+    }
+
+    public void setSkinFromName(@NotNull final Player target, @NotNull String skinName, boolean playerFeedback, int attempts, boolean skipCache)
+    {
+        setSkinFromNameInternal(null, target, skinName, playerFeedback, attempts, skipCache);
     }
 
     public void setSkinFromName(@NotNull final CommandSender caller, @NotNull final Player target, @NotNull String skinName, boolean playerFeedback)
@@ -75,7 +80,12 @@ public class SkinManager
 
     public void setSkinFromName(@NotNull final CommandSender caller, @NotNull final Player target, @NotNull String skinName, boolean playerFeedback, int attempts)
     {
-        setSkinFromNameInternal(caller, target, skinName, playerFeedback, attempts);
+        setSkinFromNameInternal(caller, target, skinName, playerFeedback, attempts, false);
+    }
+
+    public void setSkinFromName(@NotNull final CommandSender caller, @NotNull final Player target, @NotNull String skinName, boolean playerFeedback, int attempts, boolean skipCache)
+    {
+        setSkinFromNameInternal(caller, target, skinName, playerFeedback, attempts, skipCache);
     }
 
     public void setSkinFromName(@NotNull final Player caller, @NotNull final Player target, @NotNull String skinName, boolean playerFeedback)
@@ -85,7 +95,12 @@ public class SkinManager
 
     public void setSkinFromName(@NotNull final Player caller, @NotNull final Player target, @NotNull String skinName, boolean playerFeedback, int attempts)
     {
-        setSkinFromNameInternal(caller, target, skinName, playerFeedback, attempts);
+        setSkinFromNameInternal(caller, target, skinName, playerFeedback, attempts, false);
+    }
+
+    public void setSkinFromName(@NotNull final Player caller, @NotNull final Player target, @NotNull String skinName, boolean playerFeedback, int attempts, boolean skipCache)
+    {
+        setSkinFromNameInternal(caller, target, skinName, playerFeedback, attempts, skipCache);
     }
 
     /* resetSkin overloads */
@@ -130,13 +145,14 @@ public class SkinManager
                                          @NotNull final Player target,
                                          @NotNull final String skinName,
                                          boolean playerFeedback,
-                                         int attempts)
+                                         int attempts,
+                                         boolean skipCache)
     {
         if (skinName.isEmpty() || !target.isOnline()) return;
 
         final String normalizedSkinName = FormatUtil.normalize(skinName);
 
-        if (isWearingSkin(target, skinName)) {
+        if (!skipCache && isWearingSkin(target, skinName)) {
             if (plugin.PLAYER_FEEDBACK && playerFeedback) {
                 if (caller == null) {
                     target.sendMessage(langManager.translate("messages.already-wearing-skin-self", Map.of(
@@ -152,7 +168,7 @@ public class SkinManager
             return;
         }
 
-        getSkinAsync(skinName, attempts).whenComplete((skin, t) -> {
+        getSkinAsync(skinName, attempts, skipCache).whenComplete((skin, t) -> {
             if (t != null) {
                 if (plugin.DEBUG)
                     plugin.getLogger().warning("Error fetching skin '" + normalizedSkinName + "' -> " + t.getMessage());
@@ -231,7 +247,7 @@ public class SkinManager
             return;
         }
 
-        setSkinFromNameInternal(caller, target, defaultSkinName, false, 3);
+        setSkinFromNameInternal(caller, target, defaultSkinName, false, 3, false);
 
         if (plugin.PLAYER_FEEDBACK && playerFeedback) {
             if (caller == null) {
@@ -258,7 +274,7 @@ public class SkinManager
             return;
         }
 
-        setSkinFromNameInternal(caller, target, randomSkin, false, 3);
+        setSkinFromNameInternal(caller, target, randomSkin, false, 3, false);
 
         if (plugin.PLAYER_FEEDBACK && playerFeedback) {
             final Component msg = plugin.langManager.translate("messages.skin-random", Map.of(
@@ -275,11 +291,19 @@ public class SkinManager
 
     public CompletableFuture<SkinData> getSkinAsync(String skinName, int attempts)
     {
+        return getSkinAsync(skinName, attempts, false);
+    }
+
+    public CompletableFuture<SkinData> getSkinAsync(String skinName, int attempts, boolean skipCache)
+    {
         final String normalizedSkinName = FormatUtil.normalize(skinName);
 
-        final SkinData cached = plugin.cacheManager.getSkin(normalizedSkinName);
-        if (cached != null)
-            return CompletableFuture.completedFuture(cached);
+        if (!skipCache)
+        {
+            final SkinData cached = plugin.cacheManager.getSkin(normalizedSkinName);
+            if (cached != null)
+                return CompletableFuture.completedFuture(cached);
+        }
 
         return fetchSkinAttempt(normalizedSkinName, attempts);
     }
