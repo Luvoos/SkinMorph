@@ -32,6 +32,8 @@ public final class SkinMorph extends JavaPlugin
     @Override
     public void onEnable()
     {
+        printBanner();
+
         try {
             init();
         } catch (Exception e) {
@@ -77,5 +79,15 @@ public final class SkinMorph extends JavaPlugin
         getServer().getPluginManager().registerEvents(new SkinMorphListener(this, favoritesManager, skinManager, selectedSkinsManager, langManager), this);
         getServer().getPluginManager().registerEvents(menu, this);
         getServer().getPluginManager().registerEvents(inputManager, this);
+    }
+
+    private void printBanner()
+    {
+        getLogger().info(" _____ _   _     _____             _   ");
+        getLogger().info("|    _| |_|_|___|     |___ ___ ___| |_ ");
+        getLogger().info("|__   | '_| |   | | | | . |  _| . |   |");
+        getLogger().info("|_____|_,_|_|_|_|_|_|_|___|_| |  _|_|_|");
+        getLogger().info(" by Luvoos (v" + this.getDescription().getVersion() + ")           |__|");
+        getLogger().info("");
     }
 }
